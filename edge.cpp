@@ -32,21 +32,21 @@ void Edges::print()
 	printf("\n");
 	
 	for(i=0;i < _Nodes;i++)
-		printf("  \t %8d  ",i);
+		cout<<"\t"<<i;
 	
-	printf("\n");
+	cout<<endl;
 	
 	for(i=0;i < _Nodes;i++)
 	{
 		for(j=0;j< _Nodes;j++)
 			if(j==0)
-				printf("%d \t %8llu \t ", i ,_Weights[i][j] );
+				cout<<i<<"\t"<<_Weights[i][j];
 			else
-				printf("%8llu  \t ",_Weights[i][j] );
+				cout<<"\t"<<_Weights[i][j];
 		
-		printf("\n");
+		cout<<endl;
 	}
-	printf("\n");
+	cout<<endl;
 }
 
 void Edges::assignWeights()

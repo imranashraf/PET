@@ -6,7 +6,7 @@
 #include <time.h>
 
 
-long long fac(long long number)
+long long factorial(long long number)
  {
    long long fac = 1;
    #pragma omp parallel
@@ -22,7 +22,7 @@ long long fac(long long number)
  }
 
 
-long long sterling(int n, int k)
+long long sterling_2nd(int n, int k)
 {
     int i; 
     long long comb;
@@ -38,45 +38,45 @@ long long sterling(int n, int k)
         parity = -parity;
         comb = comb*(k-i)/(i+1);
     }
-    total = total/fac(k);
+    total = total/factorial(k);
 
     return total;
 }
 
 long long combinations(int n, int k)
 {
-    return fac(n)/(fac(n-k)*fac(k));
+    long long value = 1;
+    long long tmp = 1;
+    assert(n>=k);
+
+    if(n < 2*k) k = n - k;
+
+    for(int i = n; i>n-k; i--)
+        value *= (long long)i;
+    for(int i = 2; i<=k; i++)
+        tmp *= (long long)i;
+
+    return value/tmp;
 }
 
 long long permutations(int n, int k)
 {
-    return fac(n)/fac(n-k);
+    long long value = 1;
+
+    assert(n>=k);
+    for(int i = n; i>n-k; i--)
+        value *= (long long)i;
+
+    return value;
 }
 
-long long count(int n, int k)
+/*long long count(int n, int k)
 {
     int x;
     long long total = 0;
 
     for(x=0;x<k;x++)
-        total += fac(k-x)*combinations(k,x)*sterling(n-k,k-x);
+        total += factorial(k-x)*combinations(k,x)*sterling(n-k,k-x);
 
     return total;
-}
-
-
-int main(int argc, char *argv[])
-{
-    int i,j;
-    int n = atoi(argv[1]);    
-    int k = atoi(argv[2]);
-
-    printf("n:%d k:%d\nsterling:%lld\nnewcount:%lld\nnewcount2:%Lf\n",
-        n,k,
-        sterling(n,k),
-        count(n,k),
-        (long double)pow((long double)k,(long double)(n-k))
-    );
-
-    return 0;
-}
+}*/

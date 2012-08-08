@@ -2,6 +2,7 @@
 #include<stdlib.h>
 
 #include"graph.h"
+#include "rng.h"
 
 Graph::Graph(int nodes)
 {
@@ -25,7 +26,7 @@ void Graph::print()
 	printf("\n");
 	
 	for(int i=0;i < Nodes;i++)
-		printf(" \t %d  ",i);
+		printf("  \t %8d  ",i);
 	
 	printf("\n");
 	
@@ -33,11 +34,30 @@ void Graph::print()
 	{
 		for(int j=0;j< Nodes;j++)
 			if(j==0)
-				printf("%d \t %llu \t ", i , Weights[i][j] );
+				printf("%d \t %8llu \t ", i , Weights[i][j] );
 			else
-				printf("%llu  \t ", Weights[i][j] );
+				printf("%8llu  \t ", Weights[i][j] );
 		
 		printf("\n");
 	}
 	printf("\n");
+}
+
+void Graph::attachWeights()
+{
+	RNG rng;
+	
+	int Low = 500;
+	int High = 10000;
+		
+	for(int i=0;i < Nodes;i++)
+		for(int j=0;j< Nodes;j++)
+		{
+			//some links will not be there
+			Weights[i][j] =  ( abs( rng.rand_int31() ) % (1 - 0 + 1 ) ); 
+			
+			//the links which are there now should get random communication
+			Weights[i][j] =  Weights[i][j] * ( abs( rng.rand_int31() ) % (High - Low + 1 ) ); 
+		}
+	
 }

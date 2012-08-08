@@ -7,11 +7,10 @@
 
 #include "bruteforce.h"
 #include "graph.h"
-#include "rng.h"
+
 
 int main(int argc, char *argv[])
 {
-	RNG rng;
 	int n,k,t;
 	Graph g(4);
 	if(argc!=3 && argc!=4) {
@@ -33,8 +32,7 @@ int main(int argc, char *argv[])
 	else if(t==2)
 		bruteforce_nonempty(n,k,print_part);
 	
-	printf("A random No :  %lu ",rng.rand_int31() );
-	
+	g.attachWeights();
 	g.print();
 	
 	return 0; 

@@ -6,13 +6,12 @@
 #include <time.h>
 
 #include "bruteforce.h"
-#include "graph.h"
-
+#include "edge.h"
+#include "application.h"
 
 int main(int argc, char *argv[])
 {
 	int n,k,t;
-	Graph g(4);
 	if(argc!=3 && argc!=4) {
 		printf("syntax: %s n k <t>\n", argv[0]);
 		printf("\tn,k: integer\n");
@@ -32,8 +31,8 @@ int main(int argc, char *argv[])
 	else if(t==2)
 		bruteforce_nonempty(n,k,print_part);
 	
-	g.attachWeights();
-	g.print();
+	Application applic(n);
+	applic.print();
 	
 	return 0; 
 }

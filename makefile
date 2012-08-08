@@ -2,8 +2,8 @@ CC=g++
 CFLAGS=-g -Wall -O2 -fopenmp
 LDFLAGS= -fopenmp
 LIBS=-lm
-CSRCS=main.c bruteforce.c count.c graph.c 
-CPPSRCS=rng.cpp
+CSRCS=main.c bruteforce.c count.c 
+CPPSRCS=rng.cpp edge.cpp node.cpp application.cpp
 
 OBJECTS=$(CSRCS:.c=.o)
 OBJECTS+=$(CPPSRCS:.cpp=.o)
@@ -20,8 +20,8 @@ $(EXEC): $(OBJECTS)
 %.o: %.c
 	$(CC) -c $(CFLAGS) $< -o $@ 
 
-run: $(EXEC)
-	@-./$(EXEC) 2 3
+run: $(EXEC)     #   n  k 
+	@-./$(EXEC)  4  2
 
 clean:
 	@-rm -f $(OBJECTS) $(EXEC) *~

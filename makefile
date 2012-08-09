@@ -2,8 +2,8 @@ CC=g++
 CFLAGS=-g -Wall -O2 -fopenmp
 LDFLAGS= -fopenmp
 LIBS=-lm
-CSRCS=main.c bruteforce.c count.c 
-CPPSRCS=rng.cpp edge.cpp node.cpp application.cpp cluster.cpp
+CSRCS=count.c
+CPPSRCS=main.cpp rng.cpp edge.cpp node.cpp application.cpp cluster.cpp algorithm.cpp bruteforce.cpp
 
 OBJECTS=$(CSRCS:.c=.o)
 OBJECTS+=$(CPPSRCS:.cpp=.o)

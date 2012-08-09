@@ -1,18 +1,17 @@
 #ifndef _CLUSTER_H
 #define _CLUSTER_H
 
-#include "node.h"
-
 class Cluster
 {
 	private:
 		unsigned int _NodeCount;
 		unsigned int _NodeCapacity;
-		Node * _Nodes;
+		unsigned int * _Nodes;
 	
 	public:
+		Cluster(){}
 		Cluster(unsigned int totalNodes);
-		void addNode(Node node);
+		void addNode(unsigned int nodeNo);
 		void print();
 };
 

@@ -1,6 +1,11 @@
+#include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+
+#include "bruteforce.h"
+
+using namespace std;
 
 typedef void (*eval_func) (int n, int k, int *partition);
 
@@ -50,7 +55,7 @@ void bruteforce_kfixed(int n, int k, eval_func eval)
     g_n = n;
     g_k = k;
     evaluate = eval;
-    partition = (int *)malloc(sizeof(int)*n);
+    partition = (int *)malloc( sizeof(int) * n );
 
     for(i=0;i<n-k;i++)
         partition[i] = 0;
@@ -105,4 +110,27 @@ void print_part (int n, int k, int *partition)
     while(n--) 
         printf("%d ",partition[n]);
     printf("\n");
+}
+
+
+Cluster * Bruteforce::Partition(Application applic , unsigned int k)
+{
+	Cluster * clusters = new Cluster[k];
+	if( clusters == NULL )
+	{
+		cout<<"Could not allocate memory for clusters"<<endl;
+		exit(1);
+	}
+	
+	bruteforce_kfixed( applic.getTotalNodes(), k , print_part );
+	
+/*	if(t==0)
+		bruteforce(n,k,print_part);
+	else if(t==1)
+		bruteforce_kfixed(n,k,print_part);
+	else if(t==2)
+		bruteforce_nonempty(n,k,print_part);*/
+	
+	
+	return clusters;
 }

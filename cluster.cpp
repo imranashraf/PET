@@ -12,7 +12,7 @@ Cluster::Cluster(unsigned int totalNodes)
 	
 	//for simplicity, we reserve a space equivalent to the space
 	//of total number of Nodes in this application.
-	_Nodes = new Node[_NodeCapacity]; 
+	_Nodes = new unsigned int [_NodeCapacity]; 
 	if(_Nodes == NULL)
 	{
 		cout<<"Memory Error"<<endl;
@@ -20,7 +20,7 @@ Cluster::Cluster(unsigned int totalNodes)
 	}
 }
 
-void Cluster::addNode(Node node)
+void Cluster::addNode(unsigned int node)
 {
 	if(_NodeCount < _NodeCapacity)
 	{
@@ -39,7 +39,7 @@ void Cluster::print()
 	cout<<"No of Nodes in Cluster = "<<_NodeCount<<endl;
 	for(unsigned int i =0; i< _NodeCount; i++)
 	{
-		cout<<"Node "<<i<<" : "<<endl;
-		_Nodes[i].print();
+		cout<<"  Node "<<i<<" = "<<_Nodes[i];
 	}
+	cout<<endl;
 }

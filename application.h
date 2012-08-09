@@ -14,6 +14,7 @@ class Application
 	public:
 		Application(){}
 		Application(unsigned int nodes);
+		unsigned int getTotalNodes(){ return _TotalNodes; };
 		
 		void print();
 };

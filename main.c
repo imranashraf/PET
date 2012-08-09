@@ -8,6 +8,7 @@
 #include "bruteforce.h"
 #include "edge.h"
 #include "application.h"
+#include "cluster.h"
 
 int main(int argc, char *argv[])
 {
@@ -33,6 +34,9 @@ int main(int argc, char *argv[])
 	
 	Application applic(n);
 	applic.print();
+	
+	Cluster clust(n);
+	clust.print();
 	
 	return 0; 
 }

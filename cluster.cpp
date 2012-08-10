@@ -2,8 +2,57 @@
 #include <cstdlib>
 
 #include "cluster.h"
+#include "globals.h"
 
 using namespace std;
+
+bool Cluster::inCluster(unsigned int fno)
+{
+	unsigned int i;
+	for(i=0; i<_FunctionCount; i++)
+		if(_Functions[i] == fno) return true;
+	
+	return false;
+}
+
+float Cluster::ExternalComm()
+{
+	float comm=0.0;
+	int i,j;
+	int n = applic->getTotalFunctions();
+	
+	for(i=0; i<n ;i++)
+		for(j=0; j<n ; j++)
+			if( inCluster(i) == true && inCluster(j) == false ) 
+				comm += applic->getEdgeWeight(i,j);
+		
+	return comm;
+}
+
+float Cluster::InternalComm()
+{
+	float comm=0.0;
+	int i,j;
+	int n = applic->getTotalFunctions();
+	
+	for(i=0; i<n ;i++)
+		for(j=0; j<n ; j++)
+			if( inCluster(i) == true && inCluster(j) == true ) 
+				comm += applic->getEdgeWeight(i,j);
+			
+			return comm;
+}
+
+float Cluster::ExecCost()
+{
+	float EC=0.0;
+	unsigned int i;
+	
+	for(i=0;i<_FunctionCount;i++)
+		EC += applic->getFunctionContrib( _Functions[i] );
+		
+	return EC;
+}
 
 Cluster::Cluster(unsigned int totalFunctions)
 { 
@@ -51,10 +100,10 @@ void Cluster::addFunction(unsigned int node)
 
 void Cluster::Print()
 {
-	cout<<"No of Functions in Cluster = "<<_FunctionCount<<endl;
+	cout<<_FunctionCount<<" functions in Cluster ( ";
 	for(unsigned int i =0; i< _FunctionCount; i++)
 	{
-		cout<<"  Function "<<i<<" = "<<_Functions[i];
+		cout<<_Functions[i]<<"  ";
 	}
-	cout<<endl;
+	cout<<")"<<endl;
 }

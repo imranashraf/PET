@@ -18,7 +18,7 @@ class Bruteforce : public Algorithm
 	public:
 		Bruteforce(){}
 		
-		Partition * Apply(Application applic , unsigned int k);
+		void Apply(Application applic , unsigned int k);
 		
 };
 

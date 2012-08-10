@@ -5,16 +5,16 @@
 
 typedef unsigned long long ULL;
 
-class Edges
+class Edge
 {
 	private:
-		unsigned int _Nodes;
-		ULL ** _Weights;
+		unsigned int _Weight;
 		
 	public:
-		Edges(){_Nodes=0; _Weights=NULL;}
-		Edges(unsigned int nodes);
-		void assignWeights();
+		Edge(){_Weight=0;}
+		Edge(unsigned int weight){_Weight = weight;}
+		void setWeight(unsigned int weight){_Weight = weight;}
+		ULL getWeight(){return _Weight;}
 		void print();
 		
 };

@@ -19,6 +19,7 @@ class Function
 		}
 
 		void assignContrib(ULL contrib);
+		unsigned int getExecContrib(){return ExecContrib;}
 		void print();
 
 };

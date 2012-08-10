@@ -1,0 +1,22 @@
+#ifndef _GLOBALS_H
+#define _GLOBALS_H
+
+#include "partition.h"
+#include "application.h"
+
+//comment the following to hide debugging output
+// #define DEBUG
+
+//comment the following to not store all the partitions produced in bruteforce algorithm
+// #define STORE_PARTITIONS
+
+//comment the following to stop storing the scores of all partions produced in bruteforce algorithm
+#define STORE_SCORES
+
+#ifdef STORE_PARTITIONS
+extern Partition * partitions;
+#endif
+
+extern Application * applic;
+
+#endif

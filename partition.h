@@ -15,6 +15,10 @@ class Partition
 		void setCluster(unsigned int totalFunctions, unsigned int nclusters);
 		void addFunction(unsigned int ftnNo, unsigned int clusterNo);
 		void Print();
+		float Cost();
+		float BalancingPenalty();
+		float CommunicationCost();
+		float CouplingDegree();
 	
 };
 

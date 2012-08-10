@@ -3,7 +3,7 @@
 
 #include "algorithm.h"
 #include "application.h"
-#include "cluster.h"
+#include "partition.h"
 
 typedef void (*eval_func) (int n, int k, int *partition);
 
@@ -18,7 +18,7 @@ class Bruteforce : public Algorithm
 	public:
 		Bruteforce(){}
 		
-		Cluster * Partition(Application applic , unsigned int k);
+		Partition * Apply(Application applic , unsigned int k);
 		
 };
 

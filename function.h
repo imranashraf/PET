@@ -4,18 +4,18 @@
 typedef unsigned long long ULL;
 static int count = 0;
 
-class Node
+class Function
 {
 	private:
 		unsigned int ExecContrib;
-		unsigned int NodeNo;
+		unsigned int FunctionNo;
 
 	public:
-		Node(){ExecContrib=0; NodeNo=count++;}
-		Node(unsigned int contrib)
+		Function(){ExecContrib=0; FunctionNo=count++;}
+		Function(unsigned int contrib)
 		{
 			ExecContrib = contrib;
-			NodeNo=count++;
+			FunctionNo=count++;
 		}
 
 		void assignContrib(ULL contrib);

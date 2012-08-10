@@ -1,8 +1,7 @@
 #include<iostream>
 
 #include"application.h"
-#include "edge.h"
-#include "rng.h"
+#include"rng.h"
 
 using namespace std;
 
@@ -13,17 +12,17 @@ Application::Application(unsigned int nodes)
 	ULL contrib;
 	RNG rng;
 	
-	_TotalNodes = nodes;
-	_Nodes = new Node[ _TotalNodes ];
-	_Edges = new Edges(_TotalNodes);
+	_TotalFunctions = nodes;
+	_Functions = new Function[ _TotalFunctions ];
+	_Edges = new Edges(_TotalFunctions);
 	
-	for(i=0;i<_TotalNodes - 1; i++) //got till one less than the total nodes
+	for(i=0;i<_TotalFunctions - 1; i++) //got till one less than the total nodes
 	{
 		contrib = ( abs( rng.rand_int31() ) % (cummContrib + 1 ) );
-		_Nodes[i].assignContrib(contrib);
+		_Functions[i].assignContrib(contrib);
 		cummContrib -= contrib;
 	}
-	_Nodes[i].assignContrib(cummContrib); //last should get the remaining
+	_Functions[i].assignContrib(cummContrib); //last should get the remaining
 	
 	
 	_Edges->assignWeights();
@@ -34,9 +33,9 @@ void Application::print()
 {
 	unsigned int i;
 	
-	cout<<endl<<"Nodes"<<endl;
-	for(i=0; i< _TotalNodes; i++)
-		_Nodes[i].print();
+	cout<<endl<<"Functions"<<endl;
+	for(i=0; i< _TotalFunctions; i++)
+		_Functions[i].print();
 	
 	cout<<endl<<"Edges";
 	_Edges->print();

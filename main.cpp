@@ -8,7 +8,8 @@
 #include "bruteforce.h"
 #include "edge.h"
 #include "application.h"
-#include "cluster.h"
+#include "partition.h"
+#include "count.h"
 
 using namespace std;
 
@@ -36,12 +37,16 @@ int main(int argc, char *argv[])
 	Application applic(n);
 	applic.print();
 	
-	Algorithm * algo = new Bruteforce();
-	Cluster * clusters;
-	clusters = algo->Partition( applic , k );
+	Algorithm * bforce = new Bruteforce();
+	Partition * partitions;
+	long long totalPartitions = Count(n,k);
+	partitions = bforce->Apply( applic , k );
 	
-	for(i=0 ; i<k ; i++)
-		clusters[i].print();
+	for(i=0 ; i < totalPartitions ; i++)
+	{
+		cout<<endl<<"Partition "<<i<<endl;
+		partitions[i].Print();
+	}
 	
 	return 0; 
 }

@@ -5,27 +5,42 @@
 
 using namespace std;
 
-Cluster::Cluster(unsigned int totalNodes)
+Cluster::Cluster(unsigned int totalFunctions)
 { 
-	_NodeCount = 0; 
-	_NodeCapacity = totalNodes;
+	_FunctionCount = 0; 
+	_FunctionCapacity = totalFunctions;
 	
 	//for simplicity, we reserve a space equivalent to the space
-	//of total number of Nodes in this application.
-	_Nodes = new unsigned int [_NodeCapacity]; 
-	if(_Nodes == NULL)
+	//of total number of Functions in this application.
+	_Functions = new unsigned int [_FunctionCapacity]; 
+	if(_Functions == NULL)
 	{
 		cout<<"Memory Error"<<endl;
 		exit(1);
 	}
 }
 
-void Cluster::addNode(unsigned int node)
-{
-	if(_NodeCount < _NodeCapacity)
+void Cluster::setFunctionCapacity(unsigned int totalFunctions)
+{ 
+	_FunctionCount = 0; 
+	_FunctionCapacity = totalFunctions;
+	
+	//for simplicity, we reserve a space equivalent to the space
+	//of total number of Functions in this application.
+	_Functions = new unsigned int [_FunctionCapacity]; 
+	if(_Functions == NULL)
 	{
-		_Nodes[_NodeCount]=node;
-		_NodeCount++;
+		cout<<"Memory Error"<<endl;
+		exit(1);
+	}
+}
+
+void Cluster::addFunction(unsigned int node)
+{
+	if(_FunctionCount < _FunctionCapacity)
+	{
+		_Functions[_FunctionCount]=node;
+		_FunctionCount++;
 	}
 	else //should not come here in the current implementation
 	{
@@ -34,12 +49,12 @@ void Cluster::addNode(unsigned int node)
 	}
 }
 
-void Cluster::print()
+void Cluster::Print()
 {
-	cout<<"No of Nodes in Cluster = "<<_NodeCount<<endl;
-	for(unsigned int i =0; i< _NodeCount; i++)
+	cout<<"No of Functions in Cluster = "<<_FunctionCount<<endl;
+	for(unsigned int i =0; i< _FunctionCount; i++)
 	{
-		cout<<"  Node "<<i<<" = "<<_Nodes[i];
+		cout<<"  Function "<<i<<" = "<<_Functions[i];
 	}
 	cout<<endl;
 }

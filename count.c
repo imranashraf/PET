@@ -70,13 +70,13 @@ long long permutations(int n, int k)
     return value;
 }
 
-/*long long count(int n, int k)
+long long Count(int n, int k)
 {
     int x;
     long long total = 0;
 
     for(x=0;x<k;x++)
-        total += factorial(k-x)*combinations(k,x)*sterling(n-k,k-x);
+        total += factorial(k-x)*combinations(k,x)*sterling_2nd(n-k,k-x);
 
     return total;
-}*/
+}

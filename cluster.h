@@ -4,15 +4,16 @@
 class Cluster
 {
 	private:
-		unsigned int _NodeCount;
-		unsigned int _NodeCapacity;
-		unsigned int * _Nodes;
+		unsigned int _FunctionCount;
+		unsigned int _FunctionCapacity;
+		unsigned int * _Functions;
 	
 	public:
-		Cluster(){}
-		Cluster(unsigned int totalNodes);
-		void addNode(unsigned int nodeNo);
-		void print();
+		Cluster(){_FunctionCount=0;}
+		Cluster(unsigned int totalFunctions);
+		void setFunctionCapacity(unsigned int totalFunctions);
+		void addFunction(unsigned int nodeNo);
+		void Print();
 };
 
 #endif

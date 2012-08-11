@@ -14,11 +14,11 @@ static int g_n, g_k;
 static int parCount=0;
 
 #ifdef STORE_PARTITIONS
-Partition * partitions;
+Partition * Partitions;
 #endif
 
-#ifdef STORE_SCORE
-
+#ifdef STORE_COSTS
+float * Costs;
 #endif
 
 static void _Bruteforce(int n)
@@ -36,11 +36,7 @@ static void _Bruteforce(int n)
  			cout<<"Function "<<j<<" is in Cluster "<<partition[j]<<endl;
 			#endif
 			#ifdef STORE_PARTITIONS
-			partitions[parCount].addFunction(j,partition[j]);
-			#endif
-			
-			#ifdef STORE_SCORE
-			
+			Partitions[parCount].addFunction(j,partition[j]);
 			#endif
 			
 			part.addFunction( j , partition[j] );
@@ -48,9 +44,15 @@ static void _Bruteforce(int n)
 		#ifdef DEBUG
  		cout<<endl;
 		#endif
-		
+
+		#ifdef STORE_COSTS
+		Costs[parCount] = part.Cost();
+		#endif
+
+		#ifdef DEBUG
 		part.Print();
 		cout<<"Cost of Partition = "<<part.Cost()<<endl<<endl;
+		#endif
 		
 		parCount++;
     }
@@ -89,14 +91,18 @@ void Bruteforce::Apply(Application applic , unsigned int k)
 	long long nPartitions = Count(n,k);
 	
 	#ifdef STORE_PARTITIONS
-	partitions = new Partition[nPartitions];
+	Partitions = new Partition[nPartitions];
 	for(int i=0;i<nPartitions;i++)
-		partitions[i].setCluster(n,k);
-	if( partitions == NULL )
+		Partitions[i].setCluster(n,k);
+	if( Partitions == NULL )
 	{
 		cout<<"Could not allocate memory for partitions"<<endl;
 		exit(1);
 	}
+	#endif
+	
+	#ifdef STORE_COSTS
+	Costs = new float[nPartitions];
 	#endif
 	
 	Bruteforce_kfixed( n , k);

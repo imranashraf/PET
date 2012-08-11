@@ -1,10 +1,6 @@
-#include <limits.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
-#include <time.h>
-#include <assert.h>
+#include <cstdlib>
+#include <cmath>
+#include <cassert>
 
 long long factorial(long long number)
  {

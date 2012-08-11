@@ -8,7 +8,6 @@ using namespace std;
 ULL commLow = 500;
 ULL commHigh = 10000;
 
-
 Application::Application(unsigned int nftns)
 {
 	RNG rng;
@@ -22,10 +21,10 @@ Application::Application(unsigned int nftns)
 	for(i=0;i<_TotalFunctions - 1; i++) //got till one less than the total nodes
 	{
 		contrib = ( abs( rng.rand_int31() ) % (cummContrib + 1 ) );
-		_Functions[i].assignContrib(contrib);
+		_Functions[i].setExecContrib(contrib);
 		cummContrib -= contrib;
 	}
-	_Functions[i].assignContrib(cummContrib); //last should get the remaining
+	_Functions[i].setExecContrib(cummContrib); //last should get the remaining
 	
 	
 	_Edges = new Edge* [_TotalFunctions];

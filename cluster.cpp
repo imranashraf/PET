@@ -84,11 +84,11 @@ void Cluster::setFunctionCapacity(unsigned int totalFunctions)
 	}
 }
 
-void Cluster::addFunction(unsigned int node)
+void Cluster::addFunction(unsigned int fno)
 {
 	if(_FunctionCount < _FunctionCapacity)
 	{
-		_Functions[_FunctionCount]=node;
+		_Functions[_FunctionCount]=fno;
 		_FunctionCount++;
 	}
 	else //should not come here in the current implementation

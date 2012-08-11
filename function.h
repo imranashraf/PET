@@ -7,19 +7,19 @@ static int count = 0;
 class Function
 {
 	private:
-		unsigned int ExecContrib;
-		unsigned int FunctionNo;
+		float _ExecContrib;
+		unsigned int _FunctionNo;
 
 	public:
-		Function(){ExecContrib=0; FunctionNo=count++;}
-		Function(unsigned int contrib)
+		Function(){_ExecContrib=0; _FunctionNo=count++;}
+		Function(float contrib)
 		{
-			ExecContrib = contrib;
-			FunctionNo=count++;
+			_ExecContrib = contrib;
+			_FunctionNo=count++;
 		}
 
-		void assignContrib(ULL contrib);
-		unsigned int getExecContrib(){return ExecContrib;}
+		void setExecContrib(float contrib);
+		float getExecContrib(){return _ExecContrib;}
 		void print();
 
 };

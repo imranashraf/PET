@@ -3,18 +3,16 @@
 
 #include<cstdlib>
 
-typedef unsigned long long ULL;
-
 class Edge
 {
 	private:
-		unsigned int _Weight;
+		float _Weight;
 		
 	public:
 		Edge(){_Weight=0;}
-		Edge(unsigned int weight){_Weight = weight;}
-		void setWeight(unsigned int weight){_Weight = weight;}
-		ULL getWeight(){return _Weight;}
+		Edge(float weight){_Weight = weight;}
+		void setWeight(float weight){_Weight = weight;}
+		float getWeight(){return _Weight;}
 		void print();
 		
 };

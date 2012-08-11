@@ -4,6 +4,10 @@
 
 #include "partition.h"
 
+const float ALPHA = 1.0;
+const float BETA  = 0.5;
+const float GAMMA = 0.5;
+
 using namespace std;
 
 Partition::Partition(unsigned int totalFunctions, unsigned int nclusters)
@@ -91,7 +95,7 @@ float Partition::Cost()
 	CC = CommunicationCost();
 	CD = CouplingDegree();
 	
- 	cost = BP + CC + 1/CD;
+ 	cost = ALPHA * BP + BETA * CC + GAMMA*1.0/CD;
 
 	return cost;
 }

@@ -11,10 +11,14 @@
 // #define STORE_PARTITIONS
 
 //comment the following to stop storing the scores of all partions produced in bruteforce algorithm
-#define STORE_SCORES
+#define STORE_COSTS
 
 #ifdef STORE_PARTITIONS
-extern Partition * partitions;
+extern Partition * Partitions;
+#endif
+
+#ifdef STORE_COSTS
+extern float * Costs;
 #endif
 
 extern Application * applic;

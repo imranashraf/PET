@@ -12,7 +12,7 @@ class Cluster
 		Cluster(){_FunctionCount=0;}
 		Cluster(unsigned int totalFunctions);
 		void setFunctionCapacity(unsigned int totalFunctions);
-		void addFunction(unsigned int nodeNo);
+		void addFunction(unsigned int fno);
 		float ExecCost();
 		float ExternalComm();
 		float InternalComm();

@@ -5,13 +5,13 @@
 
 using namespace std;
 
-void Function::assignContrib(ULL contrib)
+void Function::setExecContrib(float contrib)
 {
-	ExecContrib = contrib;
+	_ExecContrib = contrib;
 }
 
 void Function::print()
 {
-	cout<<"("<<FunctionNo<<" , "<<ExecContrib<<")"<<endl;
+	cout<<"("<<_FunctionNo<<" , "<<_ExecContrib<<")"<<endl;
 }
 

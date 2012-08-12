@@ -105,4 +105,10 @@ void Partition::Print()
 	unsigned int i;
 	for(i=0;i<_nClusters;i++)
 		_Clusters[i].Print();
+	
+	cout<<"Cost of Partition = "<<Cost()<<endl;
+	cout<<"BalancingPenalty = "<<BalancingPenalty()<<endl;
+	cout<<"CommunicationCost = "<<CommunicationCost()<<endl;
+	cout<<"CouplingDegree = "<<CouplingDegree()<<endl;
+	
 }

@@ -5,27 +5,32 @@
 
 using namespace std;
 
-ULL commLow = 500;
+ULL commLow  = 100;
 ULL commHigh = 10000;
+ULL execLow  = 10;
+ULL execHigh = 1000;
 
 Application::Application(unsigned int nftns)
 {
 	RNG rng;
 	unsigned int i,j;
-	static ULL cummContrib=100;
-	ULL contrib;
+	ULL totalExecTime=0;
+	ULL execTime;
 	
 	_TotalFunctions = nftns;
 	_Functions = new Function[ _TotalFunctions ];
 
-	for(i=0;i<_TotalFunctions - 1; i++) //got till one less than the total nodes
+	for(i=0;i<_TotalFunctions; i++)
 	{
-		contrib = ( abs( rng.rand_int31() ) % (cummContrib + 1 ) );
-		_Functions[i].setExecContrib(contrib);
-		cummContrib -= contrib;
+		execTime = ( abs( rng.rand_int31() ) % (execHigh - execLow + 1 ) );
+		_Functions[i].setExecContrib(execTime);
+		totalExecTime += execTime;
 	}
-	_Functions[i].setExecContrib(cummContrib); //last should get the remaining
 	
+	for(i=0;i<_TotalFunctions; i++)
+	{
+		_Functions[i].setExecContrib( _Functions[i].getExecContrib() / totalExecTime * 100.0);
+	}
 	
 	_Edges = new Edge* [_TotalFunctions];
 	if( _Edges == NULL)	{ cout<<"\n Memory Allocation Error "<<endl;  exit(1); }
@@ -36,17 +41,32 @@ Application::Application(unsigned int nftns)
 		if(_Edges[i] == NULL)	{ cout<<"\n Memory Allocation Error "<<endl;  exit(1); }
 	}
 
+	double totalComm=0;
+	float comm;
 	for(i=0 ; i < _TotalFunctions ; i++)
 	{
 		for(j=0;j< _TotalFunctions;j++)
 		{
 			//some links will not be there
-			_Edges[i][j].setWeight( ( abs( rng.rand_int31() ) % (1 - 0 + 1 ) ) ); 
-			
+			comm = ( abs( rng.rand_int31() ) % (1 - 0 + 1 ) );
+		
 			//the links which are there now should get random communication
-			_Edges[i][j].setWeight( _Edges[i][j].getWeight() * ( abs( rng.rand_int31() ) % (commHigh - commLow + 1 ) ) ); 
+			comm = comm * ( abs( rng.rand_int31() ) % (commHigh - commLow + 1 ) );
+			
+			_Edges[i][j].setWeight(comm); 
+			totalComm += comm;
 		}
 	}	
+	
+	for(i=0 ; i < _TotalFunctions ; i++)
+	{
+		for(j=0;j< _TotalFunctions;j++)
+		{
+			//some links will not be there
+			_Edges[i][j].setWeight( _Edges[i][j].getWeight()/totalComm * 100 ); 
+		}
+	}
+	
 }
 
 void Application::print()

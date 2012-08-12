@@ -1,9 +1,7 @@
 #include <iostream>
 #include <climits>
-#include <cstring>
 #include <cstdlib>
 #include <cmath>
-#include <ctime>
 
 #include "bruteforce.h"
 #include "edge.h"
@@ -11,6 +9,7 @@
 #include "partition.h"
 #include "count.h"
 #include "globals.h"
+#include "utility.h"
 
 using namespace std;
 
@@ -24,6 +23,8 @@ Application * applic;
 int main(int argc, char *argv[])
 {
 	int n,k;
+	Timer *timer = new Timer();
+	
 	if(argc!=3) 
 	{
 		cout<<"syntax: "<<argv[0]<<" n k <t>"<<endl;
@@ -40,8 +41,9 @@ int main(int argc, char *argv[])
 	Algorithm * bforce = new Bruteforce();
 	long long totalPartitions = Count(n,k);
 	
+	timer->Start();
 	bforce->Apply( *applic , k );
-	cout<<"Total Partitions Evaluated = "<<totalPartitions<<endl;
+	timer->Stop();
 	
 	#ifdef STORE_PARTITIONS
 	cout<<"Partitions evaluated are :"<<endl;
@@ -52,13 +54,18 @@ int main(int argc, char *argv[])
 	}
 	#endif
 
+
 	#ifdef STORE_COSTS
-	cout<<"Costs of evaluated Partitions are ... "<<endl;
 	float minCost=Costs[0];
 	float maxCost=Costs[0];
+	#ifdef DEBUG 
+	cout<<"Costs of evaluated Partitions are ... "<<endl;
+	#endif
 	for(int i=0 ; i < totalPartitions ; i++)
 	{
+		#ifdef DEBUG 
 		cout<<"\t Partition "<<i<<" Cost = "<<Costs[i]<<endl;
+		#endif
 		
 		if(Costs[i]<minCost) minCost = Costs[i];
 		if(Costs[i]>maxCost) maxCost = Costs[i];
@@ -66,6 +73,12 @@ int main(int argc, char *argv[])
 	cout<<"Minimum Cost = "<<minCost<<endl;
 	cout<<"Maximum Cost = "<<maxCost<<endl;
 	#endif
+
+	cout<<"Total Partitions Evaluated = "<<totalPartitions<<endl;
+	timer->Print(); //print time
+	
+	cout<<"\nDetails of Best Partition found..."<<endl;
+	bestPartition.Print();
 	
 	return 0; 
 }

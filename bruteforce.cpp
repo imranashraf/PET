@@ -17,6 +17,8 @@ static int parCount=0;
 Partition * Partitions;
 #endif
 
+Partition bestPartition;
+
 #ifdef STORE_COSTS
 float * Costs;
 #endif
@@ -53,6 +55,9 @@ static void _Bruteforce(int n)
 		part.Print();
 		cout<<"Cost of Partition = "<<part.Cost()<<endl<<endl;
 		#endif
+		
+		if( (part.Cost() ) < (bestPartition.Cost() ) )
+			bestPartition = part;
 		
 		parCount++;
     }

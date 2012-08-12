@@ -17,6 +17,8 @@
 extern Partition * Partitions;
 #endif
 
+extern Partition bestPartition;
+
 #ifdef STORE_COSTS
 extern float * Costs;
 #endif

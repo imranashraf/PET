@@ -1,14 +1,17 @@
 #include<iostream>
+#include<iomanip>
+#include <fstream>
 
 #include"application.h"
 #include"rng.h"
 
 using namespace std;
 
-ULL commLow  = 100;
-ULL commHigh = 10000;
+ULL commLow  = 4;
+ULL commHigh = 100000;
 ULL execLow  = 10;
 ULL execHigh = 1000;
+int PERCENT_CONNECTIVITY = 50;
 
 Application::Application(unsigned int nftns)
 {
@@ -41,29 +44,34 @@ Application::Application(unsigned int nftns)
 		if(_Edges[i] == NULL)	{ cout<<"\n Memory Allocation Error "<<endl;  exit(1); }
 	}
 
-	double totalComm=0;
+	double totalcomm=0;
+	double maxcomm=0;
 	float comm;
 	for(i=0 ; i < _TotalFunctions ; i++)
 	{
 		for(j=0;j< _TotalFunctions;j++)
 		{
 			//some links will not be there
-			comm = ( abs( rng.rand_int31() ) % (1 - 0 + 1 ) );
+			comm = ( ( abs( rng.rand_int31() ) % 100 ) < PERCENT_CONNECTIVITY ? 1 : 0 );
 		
 			//the links which are there now should get random communication
 			comm = comm * ( abs( rng.rand_int31() ) % (commHigh - commLow + 1 ) );
 			
 			_Edges[i][j].setWeight(comm); 
-			totalComm += comm;
+			totalcomm += comm;
+			if(comm > maxcomm) maxcomm = comm;
 		}
 	}	
 	
+	_MaxComm = maxcomm;
+	_TotalComm = totalcomm;
+
 	for(i=0 ; i < _TotalFunctions ; i++)
 	{
 		for(j=0;j< _TotalFunctions;j++)
 		{
 			//some links will not be there
-			_Edges[i][j].setWeight( _Edges[i][j].getWeight()/totalComm * 100 ); 
+			_Edges[i][j].setWeight( _Edges[i][j].getWeight()/totalcomm * 100 ); 
 		}
 	}
 	
@@ -73,6 +81,9 @@ void Application::print()
 {
 	unsigned int i,j;
 	
+	cout<<setiosflags(ios::fixed | ios::showpoint);
+	cout<<setprecision(2);
+	
 	cout<<endl<<"Functions"<<endl;
 	for(i=0; i< _TotalFunctions; i++)
 		_Functions[i].print();
@@ -80,7 +91,7 @@ void Application::print()
 	cout<<endl<<"Edges";
 
 	for(i=0;i < _TotalFunctions;i++)
-		cout<<"\t"<<i;
+		cout<<setw(6)<<i;
 	
 	cout<<endl;
 	
@@ -88,13 +99,58 @@ void Application::print()
 	{
 		for(j=0;j< _TotalFunctions;j++)
 			if(j==0)
-				cout<<i<<"\t"<<_Edges[i][j].getWeight();
+				cout<<setw(6)<<i<<setw(6)<<_Edges[i][j].getWeight();
 			else
-				cout<<"\t"<<_Edges[i][j].getWeight();
+				cout<<setw(6)<<_Edges[i][j].getWeight();
 			
 			cout<<endl;
 	}
 	cout<<endl;
-	
-	
+	cout<<resetiosflags(ios::fixed | ios::showpoint);
 }
+
+void Application::Print2Dot()
+{
+	int color;
+	unsigned int comm,prod,cons;
+	unsigned int i, j;
+	
+	ofstream dotf;
+	dotf.open("Graph.dot");
+	if (dotf.fail()) {cout<<"\n failed opening the DOT file.\n"; exit(1); }
+	
+	dotf<<"digraph {"<<endl
+		<<"graph [];"<<endl
+		<<"node [fontcolor=black, style=filled, fontsize=20];"<<endl
+		<<"edge [fontsize=14, arrowhead=vee, arrowsize=0.5];"<<endl;	
+
+	for(i=0; i< _TotalFunctions; i++)
+	{
+		dotf<<"\""<<i<<"\""<<" [label="<<"\""<<_Functions[i].getFunctionNo()<<"\""<<"];"<<endl;
+	}
+	
+	for(i=0;i < _TotalFunctions;i++)
+	{
+		for(j=0;j< _TotalFunctions;j++)
+		{
+			comm = ( _Edges[i][j].getWeight() ) * _TotalComm / 100;
+			if(comm == 0 ) continue;
+			
+			prod = _Functions[i].getFunctionNo();
+			cons = _Functions[j].getFunctionNo();
+			
+			color = (int) (  1023 *  log((double)(comm )) / log((double)_MaxComm)  ); 
+			
+			dotf<<"\""<<prod<<"\""<<" -> "<<"\""<<cons<<"\""
+				<<" [label="<<"\""<<comm<<" Bytes "<<"\""
+				<<" color="<<"\""<<"#"<<max(0,color-768)<<min(255,512-abs(color-512))<<max(0,min(255,512-color))
+				<<"\"]"
+				<<endl;
+		}
+	}
+	
+	dotf<<"}"<<endl;
+	
+	dotf.close();
+}
+

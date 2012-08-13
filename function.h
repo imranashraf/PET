@@ -20,6 +20,7 @@ class Function
 
 		void setExecContrib(float contrib);
 		float getExecContrib(){return _ExecContrib;}
+		unsigned int getFunctionNo(){return _FunctionNo;}
 		void print();
 
 };

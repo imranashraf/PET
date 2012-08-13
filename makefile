@@ -25,7 +25,8 @@ $(EXEC): $(OBJECTS)
 	$(CC) -c $(CFLAGS) $< -o $@ 
 
 run: $(EXEC)     #   n  k 
-	@-./$(EXEC)  4  2
+	@-./$(EXEC)  10  3
+	@-cat Graph.dot | dot -Tpdf -o Graph.pdf
 
 gprof: CFLAGS= -Wall -g -fopenmp -pg 
 gprof: LDFLAGS=-fopenmp -pg
@@ -41,4 +42,4 @@ open:
 	
 
 clean:
-	@-rm -f $(OBJECTS) $(EXEC) *~ gmon.out $(PROFILE)
+	@-rm -f $(OBJECTS) $(EXEC) *~ gmon.out $(PROFILE) Graph.dot Graph.pdf

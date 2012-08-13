@@ -77,8 +77,10 @@ int main(int argc, char *argv[])
 	cout<<"Total Partitions Evaluated = "<<totalPartitions<<endl;
 	timer->Print(); //print time
 	
-	cout<<"\nDetails of Best Partition found..."<<endl;
+	cout<<"\nDetails of Best Partition ..."<<endl;
 	bestPartition.Print();
+	
+	applic->Print2Dot();
 	
 	return 0; 
 }

@@ -90,9 +90,9 @@ void Bruteforce_kfixed(int n, int k)
     free(partition);
 }
 
-void Bruteforce::Apply(Application applic , unsigned int k)
+void Bruteforce::Apply(unsigned int k)
 {
-	unsigned int n = applic.getTotalFunctions();
+	unsigned int n = applic->getTotalFunctions();
 	long long nPartitions = Count(n,k);
 	
 	#ifdef STORE_PARTITIONS

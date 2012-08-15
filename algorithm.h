@@ -9,7 +9,7 @@ class Algorithm
 	public:
 		Algorithm(){}
 		
-		virtual void Apply(Application applic , unsigned int k)=0;
+		virtual void Apply(unsigned int k)=0;
 	
 };
 

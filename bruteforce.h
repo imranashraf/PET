@@ -18,7 +18,7 @@ class Bruteforce : public Algorithm
 	public:
 		Bruteforce(){}
 		
-		void Apply(Application applic , unsigned int k);
+		void Apply(unsigned int k);
 		
 };
 

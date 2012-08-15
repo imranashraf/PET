@@ -14,8 +14,9 @@
 #temporary files
 *~
 profile.txt
+profile.pdf
 gmon.out
-Graph.dot
-Graph.pdf
+graph.dot
+graph.pdf
 
 

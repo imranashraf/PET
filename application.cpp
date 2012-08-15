@@ -8,7 +8,7 @@
 using namespace std;
 
 ULL commLow  = 4;
-ULL commHigh = 100000;
+ULL commHigh = 1000000;
 ULL execLow  = 10;
 ULL execHigh = 1000;
 int PERCENT_CONNECTIVITY = 50;
@@ -112,11 +112,11 @@ void Application::print()
 void Application::Print2Dot()
 {
 	int color;
-	unsigned int comm,prod,cons;
+	unsigned int comm, prod, cons;
 	unsigned int i, j;
 	
 	ofstream dotf;
-	dotf.open("Graph.dot");
+	dotf.open("graph.dot");
 	if (dotf.fail()) {cout<<"\n failed opening the DOT file.\n"; exit(1); }
 	
 	dotf<<"digraph {"<<endl
@@ -142,9 +142,18 @@ void Application::Print2Dot()
 			color = (int) (  1023 *  log((double)(comm )) / log((double)_MaxComm)  ); 
 			
 			dotf<<"\""<<prod<<"\""<<" -> "<<"\""<<cons<<"\""
-				<<" [label="<<"\""<<comm<<" Bytes "<<"\""
-				<<" color="<<"\""<<"#"<<max(0,color-768)<<min(255,512-abs(color-512))<<max(0,min(255,512-color))
+				<<" [label="<<"\""
+				<<comm<<" Bytes "<<"\""
+				<<" color= "<<"\""<<"#"
+				<<std::noshowbase<<std::hex
+ 				<<std::setw(2)<<std::setfill('0')
+				<<max(0,color-768)
+				<<std::setw(2)<<std::setfill('0')				
+				<<min(255,512-abs(color-512))
+				<<std::setw(2)<<std::setfill('0')				
+				<<max(0,min(255,512-color))
 				<<"\"]"
+ 				<<std::dec
 				<<endl;
 		}
 	}

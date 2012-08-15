@@ -3,7 +3,6 @@ CFLAGS=-Wall -O3 -fopenmp
 LDFLAGS= -fopenmp
 LIBS=-lm
 CSRCS=
-PROFILE=profile.txt
 
 CPPSRCS=main.cpp rng.cpp edge.cpp function.cpp application.cpp \
 	cluster.cpp partition.cpp algorithm.cpp bruteforce.cpp \
@@ -26,15 +25,17 @@ $(EXEC): $(OBJECTS)
 
 run: $(EXEC)     #   n  k 
 	@-./$(EXEC)  10  3
-	@-cat Graph.dot | dot -Tpdf -o Graph.pdf
+	@-cat graph.dot | dot -Tpdf -o graph.pdf
 
-gprof: CFLAGS= -Wall -g -fopenmp -pg 
+gprof: CFLAGS= -Wall -g -O3 -fopenmp -pg 
 gprof: LDFLAGS=-fopenmp -pg
 gprof: clean all
 gprof:    	 #   n  k 
 	@-./$(EXEC)  12  4
-	@-gprof -b ./$(EXEC) > $(PROFILE)
-	
+	@-gprof -b ./$(EXEC) > profile.txt
+	@-cat profile.txt | ./gprof2dot.py --skew=0.01 | dot -Tpdf -o profile.pdf 
+# 	@-cat profile.txt | ./gprof2dot.py -e0 -n0 --skew=0.01 | dot -Tpdf -o profile.pdf   #all functions
+
 open:
 	kate makefile globals.h main.cpp algorithm.h algorithm.cpp bruteforce.h bruteforce.cpp \
 	application.h application.cpp edge.h edge.cpp function.h function.cpp \
@@ -42,4 +43,4 @@ open:
 	
 
 clean:
-	@-rm -f $(OBJECTS) $(EXEC) *~ gmon.out $(PROFILE) Graph.dot Graph.pdf
+	@-rm -f $(OBJECTS) $(EXEC) *~ gmon.out graph.dot graph.pdf profile.txt profile.pdf

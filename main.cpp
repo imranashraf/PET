@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 	long long totalPartitions = Count(n,k);
 	
 	timer->Start();
-	bforce->Apply( *applic , k );
+	bforce->Apply(k); 
 	timer->Stop();
 	
 	#ifdef STORE_PARTITIONS

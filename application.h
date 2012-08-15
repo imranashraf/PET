@@ -16,7 +16,8 @@ class Application
 	public:
 		Application(){}
 		Application(unsigned int nodes);
-		unsigned int getTotalFunctions(){ return _TotalFunctions; };
+		unsigned int getTotalFunctions() const
+			{ return _TotalFunctions; };
 		float getFunctionContrib(unsigned int fno){ return _Functions[fno].getExecContrib(); }
 		unsigned long long getEdgeWeight(unsigned int i, unsigned int j){return _Edges[i][j].getWeight();}
 		void print();

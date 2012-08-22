@@ -1,5 +1,5 @@
-#ifndef _COUNT_H
-#define _COUNT_H
+#ifndef COUNT_H
+#define COUNT_H
 
 long long factorial(long long number);
 long long sterling_2nd(int n, int k);

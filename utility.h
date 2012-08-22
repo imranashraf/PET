@@ -1,5 +1,5 @@
-#ifndef _UTILITY_H
-#define _UTILITY_H
+#ifndef UTILITY_H
+#define UTILITY_H
 
 #include <sys/time.h>
  
@@ -15,5 +15,8 @@ class Timer
 		void Stop();
 		void Print();
 };
+
+void bsort(double Array[], int n);
+int Max(double Array[], int n);
 
 #endif 

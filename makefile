@@ -4,9 +4,9 @@ LDFLAGS= -fopenmp
 LIBS=-lm
 CSRCS=
 
-CPPSRCS=main.cpp rng.cpp edge.cpp function.cpp application.cpp \
+CPPSRCS=main.cpp rng.cpp edge.cpp application.cpp function.cpp \
 	cluster.cpp partition.cpp algorithm.cpp bruteforce.cpp \
-	count.cpp utility.cpp
+	heuristic.cpp count.cpp utility.cpp
 
 OBJECTS=$(CSRCS:.c=.o)
 OBJECTS+=$(CPPSRCS:.cpp=.o)
@@ -38,6 +38,7 @@ gprof:    	 #   n  k
 
 open:
 	kate makefile globals.h main.cpp algorithm.h algorithm.cpp bruteforce.h bruteforce.cpp \
+	heuristic.h heuristic.cpp \
 	application.h application.cpp edge.h edge.cpp function.h function.cpp \
 	partition.h partition.cpp cluster.h cluster.cpp &
 	

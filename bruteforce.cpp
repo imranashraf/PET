@@ -5,7 +5,6 @@
 
 #include "bruteforce.h"
 #include "count.h"
-#include "globals.h"
 
 using namespace std;
 
@@ -92,7 +91,7 @@ void Bruteforce_kfixed(int n, int k)
 
 void Bruteforce::Apply(unsigned int k)
 {
-	unsigned int n = applic->getTotalFunctions();
+	UINT n = applic->getTotalFunctions();
 	long long nPartitions = Count(n,k);
 	
 	#ifdef STORE_PARTITIONS

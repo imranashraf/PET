@@ -1,14 +1,19 @@
-#ifndef _NODE_H
-#define _NODE_H
+#ifndef _FUNCTION_H
+#define _FUNCTION_H
+
+#include <iostream>
 
 typedef unsigned long long ULL;
+typedef unsigned int UINT;
+
 static int count = 0;
 
 class Function
 {
 	private:
 		float _ExecContrib;
-		unsigned int _FunctionNo;
+		UINT _FunctionNo;
+		double * _Ranks;
 
 	public:
 		Function(){_ExecContrib=0; _FunctionNo=count++;}
@@ -20,9 +25,15 @@ class Function
 
 		void setExecContrib(float contrib);
 		float getExecContrib(){return _ExecContrib;}
-		unsigned int getFunctionNo(){return _FunctionNo;}
+		UINT getFunctionNo(){return _FunctionNo;}
+		void CreateRanks(UINT k)
+		{
+			_Ranks = new double[k];
+			if(_Ranks==NULL)
+				std::cout<<"Could not allocate memory for Ranks "<<std::endl;
+		}
+		
 		void print();
-
 };
 
 #endif

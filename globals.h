@@ -14,15 +14,18 @@
 #define STORE_COSTS
 
 #ifdef STORE_PARTITIONS
-extern Partition * Partitions;
+extern Partition* Partitions;
 #endif
 
 extern Partition bestPartition;
+extern Partition heurPartition;
 
 #ifdef STORE_COSTS
-extern float * Costs;
+extern float* Costs;
 #endif
 
-extern Application * applic;
+extern Application* applic;
+
+typedef unsigned int UINT;
 
 #endif

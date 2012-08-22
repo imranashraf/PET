@@ -1,9 +1,11 @@
-#include<iostream>
-#include<iomanip>
+#include <iostream>
+#include <iomanip>
 #include <fstream>
 
-#include"application.h"
-#include"rng.h"
+#include "application.h"
+#include "rng.h"
+#include "utility.h"
+#include "globals.h"
 
 using namespace std;
 
@@ -22,19 +24,25 @@ Application::Application(unsigned int nftns)
 	
 	_TotalFunctions = nftns;
 	_Functions = new Function[ _TotalFunctions ];
+	double* contribArray = new double[ _TotalFunctions ];
 
 	for(i=0;i<_TotalFunctions; i++)
 	{
 		execTime = ( abs( rng.rand_int31() ) % (execHigh - execLow + 1 ) );
-		_Functions[i].setExecContrib(execTime);
+		contribArray[i] = execTime;
 		totalExecTime += execTime;
 	}
 	
+	//sort the contribArray in descending order 
+	//this is only needed to simplify the initial selection in heuristic
+	bsort(contribArray, _TotalFunctions);
+		
 	for(i=0;i<_TotalFunctions; i++)
 	{
-		_Functions[i].setExecContrib( _Functions[i].getExecContrib() / totalExecTime * 100.0);
+		std::cout<<contribArray[i]<<" ";
+		_Functions[i].setExecContrib( contribArray[i] / totalExecTime * 100.0);
 	}
-	
+
 	_Edges = new Edge* [_TotalFunctions];
 	if( _Edges == NULL)	{ cout<<"\n Memory Allocation Error "<<endl;  exit(1); }
 	

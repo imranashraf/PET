@@ -1,6 +1,7 @@
 #ifndef _BRUTEFORCE_H
 #define _BRUTEFORCE_H
 
+#include "globals.h"
 #include "algorithm.h"
 #include "application.h"
 #include "partition.h"
@@ -18,7 +19,7 @@ class Bruteforce : public Algorithm
 	public:
 		Bruteforce(){}
 		
-		void Apply(unsigned int k);
+		void Apply(UINT k);
 		
 };
 

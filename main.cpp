@@ -4,6 +4,7 @@
 #include <cmath>
 
 #include "bruteforce.h"
+#include "heuristic.h"
 #include "edge.h"
 #include "application.h"
 #include "partition.h"
@@ -12,11 +13,6 @@
 #include "utility.h"
 
 using namespace std;
-
-/*void partition_cost(int n, int k, int *partition)
-{
-	
-}*/
 
 Application * applic;
 
@@ -37,6 +33,11 @@ int main(int argc, char *argv[])
 
 	applic = new Application(n);
 	applic->print();
+
+	/********  Exhaustive Search ********/
+	cout<<"====================================";
+	cout<<endl<<"Exhaustive Search Summary"<<endl;
+	cout<<"===================================="<<endl;
 	
 	Algorithm * bforce = new Bruteforce();
 	long long totalPartitions = Count(n,k);
@@ -81,6 +82,22 @@ int main(int argc, char *argv[])
 	bestPartition.Print();
 	
 	applic->Print2Dot();
+
+	
+	/********  Heuristic ********/
+	cout<<"====================================";
+	cout<<endl<<"Heuristic Search Summary"<<endl;
+	cout<<"===================================="<<endl;
+	
+	Algorithm * heuristic = new Heuristic();
+	
+	timer->Start();
+	heuristic->Apply(k); 
+	timer->Stop();
+	timer->Print(); //print time
+	
+// 	cout<<"\nDetails of Partition ..."<<endl;
+//  	heurPartition.Print();
 	
 	return 0; 
 }

@@ -6,9 +6,9 @@
 
 using namespace std;
 
-bool Cluster::inCluster(unsigned int fno)
+bool Cluster::inCluster(UINT fno)
 {
-	unsigned int i;
+	UINT i;
 	for(i=0; i<_FunctionCount; i++)
 		if(_Functions[i] == fno) return true;
 	
@@ -46,22 +46,23 @@ float Cluster::InternalComm()
 float Cluster::ExecCost()
 {
 	float EC=0.0;
-	unsigned int i;
+	UINT i;
 	
-	for(i=0;i<_FunctionCount;i++)
+	for(i=0; i<_FunctionCount; i++)
 		EC += applic->getFunctionContrib( _Functions[i] );
 		
 	return EC;
 }
 
-Cluster::Cluster(unsigned int totalFunctions)
+Cluster::Cluster(UINT totalFunctions)
 { 
 	_FunctionCount = 0; 
+	_Status = UnFinished;
 	_FunctionCapacity = totalFunctions;
 	
 	//for simplicity, we reserve a space equivalent to the space
 	//of total number of Functions in this application.
-	_Functions = new unsigned int [_FunctionCapacity]; 
+	_Functions = new UINT [_FunctionCapacity]; 
 	if(_Functions == NULL)
 	{
 		cout<<"Memory Error"<<endl;
@@ -69,14 +70,14 @@ Cluster::Cluster(unsigned int totalFunctions)
 	}
 }
 
-void Cluster::setFunctionCapacity(unsigned int totalFunctions)
+void Cluster::setFunctionCapacity(UINT totalFunctions)
 { 
 	_FunctionCount = 0; 
 	_FunctionCapacity = totalFunctions;
 	
 	//for simplicity, we reserve a space equivalent to the space
 	//of total number of Functions in this application.
-	_Functions = new unsigned int [_FunctionCapacity]; 
+	_Functions = new UINT [_FunctionCapacity]; 
 	if(_Functions == NULL)
 	{
 		cout<<"Memory Error"<<endl;
@@ -84,12 +85,23 @@ void Cluster::setFunctionCapacity(unsigned int totalFunctions)
 	}
 }
 
-void Cluster::addFunction(unsigned int fno)
+void Cluster::addFunction(UINT fno)
 {
 	if(_FunctionCount < _FunctionCapacity)
 	{
 		_Functions[_FunctionCount]=fno;
 		_FunctionCount++;
+		
+		//update the set of neighbours of this cluster
+		UINT i;
+		UINT n = applic->getTotalFunctions();
+		
+		//remove fno from the neighbours if there ...
+		_Neighbours.erase(fno);
+		
+		for(i=0; i<n ;i++)
+			if( (applic->getEdgeWeight(fno,i)) > 0 && inCluster(i) == false)	
+				_Neighbours.insert(i);
 	}
 	else //should not come here in the current implementation
 	{
@@ -100,10 +112,27 @@ void Cluster::addFunction(unsigned int fno)
 
 void Cluster::Print()
 {
-	cout<<_FunctionCount<<" functions in Cluster ( ";
-	for(unsigned int i =0; i< _FunctionCount; i++)
+	cout<<_FunctionCount<<" functions ( ";
+	for(UINT i =0; i< _FunctionCount; i++)
 	{
 		cout<<_Functions[i]<<"  ";
 	}
 	cout<<")"<<endl;
 }
+
+// void Cluster::UpdateNeighbours()
+// {
+// 	//update the set of neighbours of this cluster
+// 	UINT i,j;
+// 	UINT n = applic->getTotalFunctions();
+// 	
+// 	for(i=0; i<n ;i++)
+// 	{
+// 		for(j=0; j<n ;j++)
+// 		{
+// 			if( inCluster(i) == true && inCluster(j) == false  && (applic->getEdgeWeight(i,j) ) > 0 )
+// 				_Neighbours.insert(j);
+// 		}
+// 	}
+// 	
+// }

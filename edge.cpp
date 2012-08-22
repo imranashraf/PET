@@ -1,8 +1,8 @@
-#include<iostream>
-#include<stdio.h>
-#include<stdlib.h>
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
 
-#include"edge.h"
+#include "edge.h"
 #include "rng.h"
 
 using namespace std;

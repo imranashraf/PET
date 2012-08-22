@@ -10,7 +10,7 @@ const float GAMMA = 0.5;
 
 using namespace std;
 
-Partition::Partition(unsigned int totalFunctions, unsigned int nclusters)
+Partition::Partition(UINT totalFunctions, UINT nclusters)
 {
 	_nClusters = nclusters; 
 	_Clusters = new Cluster[_nClusters];
@@ -19,11 +19,11 @@ Partition::Partition(unsigned int totalFunctions, unsigned int nclusters)
 		cout<<"Could not allocate memory for clusters in partition"<<endl;
 		exit(1);
 	}
-	for(unsigned int i=0;i<_nClusters;i++)
+	for(UINT i=0;i<_nClusters;i++)
 		_Clusters[i].setFunctionCapacity(totalFunctions);
 }
 
-void Partition::setCluster(unsigned int totalFunctions, unsigned int nclusters)
+void Partition::setCluster(UINT totalFunctions, UINT nclusters)
 {
 	_nClusters = nclusters; 
 	_Clusters = new Cluster[_nClusters];
@@ -32,11 +32,11 @@ void Partition::setCluster(unsigned int totalFunctions, unsigned int nclusters)
 		cout<<"Could not allocate memory for clusters in partition"<<endl;
 		exit(1);
 	}
-	for(unsigned int i=0;i<_nClusters;i++)
+	for(UINT i=0;i<_nClusters;i++)
 		_Clusters[i].setFunctionCapacity(totalFunctions);
 }
 
-void Partition::addFunction(unsigned int ftnNo, unsigned int clusterNo)
+void Partition::addFunction(UINT ftnNo, UINT clusterNo)
 {
 	_Clusters[clusterNo].addFunction(ftnNo);
 }
@@ -46,7 +46,7 @@ float Partition::BalancingPenalty()
 	float EC=0.0, BP=0.0;
 	float * ECi = new float [_nClusters];
 	
-	unsigned int i;
+	UINT i;
 	
 	for( i=0; i< _nClusters ; i++)
 	{
@@ -65,7 +65,7 @@ float Partition::BalancingPenalty()
 float Partition::CommunicationCost()
 {
 	float commcost=0.0;
-	unsigned int i;
+	UINT i;
 	
 	for( i=0; i< _nClusters ; i++)
 	{
@@ -78,7 +78,7 @@ float Partition::CommunicationCost()
 float Partition::CouplingDegree()
 {
 	float copdegree=0.0;
-	unsigned int i;
+	UINT i;
 	
 	for( i=0; i< _nClusters ; i++)
 		copdegree += _Clusters[i].InternalComm();
@@ -102,9 +102,12 @@ float Partition::Cost()
 
 void Partition::Print()
 {
-	unsigned int i;
+	UINT i;
 	for(i=0;i<_nClusters;i++)
+	{
+		cout<<" Cluster "<<i<<" has ";
 		_Clusters[i].Print();
+	}
 	
 	cout<<"Cost of Partition = "<<Cost()<<endl;
 	cout<<"BalancingPenalty = "<<BalancingPenalty()<<endl;

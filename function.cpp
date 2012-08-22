@@ -1,4 +1,4 @@
-#include<iostream>
+#include <iostream>
 
 #include "function.h"
 #include "rng.h"

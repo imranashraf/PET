@@ -1,5 +1,5 @@
-#ifndef _GRAPH_H
-#define _GRAPH_H
+#ifndef _EDGE_H
+#define _EDGE_H
 
 #include<cstdlib>
 

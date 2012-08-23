@@ -119,20 +119,3 @@ void Cluster::Print()
 	}
 	cout<<")"<<endl;
 }
-
-// void Cluster::UpdateNeighbours()
-// {
-// 	//update the set of neighbours of this cluster
-// 	UINT i,j;
-// 	UINT n = applic->getTotalFunctions();
-// 	
-// 	for(i=0; i<n ;i++)
-// 	{
-// 		for(j=0; j<n ;j++)
-// 		{
-// 			if( inCluster(i) == true && inCluster(j) == false  && (applic->getEdgeWeight(i,j) ) > 0 )
-// 				_Neighbours.insert(j);
-// 		}
-// 	}
-// 	
-// }

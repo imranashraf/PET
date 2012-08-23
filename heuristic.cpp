@@ -1,4 +1,4 @@
-
+#include <list>
 #include "heuristic.h"
 #include "utility.h"
 
@@ -58,13 +58,17 @@ void Heuristic::Apply(UINT k)
 {
 	UINT n = applic->getTotalFunctions();
 	Partition partition(n,k);
-	UINT i,j,cno,fno, indexOfMax;
+	UINT cno,cno1,cno2,fno;
 	
-	UINT *Candidates = new UINT[k];
+	int *Marked = new int[k];	//array to hold the marked functions for each cluster
 	
-	double **Ranks = new double*[k];	//Ranks 2D array will have the ranks of each node for each cluster
-	for(i=0;i<k;i++)
-		Ranks[i] = new double[n];
+	typedef std::list<UINT> CandidateList;
+	CandidateList * Candidates = new CandidateList[k];
+	std::list<UINT>::iterator itList;
+	
+	double **Ranks = new double*[k];	//Ranks 2D array will have the rank of each function for each cluster
+	for(cno=0;cno<k;cno++)
+		Ranks[cno] = new double[n];
 	
 	InitialSelection(partition, k);
 	
@@ -73,6 +77,9 @@ void Heuristic::Apply(UINT k)
 	{
 		UINT nNeighbours;	
 		
+		for(cno1=0;cno1<k;cno1++)
+			Marked[cno1] = -1; //no function is marked for cno1
+			
 		if( (partition.getClusterStatus(cno)) == UnFinished)
 		{
 			//find the neighbouring nodes of cluster cno
@@ -94,29 +101,52 @@ void Heuristic::Apply(UINT k)
 // 				Ranks[cno][fno] = partition.EvaluateRanks(cno, fno, Neighbours);
 // 				std::cout<<"Cluster = "<<cno<<" Neighbour = "<<fno<<endl;
  				Ranks[cno][fno] = EvaluateRanks(cno, fno, Neighbours);
+				if( Candidates[cno].empty() )
+				{
+					Candidates[cno].push_back(fno);
+				}
+				else
+				{
+					for(itList = Candidates[cno].begin(); itList != Candidates[cno].end(); itList++)
+						if( Ranks[cno][*itList] <= Ranks[cno][fno] )
+							Candidates[cno].insert(itList,fno);
+				}
+				
 			}
 			
-			//sort candidates in descending order based on rank
-			indexOfMax = Max(&Ranks[cno][0] , n);
-			//mark the candidate with the highest rank for merging to cluster cno
-			Candidates[cno] = indexOfMax;
+			//sort candidates in descending order based on rank 
+			//(not needed as already placed in right order)
+			
+			//the candidate with the highest rank will be marked for merging to cluster cno
+			itList = Candidates[cno].begin();		//point to the first element
+			Marked[cno] = *itList; //mark it for this cluster cno
 		}
 	}
 	
 	//Phase 2 (Conflict Resolution)
 	//favor the cluster in which candidate has highest score
-	for	(i=0; i<k; i++)
-		for	(j=0; j<k; j++)
-			if(Candidates[i] == Candidates[j] && (i!=j) )
-				Candidates[j] = Ranks[j][0];
+	itList = Candidates[cno].begin();
+	for	(cno1=0; cno1<k; cno1++)
+		for	(cno2=0; cno2<k; cno2++)
+			if(Candidates[cno1] == Candidates[cno2] && (cno1 != cno2) )
+			{
+				cout<<"Resolving Conflict"<<endl;
+				Marked[cno2] = -1;	//so cno1 is preffered without any criteria for now
+									//and cno2 will not have any marked candidate for merging
+									//this can be changed to give priority to highest rank function later
+				//Candidates[cno2][*itList] = Candidates[cno2][*itList];
+			}
 				
 	
 	//Phase 3 (Merging)
 	//add the top candidates to the cluster
 	for	(cno=0; cno<k; cno++)
 	{
-		partition.addFunction( Candidates[cno] , cno );
-		//cout<<"Add "<<Candidates[cno]<<" to cluster "<<cno<<endl;
+		if(Marked[cno] != -1)	//if there is candidate marked for merging
+		{
+			partition.addFunction( Marked[cno] , cno );		//merg it to cluster cno
+			//cout<<"Add "<<Candidates[cno]<<" to cluster "<<cno<<endl;
+		}
 	}
 	
 	cout<<"\nDetails of Partition ..."<<endl;

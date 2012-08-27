@@ -13,14 +13,17 @@ class Function
 	private:
 		float _ExecContrib;
 		UINT _FunctionNo;
+		UINT _ClusterNo;	//no of the cluster to which this function belongs
+							//-1 for not assigned yet
 		double * _Ranks;
 
 	public:
-		Function(){_ExecContrib=0; _FunctionNo=count++;}
+		Function(){_ExecContrib=0; _FunctionNo=count++; _ClusterNo=-1;}
 		Function(float contrib)
 		{
 			_ExecContrib = contrib;
 			_FunctionNo=count++;
+			_ClusterNo=-1;
 		}
 
 		void setExecContrib(float contrib);
@@ -31,6 +34,14 @@ class Function
 			_Ranks = new double[k];
 			if(_Ranks==NULL)
 				std::cout<<"Could not allocate memory for Ranks "<<std::endl;
+		}
+		
+		void setClusterNo(UINT cno){_ClusterNo = cno;}
+		UINT getClusterNo(){return _ClusterNo;}
+		
+		void Init()
+		{
+			_ClusterNo=-1;
 		}
 		
 		void print();

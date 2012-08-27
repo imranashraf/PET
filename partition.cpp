@@ -5,8 +5,8 @@
 #include "partition.h"
 
 const float ALPHA = 1.0;
-const float BETA  = 0.5;
-const float GAMMA = 0.5;
+const float BETA  = 1.0;
+const float GAMMA = 1.0;
 
 using namespace std;
 
@@ -38,7 +38,7 @@ void Partition::setCluster(UINT totalFunctions, UINT nclusters)
 
 void Partition::addFunction(UINT ftnNo, UINT clusterNo)
 {
-	_Clusters[clusterNo].addFunction(ftnNo);
+	_Clusters[clusterNo].addFunction(ftnNo,clusterNo);
 }
 
 float Partition::BalancingPenalty()
@@ -110,8 +110,8 @@ void Partition::Print()
 	}
 	
 	cout<<"Cost of Partition = "<<Cost()<<endl;
-	cout<<"BalancingPenalty = "<<BalancingPenalty()<<endl;
-	cout<<"CommunicationCost = "<<CommunicationCost()<<endl;
-	cout<<"CouplingDegree = "<<CouplingDegree()<<endl;
+	cout<<"\tBalancingPenalty = "<<BalancingPenalty()<<endl;
+	cout<<"\tCommunicationCost = "<<CommunicationCost()<<endl;
+	cout<<"\tCouplingDegree = "<<CouplingDegree()<<endl;
 	
 }

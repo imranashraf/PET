@@ -29,8 +29,21 @@ class Application
 				_Functions[i].CreateRanks(k);
 		}
 		
+		void setClusterNo(UINT fno, UINT cno){ _Functions[fno].setClusterNo(cno); }
+		UINT getClusterNo(UINT fno){return _Functions[fno].getClusterNo();}
+		
 		void print();
 		void Print2Dot();
+		
+		void Init()
+		{
+			for(UINT i=0;i<_TotalFunctions ; i++)
+			{
+				_Functions[i].Init();
+			}
+			
+		}
+		
 };
 
 

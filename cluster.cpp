@@ -85,29 +85,51 @@ void Cluster::setFunctionCapacity(UINT totalFunctions)
 	}
 }
 
-void Cluster::addFunction(UINT fno)
+void Cluster::addFunction(UINT fno , UINT cno)
 {
+/*	if( applic->getClusterNo(fno) != -1)
+	{
+		cout<<"Function "<<fno<<" already assigned to Cluster"<<endl;
+		exit(0);
+	}*/
+	
 	if(_FunctionCount < _FunctionCapacity)
 	{
 		_Functions[_FunctionCount]=fno;
 		_FunctionCount++;
+		applic->setClusterNo(fno, cno);
 		
+		
+		//remove fno from the neighbours of this cluster if it is already there ...
+		_Neighbours.erase(fno);
+
 		//update the set of neighbours of this cluster
 		UINT i;
 		UINT n = applic->getTotalFunctions();
 		
-		//remove fno from the neighbours if there ...
-		_Neighbours.erase(fno);
-		
-		for(i=0; i<n ;i++)
-			if( (applic->getEdgeWeight(fno,i)) > 0 && inCluster(i) == false)	
+		for(i=0; i<n ;i++)	//first K are already assigned (can be optimized later)
+		{
+			if(i==fno) continue;
+			
+			UINT tempCno = applic->getClusterNo(i);
+			//cout<<"fno = "<<i<<" is in cluster "<<tempCno<<endl;
+			//if any function has an edge with this function and
+			//if this function is not already a part of any cluster 
+			//then add it to neighbours
+			if( (applic->getEdgeWeight(fno,i)) > 0 && tempCno == -1)
+			{
+				cout<<"Added fno = "<<fno<<" to cluster "<<cno<<endl;
 				_Neighbours.insert(i);
+			}
+		}
 	}
 	else //should not come here in the current implementation
 	{
 		cout<<"Cluster Full"<<endl;
 		exit(1);
 	}
+	
+	cout<<endl;
 }
 
 void Cluster::Print()

@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
 	timer->Print(); //print time
 	
 	cout<<"\nDetails of Best Partition ..."<<endl;
-	bestPartition.Print();
+ 	bestPartition.Print();
 	
 	applic->Print2Dot();
 
@@ -89,8 +89,8 @@ int main(int argc, char *argv[])
 	cout<<endl<<"Heuristic Search Summary"<<endl;
 	cout<<"===================================="<<endl;
 	
-	Algorithm * heuristic = new Heuristic();
-	
+	Algorithm * heuristic = new Heuristic(k);
+ 	applic->Init();
 	timer->Start();
 	heuristic->Apply(k); 
 	timer->Stop();

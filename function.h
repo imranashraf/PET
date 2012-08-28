@@ -29,6 +29,7 @@ class Function
 		void setExecContrib(float contrib);
 		float getExecContrib(){return _ExecContrib;}
 		UINT getFunctionNo(){return _FunctionNo;}
+		
 		void CreateRanks(UINT k)
 		{
 			_Ranks = new double[k];

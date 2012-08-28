@@ -109,9 +109,10 @@ void Partition::Print()
 		_Clusters[i].Print();
 	}
 	
+	cout<<fixed;
 	cout<<"Cost of Partition = "<<Cost()<<endl;
 	cout<<"\tBalancingPenalty = "<<BalancingPenalty()<<endl;
 	cout<<"\tCommunicationCost = "<<CommunicationCost()<<endl;
 	cout<<"\tCouplingDegree = "<<CouplingDegree()<<endl;
-	
+	cout.unsetf(ios::fixed | ios::scientific);
 }

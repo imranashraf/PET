@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdlib>
+#include <cstdio>
 
 #include "cluster.h"
 #include "globals.h"
@@ -89,7 +90,7 @@ void Cluster::addFunction(UINT fno , UINT cno)
 {
 /*	if( applic->getClusterNo(fno) != -1)
 	{
-		cout<<"Function "<<fno<<" already assigned to Cluster"<<endl;
+		cout<<"Function "<<fno<<" already assigned to Cluster "<<applic->getClusterNo(fno)<<endl;
 		exit(0);
 	}*/
 	
@@ -98,30 +99,6 @@ void Cluster::addFunction(UINT fno , UINT cno)
 		_Functions[_FunctionCount]=fno;
 		_FunctionCount++;
 		applic->setClusterNo(fno, cno);
-		
-		
-		//remove fno from the neighbours of this cluster if it is already there ...
-		_Neighbours.erase(fno);
-
-		//update the set of neighbours of this cluster
-		UINT i;
-		UINT n = applic->getTotalFunctions();
-		
-		for(i=0; i<n ;i++)	//first K are already assigned (can be optimized later)
-		{
-			if(i==fno) continue;
-			
-			UINT tempCno = applic->getClusterNo(i);
-			//cout<<"fno = "<<i<<" is in cluster "<<tempCno<<endl;
-			//if any function has an edge with this function and
-			//if this function is not already a part of any cluster 
-			//then add it to neighbours
-			if( (applic->getEdgeWeight(fno,i)) > 0 && tempCno == -1)
-			{
-				cout<<"Added fno = "<<fno<<" to cluster "<<cno<<endl;
-				_Neighbours.insert(i);
-			}
-		}
 	}
 	else //should not come here in the current implementation
 	{
@@ -129,8 +106,70 @@ void Cluster::addFunction(UINT fno , UINT cno)
 		exit(1);
 	}
 	
-	cout<<endl;
 }
+
+void Cluster::getNeighbours(std::set<UINT>& Neighbours)
+{
+	UINT fno,i,j;
+	UINT n = applic->getTotalFunctions();
+	UINT tempCnoj;
+	for(i=0; i<_FunctionCount ;i++)	//check for neighbours of all functions in this cluster
+	{
+		fno = _Functions[i];
+		
+		for(j=0; j<n ; j++)
+		{
+			tempCnoj = applic->getClusterNo(j);
+/*			cout<<"For "<<fno<<" and "<<j<<endl;
+			cout<<"Different = "<< (fno != j) <<endl;
+			cout<<"Link = "<<( (applic->getEdgeWeight(fno,j))*100 > 0 || (applic->getEdgeWeight(j,fno))*100 > 0 )<<endl;
+			cout<<"Link Out = "<<( (applic->getEdgeWeight(fno,j))*100.0 > 0.0) <<endl;
+			cout<<"Weight Out = "<<(applic->getEdgeWeight(fno,j)) <<endl;
+			cout<<"Link In = "<<( (applic->getEdgeWeight(j,fno))*100.0 > 0.0 )<<endl;
+			cout<<"Weight In = "<<(applic->getEdgeWeight(j,fno))<<endl;
+			cout<<"Unused = "<<(tempCnoj==-1)<<endl;*/
+			
+			if( (fno != j) && 
+ 				( (applic->getEdgeWeight(fno,j))*100 > 0 || (applic->getEdgeWeight(j,fno))*100 > 0 ) &&
+ 				tempCnoj == -1
+				) 
+				{
+// 					cout<<"Added"<<endl;
+					Neighbours.insert(j);
+				}
+/*			else
+			{
+				cout<<"Not Added"<<endl;
+			}
+			getchar();*/
+		}
+	}
+}
+
+
+// //remove fno from the neighbours of this cluster if it is already there ...
+// _Neighbours.erase(fno);
+// 
+// //update the set of neighbours of this cluster
+// UINT i;
+// UINT n = applic->getTotalFunctions();
+// 
+// for(i=0; i<n ;i++)	//first K are already assigned (can be optimized later)
+// {
+	// 	if(i==fno) continue;
+	// 	
+	// 	UINT tempCno = applic->getClusterNo(i);
+	// 	//cout<<"fno = "<<i<<" is in cluster "<<tempCno<<endl;
+	// 	//if any function has an edge with this function and
+	// 	//if this function is not already a part of any cluster 
+	// 	//then add it to neighbours
+	// 	if( (applic->getEdgeWeight(fno,i)) > 0 && tempCno == -1)
+	// 	{
+		// 		cout<<"Added fno = "<<fno<<" to cluster "<<cno<<endl;
+		// 		_Neighbours.insert(i);
+		// 	}
+		// }
+		
 
 void Cluster::Print()
 {

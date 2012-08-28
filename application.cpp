@@ -39,7 +39,6 @@ Application::Application(unsigned int nftns)
 		
 	for(i=0;i<_TotalFunctions; i++)
 	{
-		std::cout<<contribArray[i]<<" ";
 		_Functions[i].setExecContrib( contribArray[i] / totalExecTime * 100.0);
 	}
 

@@ -30,8 +30,12 @@ int main(int argc, char *argv[])
 	
 	n = atoi(argv[1]); //number of functions
 	k = atoi(argv[2]); //number of clusters in a partition
-
 	applic = new Application(n);
+	
+	/********  Application Summary Print ********/
+	cout<<"====================================";
+	cout<<endl<<"Application Summary"<<endl;
+	cout<<"===================================="<<endl;
 	applic->print();
 
 	/********  Exhaustive Search ********/
@@ -78,7 +82,7 @@ int main(int argc, char *argv[])
 	cout<<"Total Partitions Evaluated = "<<totalPartitions<<endl;
 	timer->Print(); //print time
 	
-	cout<<"\nDetails of Best Partition ..."<<endl;
+	cout<<"\nDetails of Best Partition found by Exhaustive Search ..."<<endl;
  	bestPartition.Print();
 	
 	applic->Print2Dot();
@@ -91,6 +95,7 @@ int main(int argc, char *argv[])
 	
 	Algorithm * heuristic = new Heuristic(k);
  	applic->Init();
+
 	timer->Start();
 	heuristic->Apply(k); 
 	timer->Stop();

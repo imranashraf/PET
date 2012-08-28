@@ -27,6 +27,11 @@ run: $(EXEC)     #   n  k
 	@-./$(EXEC)  10  3
 	@-cat graph.dot | dot -Tpdf -o graph.pdf
 
+debug: CFLAGS= -Wall -g -fopenmp 
+debug: clean all   #   n  k 
+	@-./$(EXEC)  10  3
+
+
 gprof: CFLAGS= -Wall -g -O3 -fopenmp -pg 
 gprof: LDFLAGS=-fopenmp -pg
 gprof: clean all

@@ -25,10 +25,9 @@ class Partition
 		void setClusterStatus(Status st, UINT cno) {_Clusters[cno].setStatus(st);}
 		Status getClusterStatus(UINT cno) {return _Clusters[cno].getStatus();}
 		
-// 		const std::set<UINT> & getClusterNeighbours(UINT cno)
-		std::set<UINT> & getClusterNeighbours(UINT cno)
+		void getClusterNeighbours(UINT cno, std::set<UINT> & Neighbours)
 		{
-			return (_Clusters[cno].getNeighbours() );
+			return (_Clusters[cno].getNeighbours(Neighbours) );
 		}
 		
 };

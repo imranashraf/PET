@@ -21,7 +21,7 @@ class Application
 		UINT getTotalFunctions() const
 			{ return _TotalFunctions; }
 		float getFunctionContrib(UINT fno){ return _Functions[fno].getExecContrib(); }
-		unsigned long long getEdgeWeight(UINT i, UINT j){return _Edges[i][j].getWeight();}
+		float getEdgeWeight(UINT i, UINT j){return _Edges[i][j].getWeight();}
 		
 		void CreateRanks(UINT k)
 		{

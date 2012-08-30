@@ -2,6 +2,7 @@
 #include <climits>
 #include <cstdlib>
 #include <cmath>
+#include <fstream>
 
 #include "bruteforce.h"
 #include "heuristic.h"
@@ -14,11 +15,8 @@
 
 using namespace std;
 
-Application * applic;
-
 int main(int argc, char *argv[])
 {
-	int n,k;
 	Timer *timer = new Timer();
 	
 	if(argc!=3) 
@@ -28,15 +26,15 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 	
-	n = atoi(argv[1]); //number of functions
-	k = atoi(argv[2]); //number of clusters in a partition
-	applic = new Application(n);
+	g_n = atoi(argv[1]); //number of functions
+	g_k = atoi(argv[2]); //number of clusters in a partition
+	g_applic = new Application(g_n);
 	
 	/********  Application Summary Print ********/
 	cout<<"====================================";
 	cout<<endl<<"Application Summary"<<endl;
 	cout<<"===================================="<<endl;
-	applic->print();
+	g_applic->print();
 
 	/********  Exhaustive Search ********/
 	cout<<"====================================";
@@ -44,10 +42,10 @@ int main(int argc, char *argv[])
 	cout<<"===================================="<<endl;
 	
 	Algorithm * bforce = new Bruteforce();
-	long long totalPartitions = Count(n,k);
+	long long totalPartitions = Count(g_n,g_k);
 	
 	timer->Start();
-	bforce->Apply(k); 
+	bforce->Apply(); 
 	timer->Stop();
 	
 	#ifdef STORE_PARTITIONS
@@ -61,6 +59,7 @@ int main(int argc, char *argv[])
 
 
 	#ifdef STORE_COSTS
+	ofstream costFile("costs.txt");
 	float minCost=Costs[0];
 	float maxCost=Costs[0];
 	#ifdef DEBUG 
@@ -71,21 +70,24 @@ int main(int argc, char *argv[])
 		#ifdef DEBUG 
 		cout<<"\t Partition "<<i<<" Cost = "<<Costs[i]<<endl;
 		#endif
+		costFile<<Costs[i]<<endl;
 		
 		if(Costs[i]<minCost) minCost = Costs[i];
 		if(Costs[i]>maxCost) maxCost = Costs[i];
 	}
 	cout<<"Minimum Cost = "<<minCost<<endl;
 	cout<<"Maximum Cost = "<<maxCost<<endl;
+	
+	costFile.close();
 	#endif
 
 	cout<<"Total Partitions Evaluated = "<<totalPartitions<<endl;
 	timer->Print(); //print time
 	
 	cout<<"\nDetails of Best Partition found by Exhaustive Search ..."<<endl;
- 	bestPartition.Print();
+ 	bestPartition->Print();
 	
-	applic->Print2Dot();
+	g_applic->Print2Dot();
 
 	
 	/********  Heuristic ********/
@@ -93,17 +95,17 @@ int main(int argc, char *argv[])
 	cout<<endl<<"Heuristic Search Summary"<<endl;
 	cout<<"===================================="<<endl;
 	
-	Algorithm * heuristic = new Heuristic(k);
- 	applic->Init();
+	Algorithm * heuristic = new Heuristic();
+ 	g_applic->Init();
 
 	timer->Start();
-	heuristic->Apply(k); 
+	heuristic->Apply(); 
 	timer->Stop();
 	timer->Print(); //print time
 	
-// 	cout<<"\nDetails of Partition ..."<<endl;
-//  	heurPartition.Print();
-	
+	cout<<"\nDetails of Partition found by Heuristic Algorithm ..."<<endl;
+	heurPartition->Print();
+
 	return 0; 
 }
 

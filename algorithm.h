@@ -10,7 +10,7 @@ class Algorithm
 	public:
 		Algorithm(){}
 		
-		virtual void Apply(UINT k)=0;
+		virtual void Apply()=0;
 	
 };
 

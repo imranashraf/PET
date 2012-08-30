@@ -32,12 +32,4 @@ class Partition
 		
 };
 
-
-// void UpdateNeighbours()
-// {
-// 	for(UINT i=0; i< _nClusters ; i++)
-// 		_Clusters[i].UpdateNeighbours();
-// }
-
-
 #endif

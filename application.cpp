@@ -9,12 +9,6 @@
 
 using namespace std;
 
-ULL commLow  = 4;
-ULL commHigh = 1000000;
-ULL execLow  = 10;
-ULL execHigh = 1000;
-int PERCENT_CONNECTIVITY = 50;
-
 Application::Application(unsigned int nftns)
 {
 	RNG rng;
@@ -81,7 +75,6 @@ Application::Application(unsigned int nftns)
 			_Edges[i][j].setWeight( _Edges[i][j].getWeight()/totalcomm * 100 ); 
 		}
 	}
-	
 }
 
 void Application::print()
@@ -170,3 +163,8 @@ void Application::Print2Dot()
 	dotf.close();
 }
 
+void Application::CreateRanks()
+{
+	for(UINT i =0 ; i<_TotalFunctions;i++)
+		_Functions[i].CreateRanks();
+}

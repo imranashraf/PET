@@ -2,11 +2,8 @@
 #include<iostream>
 #include<cmath>
 
+#include "globals.h"
 #include "partition.h"
-
-const float ALPHA = 1.0;
-const float BETA  = 1.0;
-const float GAMMA = 1.0;
 
 using namespace std;
 

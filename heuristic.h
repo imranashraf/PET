@@ -13,13 +13,10 @@ typedef unsigned int UINT;
 class Heuristic : public Algorithm
 {
 	public:
-		Heuristic(){}
-		
-		Heuristic(UINT k){ applic->CreateRanks(k);}
-		
-		void Apply(UINT k);
-		
-		void InitialSelection(Partition& partition, UINT k);
+		Heuristic();
+		void Apply();
+		void InitialSelection();
+// 		void InitialSelection(Partition & heurPartition);
 };
 
 #endif

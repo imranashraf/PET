@@ -30,12 +30,7 @@ class Function
 		float getExecContrib(){return _ExecContrib;}
 		UINT getFunctionNo(){return _FunctionNo;}
 		
-		void CreateRanks(UINT k)
-		{
-			_Ranks = new double[k];
-			if(_Ranks==NULL)
-				std::cout<<"Could not allocate memory for Ranks "<<std::endl;
-		}
+		void CreateRanks();
 		
 		void setClusterNo(UINT cno){_ClusterNo = cno;}
 		UINT getClusterNo(){return _ClusterNo;}

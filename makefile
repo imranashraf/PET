@@ -4,7 +4,7 @@ LDFLAGS= -fopenmp
 LIBS=-lm
 CSRCS=
 
-CPPSRCS=main.cpp rng.cpp edge.cpp application.cpp function.cpp \
+CPPSRCS=globals.cpp main.cpp rng.cpp edge.cpp application.cpp function.cpp \
 	cluster.cpp partition.cpp algorithm.cpp bruteforce.cpp \
 	heuristic.cpp count.cpp utility.cpp
 
@@ -25,11 +25,11 @@ $(EXEC): $(OBJECTS)
 
 run: $(EXEC)     #   n  k 
 	@-./$(EXEC)  10  3
-	@-cat graph.dot | dot -Tpdf -o graph.pdf
+	@-cat graph.dot 2> /dev/null | dot -Tpdf -o graph.pdf
 
 debug: CFLAGS= -Wall -g -fopenmp 
 debug: clean all   #   n  k 
-	@-./$(EXEC)  10  3
+	@- gdb $(EXEC) 
 
 
 gprof: CFLAGS= -Wall -g -O3 -fopenmp -pg 
@@ -42,7 +42,7 @@ gprof:    	 #   n  k
 # 	@-cat profile.txt | ./gprof2dot.py -e0 -n0 --skew=0.01 | dot -Tpdf -o profile.pdf   #all functions
 
 open:
-	kate makefile globals.h main.cpp algorithm.h algorithm.cpp bruteforce.h bruteforce.cpp \
+	kate makefile globals.h globals.cpp main.cpp algorithm.h algorithm.cpp bruteforce.h bruteforce.cpp \
 	heuristic.h heuristic.cpp \
 	application.h application.cpp edge.h edge.cpp function.h function.cpp \
 	partition.h partition.cpp cluster.h cluster.cpp &

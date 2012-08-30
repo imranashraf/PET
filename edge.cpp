@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void Edge::print()
+void Edge::Print()
 {
 	cout<<"Weight = "<<_Weight<<endl;
 }

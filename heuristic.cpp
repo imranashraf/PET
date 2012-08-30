@@ -2,24 +2,29 @@
 #include <cstdio>
 #include "heuristic.h"
 #include "utility.h"
+#include "globals.h"
 
 using namespace std;
 
-void Heuristic::InitialSelection(Partition& partition, UINT k)
+Heuristic::Heuristic()
+{ 
+	g_applic->CreateRanks();
+}
+
+void Heuristic::InitialSelection()
 {
-	UINT fno,cno,n;
-	n = applic->getTotalFunctions();
-	
-	for( cno=0; cno<k; cno++)
+	UINT fno,cno;
+
+	for( cno=0; cno<g_k; cno++)
 	{
 		fno = cno; 	//The functions are sorted in descending order
-		partition.addFunction( fno , cno );
+		heurPartition->addFunction(fno,cno);
 	}
 }
 
 double ExecRank(UINT fno)
 {
-	return applic->getFunctionContrib(fno);
+	return g_applic->getFunctionContrib(fno);
 }
 
 double CommRank(UINT cno, UINT fno , const std::set<UINT> & Neighbours)
@@ -32,8 +37,8 @@ double CommRank(UINT cno, UINT fno , const std::set<UINT> & Neighbours)
 	for(it=Neighbours.begin();it!=Neighbours.end();it++)
 	{
 		fnoTemp = *it; 	//fno of neighbour
-		comm += applic->getEdgeWeight(fnoTemp, fno);	//outwards edge
-		comm += applic->getEdgeWeight(fno, fnoTemp);	//inwards  edge
+		comm += g_applic->getEdgeWeight(fnoTemp, fno);	//outwards edge
+		comm += g_applic->getEdgeWeight(fno, fnoTemp);	//inwards  edge
 	}
 	
 	return comm;
@@ -50,19 +55,17 @@ double EvaluateRanks(UINT cno, UINT fno , const std::set<UINT> & Neighbours)
 	return (Rexec + Rcomm);
 }
 
-void Heuristic::Apply(UINT k)
+void Heuristic::Apply()
 {
-	UINT n = applic->getTotalFunctions();
-	Partition partition(n,k);
+	UINT n=g_n, k=g_k;
 	UINT cno,cno1,cno2,fno;
+	heurPartition = new Partition(g_n,g_k);
 	
 	int *Marked = new int[k];	//array to hold the marked functions for each cluster
 	
 	typedef std::list<UINT> CandidateList;
 	CandidateList * Candidates = new CandidateList[k];
 	std::list<UINT>::iterator itList;
-	std::list<UINT>::iterator itList1;
-	std::list<UINT>::iterator itList2;
 	
 	UINT nNeighbours;
 	std::set<UINT> Neighbours;
@@ -71,7 +74,8 @@ void Heuristic::Apply(UINT k)
 	for(cno=0;cno<k;cno++)
 		Ranks[cno] = new double[n];
 	
-	InitialSelection(partition, k);
+// 	InitialSelection(heurPartition);
+	InitialSelection();
 	
 	UINT finishedClusters=0;	//counter to keep track of finished clusters
 	while(finishedClusters < k)
@@ -82,17 +86,17 @@ void Heuristic::Apply(UINT k)
 			Marked[cno] = -1; //no function is marked for any cluster
 			Candidates[cno].clear();
 			
-			if( (partition.getClusterStatus(cno)) == UnFinished)
+			if( (heurPartition->getClusterStatus(cno)) == UnFinished)
 			{
 				//find the neighbouring nodes of cluster cno
 				Neighbours.clear();	//first clear the set
-				partition.getClusterNeighbours(cno, Neighbours);
+				heurPartition->getClusterNeighbours(cno, Neighbours);
 				nNeighbours= Neighbours.size();	
 				
 				//if no neighbouring node exists, mark cluster as finished
 				if(nNeighbours == 0)
 				{
-					partition.setClusterStatus(Finished,cno);
+					heurPartition->setClusterStatus(Finished,cno);
 					finishedClusters++;
 					continue;
 				}
@@ -116,7 +120,6 @@ void Heuristic::Apply(UINT k)
 							if( Ranks[cno][*itList] <= Ranks[cno][fno] )
 								Candidates[cno].insert(itList,fno);
 					}
-					
 				}
 			
 				//sort candidates in descending order based on rank 
@@ -151,18 +154,14 @@ void Heuristic::Apply(UINT k)
 			if(Marked[cno] != -1)	//if there is candidate marked for merging
 			{
 // 				cout<<"Adding "<<Marked[cno]<<" to cluster "<<cno<<endl;				
-				partition.addFunction( Marked[cno] , cno );		//merge it to cluster cno
+				heurPartition->addFunction(Marked[cno],cno);		//merge it to cluster cno
 				Marked[cno] = -1;
 			}
 		}
 /*		cout<<endl<<"End of Iteration, finishedClusters = "<<finishedClusters<<endl;
-		partition.Print();
+		heurPartition->Print();
 		cout<<"Press ENTER to continue ..."<<endl;
 		getchar();*/
 	}
-	
-	cout<<"\nDetails of Partition found by Heuristic Algorithm ..."<<endl;
-	partition.Print();
-	
 }
 

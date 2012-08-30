@@ -14,8 +14,6 @@ enum Status
 	Finished
 };
 
-typedef unsigned int UINT;
-
 class Cluster
 {
 	private:

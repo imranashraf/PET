@@ -23,11 +23,7 @@ class Application
 		float getFunctionContrib(UINT fno){ return _Functions[fno].getExecContrib(); }
 		float getEdgeWeight(UINT i, UINT j){return _Edges[i][j].getWeight();}
 		
-		void CreateRanks(UINT k)
-		{
-			for(UINT i =0 ; i<_TotalFunctions;i++)
-				_Functions[i].CreateRanks(k);
-		}
+		void CreateRanks();
 		
 		void setClusterNo(UINT fno, UINT cno){ _Functions[fno].setClusterNo(cno); }
 		UINT getClusterNo(UINT fno){return _Functions[fno].getClusterNo();}

@@ -163,5 +163,12 @@ void Heuristic::Apply()
 		cout<<"Press ENTER to continue ..."<<endl;
 		getchar();*/
 	}
+	
+	for(cno=0;cno<k;cno++)
+		delete[] Ranks[cno];
+	delete[] Ranks; 
+	
+	delete[] Marked;	Marked=NULL;
+	delete[] Candidates; Candidates=NULL;
 }
 

@@ -31,6 +31,9 @@ debug: CFLAGS= -Wall -g -fopenmp
 debug: clean all   #   n  k 
 	@- gdb $(EXEC) 
 
+valgrind: CFLAGS= -Wall -g -fopenmp 
+valgrind: clean all
+	valgrind --tool=memcheck --log-fd=1 -v --show-reachable=yes --leak-check=yes --track-origins=yes ./$(EXEC) 9 3
 
 gprof: CFLAGS= -Wall -g -O3 -fopenmp -pg 
 gprof: LDFLAGS=-fopenmp -pg
@@ -49,4 +52,4 @@ open:
 	
 
 clean:
-	@-rm -f $(OBJECTS) $(EXEC) *~ gmon.out graph.dot graph.pdf profile.txt profile.pdf
+	@-rm -f $(OBJECTS) $(EXEC) *~ gmon.out graph.dot graph.pdf profile.txt profile.pdf costs.txt

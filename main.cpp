@@ -43,7 +43,10 @@ int main(int argc, char *argv[])
 	
 	Algorithm * bforce = new Bruteforce();
 	long long totalPartitions = Count(g_n,g_k);
-	
+	cout<<"Total Partitions to be Evaluated = "<<totalPartitions<<endl;
+	cout<<"Approximate Time required to Evaluate "<<totalPartitions
+		<<" = "<< PrintTime(totalPartitions);
+		
 	timer->Start();
 	bforce->Apply(); 
 	timer->Stop();
@@ -56,7 +59,6 @@ int main(int argc, char *argv[])
 		Partitions[i].Print();
 	}
 	#endif
-
 
 	#ifdef STORE_COSTS
 	ofstream costFile("costs.txt");
@@ -81,14 +83,12 @@ int main(int argc, char *argv[])
 	costFile.close();
 	#endif
 
-	cout<<"Total Partitions Evaluated = "<<totalPartitions<<endl;
 	timer->Print(); //print time
 	
 	cout<<"\nDetails of Best Partition found by Exhaustive Search ..."<<endl;
  	bestPartition->Print();
 	
 	g_applic->Print2Dot();
-
 	
 	/********  Heuristic ********/
 	cout<<"====================================";
@@ -105,7 +105,14 @@ int main(int argc, char *argv[])
 	
 	cout<<"\nDetails of Partition found by Heuristic Algorithm ..."<<endl;
 	heurPartition->Print();
-
+	
+	delete bforce;
+	delete bestPartition; 
+	delete timer;
+	delete g_applic;
+	delete[] Costs;
+ 	delete heuristic;
+	delete heurPartition;
 	return 0; 
 }
 

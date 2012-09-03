@@ -56,6 +56,7 @@ float Partition::BalancingPenalty()
 		BP += fabs(EC/_nClusters - ECi[i]);
 	}
 	
+	delete[] ECi;
 	return BP;
 }
 

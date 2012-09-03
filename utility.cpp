@@ -1,4 +1,8 @@
 #include <iostream>
+#include <string>
+#include <sstream>
+#include <iomanip>
+#include <cmath>
 
 #include "utility.h"
 
@@ -56,4 +60,25 @@ int Max(double Array[], int n)
 			index = i;
 	
 	return index;
+}
+
+using namespace std;
+std::string PrintTime(long long partitions)
+{
+	ostringstream oss;
+	long long hr, min, sec, totalSec;
+	
+	totalSec = partitions * 23e-06;	//total seconds
+
+	hr  = floor(totalSec / 3600);
+	min = floor((totalSec/60) % 60);
+	sec = totalSec % 60;
+	
+	oss <<"(HH:MM:SS) "
+		<<hr <<':'
+		<<setfill('0')<<setw(2)<<min<<':'
+		<<setfill('0')<<setw(2)<<sec
+		<<endl;
+	
+	return oss.str();
 }

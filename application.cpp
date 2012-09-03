@@ -18,8 +18,11 @@ Application::Application(unsigned int nftns)
 	
 	_TotalFunctions = nftns;
 	_Functions = new Function[ _TotalFunctions ];
+	if(_Functions == NULL) { cout<<"\n Memory Allocation Error "<<endl;  exit(1); }
+		
 	double* contribArray = new double[ _TotalFunctions ];
-
+	if(contribArray==NULL) { cout<<"\n Memory Allocation Error "<<endl;  exit(1); }
+	
 	for(i=0;i<_TotalFunctions; i++)
 	{
 		execTime = ( abs( rng.rand_int31() ) % (execHigh - execLow + 1 ) );
@@ -75,6 +78,8 @@ Application::Application(unsigned int nftns)
 			_Edges[i][j].setWeight( _Edges[i][j].getWeight()/totalcomm * 100 ); 
 		}
 	}
+	
+	delete[] contribArray;
 }
 
 void Application::print()

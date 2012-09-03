@@ -3,6 +3,7 @@
 
 #include <set>
 #include <iostream>
+#include <cstdlib>
 
 typedef unsigned int UINT;
 
@@ -23,7 +24,7 @@ class Cluster
 		Status _Status;
 		
 	public:
-		Cluster(){_FunctionCount=0; _Status = UnFinished;}
+		Cluster(){_FunctionCount=0; _Status = UnFinished; _Functions=NULL;}
 		Cluster(UINT totalFunctions);
 		void setFunctionCapacity(UINT totalFunctions);
 		void addFunction(UINT fno, UINT cno);
@@ -46,6 +47,50 @@ class Cluster
 		void getNeighbours(std::set<UINT>& Neighbours);
 		
 		void Print();
+		
+		
+		Cluster& operator=(const Cluster& srcCluster)
+		{
+			// check for self-assignment
+			if (this == &srcCluster)
+				return *this;
+			
+			// first we need to deallocate any value that this string is holding!
+			delete[] _Functions;
+			
+			// because these are not pointers, we can shallow copy it
+			_FunctionCount = srcCluster._FunctionCount;
+			_FunctionCapacity = srcCluster._FunctionCapacity;
+			_Status = srcCluster._Status;
+			
+			// now we need to deep copy _Clusters
+			if (srcCluster._Functions)
+			{
+				// allocate memory for our copy
+				_Functions = new UINT [_FunctionCapacity]; 
+				if(_Functions == NULL)
+				{
+					cout<<"Memory Error"<<endl;
+					exit(1);
+				}
+				
+				// Copy the parameter the newly allocated memory
+				for(UINT i=0;i<_FunctionCount;i++)
+				{
+					_Functions[i] = srcCluster._Functions[i];
+				}
+			}
+			else
+				_Functions = NULL;
+			
+			return *this;
+		}
+		
+		~Cluster()
+		{
+			delete[] _Functions;
+			_Functions = NULL;
+		}
 };
 
 #endif

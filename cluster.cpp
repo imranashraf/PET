@@ -64,7 +64,10 @@ float Cluster::ExecCost()
 	UINT i;
 	
 	for(i=0; i<_FunctionCount; i++)
+	{
+// 		cout<<i<<"  "<<_FunctionCount<<"  "<<_FunctionCapacity<<endl;
 		EC += g_applic->getFunctionContrib( _Functions[i] );
+	}
 		
 	return EC;
 }

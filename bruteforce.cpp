@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
@@ -11,6 +12,7 @@ using namespace std;
 
 static int *partition;
 static int parCount=0;
+long long nPartitions;
 
 static void _Bruteforce(int n)
 {
@@ -47,8 +49,10 @@ static void _Bruteforce(int n)
 		
 		if( (tempPart.Cost() ) < (bestPartition->Cost() ) )
 			*bestPartition = tempPart;
-		
+
 		parCount++;
+		if(parCount % 100000 == 0)
+			cout<<"\rProgress  = "<<setw(3)<<(parCount*100)/nPartitions<<" %"<<flush;
     }
     else
     {
@@ -64,7 +68,7 @@ void Bruteforce_kfixed(int n, int k)
 {
     int i;
 
-    partition = (int *)malloc( sizeof(int) * n );
+	partition = new int[n];
 
     for(i=0;i<n-k;i++)
         partition[i] = 0;
@@ -73,12 +77,13 @@ void Bruteforce_kfixed(int n, int k)
 
     _Bruteforce(n-k);
 
-    free(partition);
+	delete[] partition;
+
 }
 
 void Bruteforce::Apply()
 {
-	long long nPartitions = Count(g_n,g_k);
+	nPartitions = Count(g_n,g_k);
 	bestPartition = new Partition(g_n,g_k);
 	
 	#ifdef STORE_PARTITIONS
@@ -96,5 +101,7 @@ void Bruteforce::Apply()
 	Costs = new float[nPartitions];
 	#endif
 	
+	cout<<"Progress  = "<<setw(3)<<(parCount*100)/nPartitions<<" %"<<flush;
 	Bruteforce_kfixed( g_n , g_k);
+	cout<<endl;
 }

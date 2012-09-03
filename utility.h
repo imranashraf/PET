@@ -18,5 +18,6 @@ class Timer
 
 void bsort(double Array[], int n);
 int Max(double Array[], int n);
+std::string PrintTime(long long partitions);
 
 #endif 

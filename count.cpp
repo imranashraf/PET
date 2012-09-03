@@ -2,21 +2,29 @@
 #include <cmath>
 #include <cassert>
 
-long long factorial(long long number)
- {
-   long long fac = 1;
-   #pragma omp parallel
-   {
-     long long fac_private = 1; /* This value comes from the table shown above */
-     #pragma omp for nowait
-     for(long long n=2; n<=number; ++n)
-       fac_private *= n;
-     #pragma omp atomic
-     fac *= fac_private;
-   }
-   return fac;
- }
+// long long factorial(long long number)
+//  {
+//    long long fac = 1;
+//    #pragma omp parallel
+//    {
+//      long long fac_private = 1; /* This value comes from the table shown above */
+//      #pragma omp for nowait
+//      for(long long n=2; n<=number; ++n)
+//        fac_private *= n;
+//      #pragma omp atomic
+//      fac *= fac_private;
+//    }
+//    return fac;
+//  }
 
+long long factorial(long long number)
+{
+	long long fac = 1;
+	for(long long n=2; n<=number; ++n)
+		fac = fac * n;
+	
+	return fac;
+}
 
 long long sterling_2nd(int n, int k)
 {

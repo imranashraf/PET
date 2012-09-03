@@ -40,7 +40,28 @@ class Function
 			_ClusterNo=-1;
 		}
 		
+		
+		Function& operator=(const Function& srcFunc)
+		{
+			// check for self-assignment
+			if (this == &srcFunc)
+				return *this;
+			
+			// because these are not pointers, we can shallow copy it
+			_ExecContrib = srcFunc._ExecContrib;
+			_FunctionNo = srcFunc._FunctionNo;
+			_ClusterNo = srcFunc._ClusterNo;
+			
+			return *this;
+		}
+		
 		void print();
+		
+		~Function()
+		{
+			delete[] _Ranks;
+			_Ranks=NULL;
+		}
 };
 
 #endif

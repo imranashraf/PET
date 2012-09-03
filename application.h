@@ -40,6 +40,19 @@ class Application
 			
 		}
 		
+		~Application()
+		{
+			delete[] _Functions;
+			_Functions = NULL;
+			
+			for(UINT i = 0; i < _TotalFunctions; i++)
+			{
+				delete[] _Edges[i];
+			}
+			
+			delete[] _Edges;
+			_Edges = NULL;
+		}
 };
 
 

@@ -22,9 +22,7 @@ void Timer::Print()
 {
 	double t1=_StartTime.tv_sec+(_StartTime.tv_usec/1000000.0);
 	double t2=_StopTime.tv_sec+(_StopTime.tv_usec/1000000.0);
-// 	cout<<fixed;
-	cout<<"Time Elapsed = "<<t2-t1<<endl;
-// 	cout.unsetf(ios::fixed | ios::scientific);
+	cout<<"Time Elapsed = "<<PrintTime(t2-t1)<<endl;
 }
 
 //sorting in descending order
@@ -63,13 +61,11 @@ int Max(double Array[], int n)
 }
 
 using namespace std;
-std::string PrintTime(long long partitions)
+std::string PrintTime(long long totalSec)
 {
 	ostringstream oss;
-	long long hr, min, sec, totalSec;
+	long long hr, min, sec;
 	
-	totalSec = partitions * 23e-06;	//total seconds
-
 	hr  = floor(totalSec / 3600);
 	min = floor((totalSec/60) % 60);
 	sec = totalSec % 60;
@@ -81,4 +77,12 @@ std::string PrintTime(long long partitions)
 		<<endl;
 	
 	return oss.str();
+}
+
+std::string EstimateTime(long long partitions)
+{
+	double totalSec;
+	double TimePerPart = 60e-6;				//just an empirical estimate
+	totalSec = partitions * TimePerPart;	//total seconds
+	return PrintTime(totalSec);
 }

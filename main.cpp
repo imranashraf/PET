@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 	long long totalPartitions = Count(g_n,g_k);
 	cout<<"Total Partitions to be Evaluated = "<<totalPartitions<<endl;
 	cout<<"Approximate Time required to Evaluate "<<totalPartitions
-		<<" = "<< PrintTime(totalPartitions);
+		<<" partitions = "<< EstimateTime(totalPartitions);
 		
 	timer->Start();
 	bforce->Apply(); 

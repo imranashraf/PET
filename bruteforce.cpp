@@ -39,7 +39,7 @@ static void _Bruteforce(int n)
 		#endif
 
 		#ifdef STORE_COSTS
-		Costs[parCount] = tempPart.Cost();
+		Costs[parCount%nCOSTSAMPLES] = tempPart.Cost();
 		#endif
 
 		#ifdef DEBUG
@@ -69,6 +69,11 @@ void Bruteforce_kfixed(int n, int k)
     int i;
 
 	partition = new int[n];
+	if(partition == NULL)
+	{
+		cout<<"Could not allocate memory for partition"<<endl;
+		exit(1);
+	}
 
     for(i=0;i<n-k;i++)
         partition[i] = 0;
@@ -85,6 +90,11 @@ void Bruteforce::Apply()
 {
 	nPartitions = Count(g_n,g_k);
 	bestPartition = new Partition(g_n,g_k);
+	if(bestPartition == NULL)
+	{
+		cout<<"Could not allocate memory for best partition"<<endl;
+		exit(1);
+	}
 	
 	#ifdef STORE_PARTITIONS
 	Partitions = new Partition[nPartitions];
@@ -98,7 +108,16 @@ void Bruteforce::Apply()
 	#endif
 	
 	#ifdef STORE_COSTS
-	Costs = new float[nPartitions];
+	//TODO	These operations should be in catch throw exceptions
+	//TODO	Think about the solution of such a big array of Costs
+	//Costs = new float[nPartitions];
+	Costs = new float[nCOSTSAMPLES];
+	if(Costs == NULL)
+	{
+		cout<<"Could not allocate memory for Costs"<<endl;
+		exit(1);
+	}
+	
 	#endif
 	
 	cout<<"Progress  = "<<setw(3)<<(parCount*100)/nPartitions<<" %"<<flush;

@@ -140,9 +140,12 @@ void Heuristic::Apply()
 				if( Marked[cno1] == Marked[cno2] )
 				{
 // 					cout<<"Resolving Conflict, fno = "<<Marked[cno1]<<" for cno = "<<cno1<<" and cno "<<cno2<<endl;
-					Marked[cno2] = -1;	//so cno1 is preffered for now, without any criteria 
-										//and cno2 will not have any marked candidate for merging
-										//this can be changed later to give priority to highest rank function later
+					//Here we are giving priority based on rank of the tempfno for cno1 or cno2
+					UINT tempfno = Marked[cno1];	//or Marked[cno2]
+					if( Ranks[cno1][tempfno] > Ranks[cno2][tempfno] )
+						Marked[cno2] = -1;
+					else
+						Marked[cno1] = -1;
 				}
 			}
 		}

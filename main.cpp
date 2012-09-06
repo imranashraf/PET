@@ -29,6 +29,12 @@ int main(int argc, char *argv[])
 	g_n = atoi(argv[1]); //number of functions
 	g_k = atoi(argv[2]); //number of clusters in a partition
 	g_applic = new Application(g_n);
+	if(g_applic == NULL)
+	{
+		cout<<"Could not allocate memory for g_applic"<<endl;
+		exit(1);
+	}
+
 	
 	/********  Application Summary Print ********/
 	cout<<"====================================";
@@ -42,6 +48,12 @@ int main(int argc, char *argv[])
 	cout<<"===================================="<<endl;
 	
 	Algorithm * bforce = new Bruteforce();
+	if(bforce == NULL)
+	{
+		cout<<"Could not allocate memory for bforce"<<endl;
+		exit(1);
+	}
+	
 	long long totalPartitions = Count(g_n,g_k);
 	cout<<"Total Partitions to be Evaluated = "<<totalPartitions<<endl;
 	cout<<"Approximate Time required to Evaluate "<<totalPartitions
@@ -67,7 +79,13 @@ int main(int argc, char *argv[])
 	#ifdef DEBUG 
 	cout<<"Costs of evaluated Partitions are ... "<<endl;
 	#endif
-	for(int i=0 ; i < totalPartitions ; i++)
+	
+	UINT limit;
+	if(totalPartitions < nCOSTSAMPLES)
+		limit = totalPartitions;
+	else
+		limit = nCOSTSAMPLES;
+	for(UINT i=0 ; i < limit ; i++)
 	{
 		#ifdef DEBUG 
 		cout<<"\t Partition "<<i<<" Cost = "<<Costs[i]<<endl;
@@ -82,7 +100,7 @@ int main(int argc, char *argv[])
 	
 	costFile.close();
 	#endif
-
+	
 	timer->Print(); //print time
 	
 	cout<<"\nDetails of Best Partition found by Exhaustive Search ..."<<endl;
@@ -102,7 +120,7 @@ int main(int argc, char *argv[])
 	heuristic->Apply(); 
 	timer->Stop();
 	timer->Print(); //print time
-	
+
 	cout<<"\nDetails of Partition found by Heuristic Algorithm ..."<<endl;
 	heurPartition->Print();
 	
@@ -110,9 +128,9 @@ int main(int argc, char *argv[])
 	delete bestPartition; 
 	delete timer;
 	delete g_applic;
-	delete[] Costs;
  	delete heuristic;
 	delete heurPartition;
+	// 	delete[] Costs;
 	return 0; 
 }
 

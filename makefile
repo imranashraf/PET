@@ -1,3 +1,4 @@
+# TODO Work on storing and retrieving the random application
 CC=g++
 CFLAGS=-Wall -O3 -fopenmp
 LDFLAGS= -fopenmp

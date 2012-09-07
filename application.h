@@ -28,7 +28,7 @@ class Application
 		void setClusterNo(UINT fno, UINT cno){ _Functions[fno].setClusterNo(cno); }
 		UINT getClusterNo(UINT fno){return _Functions[fno].getClusterNo();}
 		
-		void print();
+		void Print();
 		void Print2Dot();
 		
 		void Init()
@@ -39,6 +39,8 @@ class Application
 			}
 			
 		}
+
+		void Save();
 		
 		~Application()
 		{

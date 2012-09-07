@@ -11,7 +11,12 @@ void Function::setExecContrib(float contrib)
 	_ExecContrib = contrib;
 }
 
-void Function::print()
+void Function::Print()
+{
+	cout<<"("<<_FunctionNo<<" , "<<_ExecContrib<<")"<<endl;
+}
+
+void Function::Save()
 {
 	cout<<"("<<_FunctionNo<<" , "<<_ExecContrib<<")"<<endl;
 }

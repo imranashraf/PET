@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 	cout<<"====================================";
 	cout<<endl<<"Application Summary"<<endl;
 	cout<<"===================================="<<endl;
-	g_applic->print();
+	g_applic->Print();
 
 	/********  Exhaustive Search ********/
 	cout<<"====================================";

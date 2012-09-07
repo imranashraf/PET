@@ -55,7 +55,7 @@ class Function
 			return *this;
 		}
 		
-		void print();
+		void Print();
 		
 		~Function()
 		{

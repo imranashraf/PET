@@ -82,7 +82,7 @@ Application::Application(unsigned int nftns)
 	delete[] contribArray;
 }
 
-void Application::print()
+void Application::Print()
 {
 	unsigned int i,j;
 	
@@ -91,7 +91,7 @@ void Application::print()
 	
 	cout<<endl<<"Functions"<<endl;
 	for(i=0; i< _TotalFunctions; i++)
-		_Functions[i].print();
+		_Functions[i].Print();
 	
 	cout<<endl<<"Edges";
 
@@ -172,4 +172,36 @@ void Application::CreateRanks()
 {
 	for(UINT i =0 ; i<_TotalFunctions;i++)
 		_Functions[i].CreateRanks();
+}
+
+void Application::Save()
+{
+	unsigned int i,j;
+	
+	cout<<setiosflags(ios::fixed | ios::showpoint);
+	cout<<setprecision(2);
+	
+	cout<<endl<<"Functions"<<endl;
+	for(i=0; i< _TotalFunctions; i++)
+		_Functions[i].Print();
+	
+	cout<<endl<<"Edges";
+
+	for(i=0;i < _TotalFunctions;i++)
+		cout<<setw(6)<<i;
+	
+	cout<<endl;
+	
+	for(i=0;i < _TotalFunctions;i++)
+	{
+		for(j=0;j< _TotalFunctions;j++)
+			if(j==0)
+				cout<<setw(6)<<i<<setw(6)<<_Edges[i][j].getWeight();
+			else
+				cout<<setw(6)<<_Edges[i][j].getWeight();
+			
+			cout<<endl;
+	}
+	cout<<endl;
+	cout<<resetiosflags(ios::fixed | ios::showpoint);
 }

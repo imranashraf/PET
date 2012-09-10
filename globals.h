@@ -32,7 +32,6 @@ extern float* Costs;
 
 extern Application* g_applic;
 
-
 extern ULL commLow;
 extern ULL commHigh;
 extern ULL execLow;

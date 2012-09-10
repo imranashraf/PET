@@ -13,11 +13,12 @@
 
 #temporary files
 *~
+partool
 profile.txt
 profile.pdf
 gmon.out
 graph.dot
 graph.pdf
 costs.txt
-
+appData.txt
 

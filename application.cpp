@@ -12,14 +12,30 @@ using namespace std;
 Application::Application(unsigned int nftns)
 {
 	RNG rng;
-	unsigned int i,j;
-	ULL totalExecTime=0;
-	ULL execTime;
+	unsigned int i;
 	
 	_TotalFunctions = nftns;
 	_Functions = new Function[ _TotalFunctions ];
 	if(_Functions == NULL) { cout<<"\n Memory Allocation Error "<<endl;  exit(1); }
 		
+	_Edges = new Edge* [_TotalFunctions];
+	if( _Edges == NULL)	{ cout<<"\n Memory Allocation Error "<<endl;  exit(1); }
+	
+	for(i = 0; i < _TotalFunctions; i++)
+	{
+		_Edges[i] = new Edge[_TotalFunctions];
+		if(_Edges[i] == NULL)	{ cout<<"\n Memory Allocation Error "<<endl;  exit(1); }
+	}
+
+}
+
+void Application::Init()
+{
+	RNG rng;
+	unsigned int i,j;
+	ULL totalExecTime=0;
+	ULL execTime;
+	
 	double* contribArray = new double[ _TotalFunctions ];
 	if(contribArray==NULL) { cout<<"\n Memory Allocation Error "<<endl;  exit(1); }
 	
@@ -33,21 +49,12 @@ Application::Application(unsigned int nftns)
 	//sort the contribArray in descending order 
 	//this is only needed to simplify the initial selection in heuristic
 	bsort(contribArray, _TotalFunctions);
-		
+	
 	for(i=0;i<_TotalFunctions; i++)
 	{
 		_Functions[i].setExecContrib( contribArray[i] / totalExecTime * 100.0);
 	}
-
-	_Edges = new Edge* [_TotalFunctions];
-	if( _Edges == NULL)	{ cout<<"\n Memory Allocation Error "<<endl;  exit(1); }
 	
-	for(i = 0; i < _TotalFunctions; i++)
-	{
-		_Edges[i] = new Edge[_TotalFunctions];
-		if(_Edges[i] == NULL)	{ cout<<"\n Memory Allocation Error "<<endl;  exit(1); }
-	}
-
 	double totalcomm=0;
 	double maxcomm=0;
 	float comm;
@@ -57,7 +64,7 @@ Application::Application(unsigned int nftns)
 		{
 			//some links will not be there
 			comm = ( ( abs( rng.rand_int31() ) % 100 ) < PERCENT_CONNECTIVITY ? 1 : 0 );
-		
+			
 			//the links which are there now should get random communication
 			comm = comm * ( abs( rng.rand_int31() ) % (commHigh - commLow + 1 ) );
 			
@@ -69,7 +76,7 @@ Application::Application(unsigned int nftns)
 	
 	_MaxComm = maxcomm;
 	_TotalComm = totalcomm;
-
+	
 	for(i=0 ; i < _TotalFunctions ; i++)
 	{
 		for(j=0;j< _TotalFunctions;j++)
@@ -81,6 +88,7 @@ Application::Application(unsigned int nftns)
 	
 	delete[] contribArray;
 }
+
 
 void Application::Print()
 {
@@ -177,31 +185,82 @@ void Application::CreateRanks()
 void Application::Save()
 {
 	unsigned int i,j;
+	ofstream appDataFile;
+	string appfname("appData.txt");
+	appDataFile.open(appfname.c_str());
+	if ( !appDataFile.good() )
+	{
+		cout<<"Could not open "<<appfname<<"file"<<endl;
+		exit(1);
+	}
 	
-	cout<<setiosflags(ios::fixed | ios::showpoint);
-	cout<<setprecision(2);
+	appDataFile<<g_n<<"\t"<<g_k<<endl;
 	
-	cout<<endl<<"Functions"<<endl;
+	appDataFile<<setiosflags(ios::fixed | ios::showpoint);
+	appDataFile<<setprecision(2);
+	
+	appDataFile<<"Functions"<<endl;
 	for(i=0; i< _TotalFunctions; i++)
-		_Functions[i].Print();
+		appDataFile<<_Functions[i].getExecContrib()<<endl;
 	
-	cout<<endl<<"Edges";
+	appDataFile<<"Edges"<<endl;
 
-	for(i=0;i < _TotalFunctions;i++)
-		cout<<setw(6)<<i;
-	
-	cout<<endl;
-	
 	for(i=0;i < _TotalFunctions;i++)
 	{
 		for(j=0;j< _TotalFunctions;j++)
-			if(j==0)
-				cout<<setw(6)<<i<<setw(6)<<_Edges[i][j].getWeight();
-			else
-				cout<<setw(6)<<_Edges[i][j].getWeight();
+			appDataFile<<setw(6)<<_Edges[i][j].getWeight();
 			
-			cout<<endl;
+			appDataFile<<endl;
 	}
-	cout<<endl;
-	cout<<resetiosflags(ios::fixed | ios::showpoint);
+	appDataFile<<endl;
+	appDataFile<<resetiosflags(ios::fixed | ios::showpoint);
+	
+	appDataFile.close();
 }
+
+void Application::Restore()
+{
+	unsigned int i,j;
+	float temp;	
+	string str;
+	ifstream appDataFile;
+	string appfname("appData.txt");
+	appDataFile.open(appfname.c_str());
+	if ( !appDataFile.good() )
+	{
+		cout<<"Could not open "<<appfname<<"file"<<endl;
+		exit(1);
+	}
+	
+	appDataFile>>g_n>>g_k;
+	g_applic = new Application(g_n);
+	if(g_applic == NULL)
+	{
+		cout<<"Could not allocate memory for g_applic"<<endl;
+		exit(1);
+	}
+	
+	appDataFile>>str;
+	cout<<"Restoring "<<str<<"... ";
+	for(i=0; i< g_applic->_TotalFunctions; i++)
+	{
+		appDataFile>>temp;
+		g_applic->_Functions[i].setExecContrib(temp);
+	}
+	cout<<"Done !"<<endl;
+	
+	appDataFile>>str;
+	cout<<"Restoring "<<str<<"... ";
+	for(i=0;i<(g_applic->_TotalFunctions);i++)
+	{
+		for(j=0;j<(g_applic->_TotalFunctions);j++)
+		{
+			appDataFile>>temp;
+			g_applic->_Edges[i][j].setWeight(temp);
+		}
+	}
+	cout<<"Done !"<<endl;
+	
+	appDataFile.close();
+}
+

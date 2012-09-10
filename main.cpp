@@ -18,23 +18,43 @@ using namespace std;
 int main(int argc, char *argv[])
 {
 	Timer *timer = new Timer();
-	
-	if(argc!=3) 
+
+	/********  Application Generation Mode (Save/Restore) ********/
+	cout<<endl<<"===========================================";
+	cout<<endl<<" Application Generation (Save/Restore Mode)";
+	cout<<endl<<"==========================================="<<endl;
+
+	if(argc == 1) //Restore Mode (No random application will be generated, instead restored from file)
 	{
-		cout<<"syntax: "<<argv[0]<<" n k <t>"<<endl;
-		cout<<"\tn,k: integer"<<endl;
-		return 1;
+		cout<<"Restore Mode (No random application will be generated, instead restored from file)"<<endl;
+		cout<<"Restoring from file"<<endl;
+		g_applic->Restore();
 	}
-	
-	g_n = atoi(argv[1]); //number of functions
-	g_k = atoi(argv[2]); //number of clusters in a partition
-	g_applic = new Application(g_n);
-	if(g_applic == NULL)
+	else if(argc == 3) //Save Mode (random application will be generated and stored to a file for later use)
 	{
-		cout<<"Could not allocate memory for g_applic"<<endl;
+		cout<<"Save Mode (Random application will be generated and stored to a file for later use)"<<endl;
+		g_n = atoi(argv[1]); //number of functions
+		g_k = atoi(argv[2]); //number of clusters in a partition
+		g_applic = new Application(g_n);
+		g_applic->Init();
+		if(g_applic == NULL)
+		{
+			cout<<"Could not allocate memory for g_applic"<<endl;
+			exit(1);
+		}
+		cout<<"Saving application to appData.txt ...";
+		g_applic->Save();
+		cout<<" Done ! "<<endl;
+	}
+	else
+	{
+		cout<<"Syntax 1: Save Mode "<<argv[0]<<" [n k] "<<endl;
+		cout<<"\tn (No of functions) ,k (No of clusters) are both integers"<<endl;
+		cout<<"\tApplication generated in this case will be stored to appData.txt"<<endl;
+		cout<<"Syntax 2: Restore Mode"<<argv[0]<<" [n k] "<<endl;
+		cout<<"\t Without n and k, application will be loaded from appData.txt"<<endl;
 		exit(1);
 	}
-
 	
 	/********  Application Summary Print ********/
 	cout<<"====================================";
@@ -73,7 +93,15 @@ int main(int argc, char *argv[])
 	#endif
 
 	#ifdef STORE_COSTS
-	ofstream costFile("costs.txt");
+	string costfname("costs.txt");
+	ofstream costFile;
+	costFile.open(costfname.c_str());
+	if ( !costFile.good() )
+	{
+		cout<<"Could not open "<<costfname<<"file"<<endl;
+		exit(1);
+	}
+	
 	float minCost=Costs[0];
 	float maxCost=Costs[0];
 	#ifdef DEBUG 
@@ -114,7 +142,7 @@ int main(int argc, char *argv[])
 	cout<<"===================================="<<endl;
 	
 	Algorithm * heuristic = new Heuristic();
- 	g_applic->Init();
+ 	g_applic->Clear();
 
 	timer->Start();
 	heuristic->Apply(); 

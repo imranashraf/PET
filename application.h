@@ -18,6 +18,7 @@ class Application
 	public:
 		Application(){}
 		Application(UINT nodes);
+		void Init();
 		UINT getTotalFunctions() const
 			{ return _TotalFunctions; }
 		float getFunctionContrib(UINT fno){ return _Functions[fno].getExecContrib(); }
@@ -31,16 +32,17 @@ class Application
 		void Print();
 		void Print2Dot();
 		
-		void Init()
+		void Clear()
 		{
 			for(UINT i=0;i<_TotalFunctions ; i++)
 			{
-				_Functions[i].Init();
+				_Functions[i].Clear();
 			}
 			
 		}
 
 		void Save();
+		void Restore();
 		
 		~Application()
 		{

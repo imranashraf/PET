@@ -2,11 +2,14 @@
 #define _FUNCTION_H
 
 #include <iostream>
+#include <fstream>
 
 typedef unsigned long long ULL;
 typedef unsigned int UINT;
 
 static int count = 0;
+
+using namespace std;
 
 class Function
 {
@@ -35,7 +38,7 @@ class Function
 		void setClusterNo(UINT cno){_ClusterNo = cno;}
 		UINT getClusterNo(){return _ClusterNo;}
 		
-		void Init()
+		void Clear()
 		{
 			_ClusterNo=-1;
 		}
@@ -56,7 +59,6 @@ class Function
 		}
 		
 		void Print();
-		
 		~Function()
 		{
 			delete[] _Ranks;

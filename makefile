@@ -1,4 +1,5 @@
-# TODO Work on storing and retrieving the random application
+# TODO exceptions
+
 CC=g++
 CFLAGS=-Wall -O3 -fopenmp
 LDFLAGS= -fopenmp
@@ -29,7 +30,7 @@ run: $(EXEC)     #   n  k
 	@-cat graph.dot 2> /dev/null | dot -Tpdf -o graph.pdf
 
 debug: CFLAGS= -Wall -g -fopenmp 
-debug: clean all   #   n  k 
+debug: all   #   n  k 
 	@- gdb $(EXEC) 
 
 valgrind: CFLAGS= -Wall -g -fopenmp 

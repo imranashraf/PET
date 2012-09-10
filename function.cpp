@@ -4,19 +4,12 @@
 #include "function.h"
 #include "rng.h"
 
-using namespace std;
-
 void Function::setExecContrib(float contrib)
 {
 	_ExecContrib = contrib;
 }
 
 void Function::Print()
-{
-	cout<<"("<<_FunctionNo<<" , "<<_ExecContrib<<")"<<endl;
-}
-
-void Function::Save()
 {
 	cout<<"("<<_FunctionNo<<" , "<<_ExecContrib<<")"<<endl;
 }

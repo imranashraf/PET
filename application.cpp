@@ -6,6 +6,7 @@
 #include "rng.h"
 #include "utility.h"
 #include "globals.h"
+#include "exception.h"
 
 using namespace std;
 
@@ -15,16 +16,30 @@ Application::Application(unsigned int nftns)
 	unsigned int i;
 	
 	_TotalFunctions = nftns;
-	_Functions = new Function[ _TotalFunctions ];
-	if(_Functions == NULL) { cout<<"\n Memory Allocation Error "<<endl;  exit(1); }
-		
-	_Edges = new Edge* [_TotalFunctions];
-	if( _Edges == NULL)	{ cout<<"\n Memory Allocation Error "<<endl;  exit(1); }
 	
-	for(i = 0; i < _TotalFunctions; i++)
+	try
 	{
-		_Edges[i] = new Edge[_TotalFunctions];
-		if(_Edges[i] == NULL)	{ cout<<"\n Memory Allocation Error "<<endl;  exit(1); }
+		_Functions = new Function[ _TotalFunctions ];
+	}
+	catch (const std::bad_alloc& e) 
+	{
+		cout<<e.what()<<endl;
+		throw Exception("Allocation Failed",__FILE__,__LINE__);
+	}
+		
+	try
+	{
+		_Edges = new Edge* [_TotalFunctions];
+		for(i = 0; i < _TotalFunctions; i++)
+		{
+			_Edges[i] = new Edge[_TotalFunctions];
+			if(_Edges[i] == NULL)	{ cout<<"\n Memory Allocation Error "<<endl;  exit(1); }
+		}
+	}
+	catch (const std::bad_alloc& e) 
+	{
+		cout<<e.what()<<endl;
+		throw Exception("Allocation Failed",__FILE__,__LINE__);
 	}
 
 }
@@ -35,9 +50,17 @@ void Application::Init()
 	unsigned int i,j;
 	ULL totalExecTime=0;
 	ULL execTime;
+	double* contribArray;
 	
-	double* contribArray = new double[ _TotalFunctions ];
-	if(contribArray==NULL) { cout<<"\n Memory Allocation Error "<<endl;  exit(1); }
+	try
+	{
+		contribArray = new double[ _TotalFunctions ];
+	}
+	catch (const std::bad_alloc& e) 
+	{
+		cout<<e.what()<<endl;
+		throw Exception("Allocation Failed",__FILE__,__LINE__);
+	}
 	
 	for(i=0;i<_TotalFunctions; i++)
 	{
@@ -90,36 +113,36 @@ void Application::Init()
 }
 
 
-void Application::Print()
+void Application::Print(std::ostream & fout)
 {
 	unsigned int i,j;
 	
-	cout<<setiosflags(ios::fixed | ios::showpoint);
-	cout<<setprecision(2);
+	fout<<setiosflags(ios::fixed | ios::showpoint);
+	fout<<setprecision(2);
 	
-	cout<<endl<<"Functions"<<endl;
+	fout<<endl<<"Functions"<<endl;
 	for(i=0; i< _TotalFunctions; i++)
-		_Functions[i].Print();
+		_Functions[i].Print(fout);
 	
-	cout<<endl<<"Edges";
+	fout<<endl<<"Edges";
 
 	for(i=0;i < _TotalFunctions;i++)
-		cout<<setw(6)<<i;
+		fout<<setw(6)<<i;
 	
-	cout<<endl;
+	fout<<endl;
 	
 	for(i=0;i < _TotalFunctions;i++)
 	{
 		for(j=0;j< _TotalFunctions;j++)
 			if(j==0)
-				cout<<setw(6)<<i<<setw(6)<<_Edges[i][j].getWeight();
+				fout<<setw(6)<<i<<setw(6)<<_Edges[i][j].getWeight();
 			else
-				cout<<setw(6)<<_Edges[i][j].getWeight();
+				fout<<setw(6)<<_Edges[i][j].getWeight();
 			
-			cout<<endl;
+			fout<<endl;
 	}
-	cout<<endl;
-	cout<<resetiosflags(ios::fixed | ios::showpoint);
+	fout<<endl;
+	fout<<resetiosflags(ios::fixed | ios::showpoint);
 }
 
 void Application::Print2Dot()
@@ -127,10 +150,19 @@ void Application::Print2Dot()
 	int color;
 	unsigned int comm, prod, cons;
 	unsigned int i, j;
-	
 	ofstream dotf;
-	dotf.open("graph.dot");
-	if (dotf.fail()) {cout<<"\n failed opening the DOT file.\n"; exit(1); }
+	string dotFile, tempstr;
+	
+	dotFile = "graph_";
+	dotFile += int2str(g_n);
+	tempstr = "_";	dotFile += tempstr;
+	dotFile += int2str(g_k);
+	tempstr = ".dot";	dotFile += tempstr;
+	dotf.open(dotFile.c_str());
+	if (dotf.fail()) 
+	{
+		throw Exception("File Opening Error",__FILE__,__LINE__);
+	}
 	
 	dotf<<"digraph {"<<endl
 		<<"graph [];"<<endl
@@ -188,10 +220,9 @@ void Application::Save()
 	ofstream appDataFile;
 	string appfname("appData.txt");
 	appDataFile.open(appfname.c_str());
-	if ( !appDataFile.good() )
+	if ( appDataFile.fail() )
 	{
-		cout<<"Could not open "<<appfname<<"file"<<endl;
-		exit(1);
+		throw Exception("File Opening Error",__FILE__,__LINE__);
 	}
 	
 	appDataFile<<g_n<<"\t"<<g_k<<endl;
@@ -226,18 +257,21 @@ void Application::Restore()
 	ifstream appDataFile;
 	string appfname("appData.txt");
 	appDataFile.open(appfname.c_str());
-	if ( !appDataFile.good() )
+	if ( appDataFile.fail() )
 	{
-		cout<<"Could not open "<<appfname<<"file"<<endl;
-		exit(1);
+		throw Exception("File Opening Error",__FILE__,__LINE__);
 	}
 	
 	appDataFile>>g_n>>g_k;
-	g_applic = new Application(g_n);
-	if(g_applic == NULL)
+
+	try
 	{
-		cout<<"Could not allocate memory for g_applic"<<endl;
-		exit(1);
+		g_applic = new Application(g_n);
+	}
+	catch (const std::bad_alloc& e) 
+	{
+		cout<<e.what()<<endl;
+		throw Exception("Allocation Failed",__FILE__,__LINE__);
 	}
 	
 	appDataFile>>str;

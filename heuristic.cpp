@@ -1,8 +1,10 @@
 #include <list>
 #include <cstdio>
+
 #include "heuristic.h"
 #include "utility.h"
 #include "globals.h"
+#include "exception.h"
 
 using namespace std;
 
@@ -59,20 +61,59 @@ void Heuristic::Apply()
 {
 	UINT n=g_n, k=g_k;
 	UINT cno,cno1,cno2,fno;
-	heurPartition = new Partition(g_n,g_k);
 	
-	int *Marked = new int[k];	//array to hold the marked functions for each cluster
+	try
+	{
+		heurPartition = new Partition(g_n,g_k);
+	}
+	catch (const std::bad_alloc& e) 
+	{
+		cout<<e.what()<<endl;
+		throw Exception("Allocation Failed",__FILE__,__LINE__);
+	}
+	
+	int *Marked;
+	try
+	{
+		Marked = new int[k];	//array to hold the marked functions for each cluster
+	}
+	catch (const std::bad_alloc& e) 
+	{
+		cout<<e.what()<<endl;
+		throw Exception("Allocation Failed",__FILE__,__LINE__);
+	}
+	
 	
 	typedef std::list<UINT> CandidateList;
-	CandidateList * Candidates = new CandidateList[k];
+	CandidateList * Candidates;
+	
+	try
+	{
+		Candidates = new CandidateList[k];
+	}
+	catch (const std::bad_alloc& e) 
+	{
+		cout<<e.what()<<endl;
+		throw Exception("Allocation Failed",__FILE__,__LINE__);
+	}
+	
 	std::list<UINT>::iterator itList;
 	
 	UINT nNeighbours;
 	std::set<UINT> Neighbours;
+	double **Ranks;
+	try
+	{
+		Ranks = new double*[k];	//Ranks 2D array will have the rank of each function for each cluster
+		for(cno=0;cno<k;cno++)
+			Ranks[cno] = new double[n];
+	}
+	catch (const std::bad_alloc& e) 
+	{
+		cout<<e.what()<<endl;
+		throw Exception("Allocation Failed",__FILE__,__LINE__);
+	}
 	
-	double **Ranks = new double*[k];	//Ranks 2D array will have the rank of each function for each cluster
-	for(cno=0;cno<k;cno++)
-		Ranks[cno] = new double[n];
 	
 // 	InitialSelection(heurPartition);
 	InitialSelection();

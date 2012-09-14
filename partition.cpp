@@ -10,12 +10,16 @@ using namespace std;
 Partition::Partition(UINT totalFunctions, UINT nclusters)
 {
 	_nClusters = nclusters; 
-	_Clusters = new Cluster[_nClusters];
-	if(_Clusters == NULL)
+	try
 	{
-		cout<<"Could not allocate memory for clusters in partition"<<endl;
-		exit(1);
+		_Clusters = new Cluster[_nClusters];
 	}
+	catch (const std::bad_alloc& e) 
+	{
+		cout<<e.what()<<endl;
+		throw Exception("Allocation Failed",__FILE__,__LINE__);
+	}
+	
 	for(UINT i=0;i<_nClusters;i++)
 		_Clusters[i].setFunctionCapacity(totalFunctions);
 }
@@ -23,12 +27,16 @@ Partition::Partition(UINT totalFunctions, UINT nclusters)
 void Partition::setCluster(UINT totalFunctions, UINT nclusters)
 {
 	_nClusters = nclusters; 
-	_Clusters = new Cluster[_nClusters];
-	if(_Clusters == NULL)
+	try
 	{
-		cout<<"Could not allocate memory for clusters in partition"<<endl;
-		exit(1);
+		_Clusters = new Cluster[_nClusters];
 	}
+	catch (const std::bad_alloc& e) 
+	{
+		cout<<e.what()<<endl;
+		throw Exception("Allocation Failed",__FILE__,__LINE__);
+	}
+	
 	for(UINT i=0;i<_nClusters;i++)
 		_Clusters[i].setFunctionCapacity(totalFunctions);
 }
@@ -41,9 +49,18 @@ void Partition::addFunction(UINT ftnNo, UINT clusterNo)
 float Partition::BalancingPenalty()
 {
 	float EC=0.0, BP=0.0;
-	float * ECi = new float [_nClusters];
-	
+	float * ECi;
 	UINT i;
+	
+	try
+	{
+		ECi = new float [_nClusters];
+	}
+	catch (const std::bad_alloc& e) 
+	{
+		cout<<e.what()<<endl;
+		throw Exception("Allocation Failed",__FILE__,__LINE__);
+	}
 	
 	for( i=0; i< _nClusters ; i++)
 	{
@@ -98,19 +115,19 @@ float Partition::Cost()
 	return cost;
 }
 
-void Partition::Print()
+void Partition::Print(std::ostream & fout)
 {
 	UINT i;
 	for(i=0;i<_nClusters;i++)
 	{
-		cout<<" Cluster "<<i<<" has ";
-		_Clusters[i].Print();
+		fout<<" Cluster "<<i<<" has ";
+		_Clusters[i].Print(fout);
 	}
 	
-	cout<<fixed;
-	cout<<"Cost of Partition = "<<Cost()<<endl;
-	cout<<"\tBalancingPenalty = "<<BalancingPenalty()<<endl;
-	cout<<"\tCommunicationCost = "<<CommunicationCost()<<endl;
-	cout<<"\tCouplingDegree = "<<CouplingDegree()<<endl;
-	cout.unsetf(ios::fixed | ios::scientific);
+	fout<<fixed;
+	fout<<"Cost of Partition = "<<Cost()<<endl;
+	fout<<"\tBalancingPenalty = "<<BalancingPenalty()<<endl;
+	fout<<"\tCommunicationCost = "<<CommunicationCost()<<endl;
+	fout<<"\tCouplingDegree = "<<CouplingDegree()<<endl;
+	fout.unsetf(ios::fixed | ios::scientific);
 }

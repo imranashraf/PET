@@ -7,11 +7,12 @@
 #include "bruteforce.h"
 #include "count.h"
 #include "globals.h"
+#include "exception.h"
 
 using namespace std;
 
 static int *partition;
-static int parCount=0;
+unsigned int parCount;
 long long nPartitions;
 
 static void _Bruteforce(int n)
@@ -68,13 +69,16 @@ void Bruteforce_kfixed(int n, int k)
 {
     int i;
 
-	partition = new int[n];
-	if(partition == NULL)
+	try
 	{
-		cout<<"Could not allocate memory for partition"<<endl;
-		exit(1);
+		partition = new int[n];
 	}
-
+	catch (const std::bad_alloc& e) 
+	{
+			cout<<e.what()<<endl;
+			throw Exception("Allocation Failed",__FILE__,__LINE__);
+	}
+	
     for(i=0;i<n-k;i++)
         partition[i] = 0;
     for(;i<n;i++)
@@ -88,36 +92,44 @@ void Bruteforce_kfixed(int n, int k)
 
 void Bruteforce::Apply()
 {
+	parCount=0;
 	nPartitions = Count(g_n,g_k);
-	bestPartition = new Partition(g_n,g_k);
-	if(bestPartition == NULL)
+	
+	try
 	{
-		cout<<"Could not allocate memory for best partition"<<endl;
-		exit(1);
+		bestPartition = new Partition(g_n,g_k);
+	}
+	catch (const std::bad_alloc& e) 
+	{
+		cout<<e.what()<<endl;
+		throw Exception("Allocation Failed",__FILE__,__LINE__);
 	}
 	
 	#ifdef STORE_PARTITIONS
-	Partitions = new Partition[nPartitions];
-	for(int i=0;i<nPartitions;i++)
-		Partitions[i].setCluster(g_n,g_k);
-	if( Partitions == NULL )
+	try
 	{
-		cout<<"Could not allocate memory for partitions"<<endl;
-		exit(1);
+		Partitions = new Partition[nPartitions];
+		for(int i=0;i<nPartitions;i++)
+			Partitions[i].setCluster(g_n,g_k);
+	}
+	catch (const std::bad_alloc& e) 
+	{
+		cout<<e.what()<<endl;
+		throw Exception("Allocation Failed",__FILE__,__LINE__);
 	}
 	#endif
 	
 	#ifdef STORE_COSTS
-	//TODO	These operations should be in catch throw exceptions
 	//TODO	Think about the solution of such a big array of Costs
-	//Costs = new float[nPartitions];
-	Costs = new float[nCOSTSAMPLES];
-	if(Costs == NULL)
+	try
 	{
-		cout<<"Could not allocate memory for Costs"<<endl;
-		exit(1);
+		Costs = new float[nCOSTSAMPLES];
 	}
-	
+	catch (const std::bad_alloc& e) 
+	{
+		cout<<e.what()<<endl;
+		throw Exception("Allocation Failed",__FILE__,__LINE__);
+	}
 	#endif
 	
 	cout<<"Progress  = "<<setw(3)<<(parCount*100)/nPartitions<<" %"<<flush;

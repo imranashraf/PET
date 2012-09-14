@@ -17,8 +17,9 @@ partool
 profile.txt
 profile.pdf
 gmon.out
-graph.dot
-graph.pdf
-costs.txt
+graph_*.dot
+graph_*.pdf
+costs_*.txt
+output_*.txt
 appData.txt
 

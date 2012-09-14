@@ -2,6 +2,7 @@
 #define _PARTITION_H
 
 #include "cluster.h"
+#include "exception.h"
 
 typedef unsigned int UINT;
 
@@ -16,7 +17,7 @@ class Partition
 		Partition(UINT totalFunctions, UINT nclusters);
 		void setCluster(UINT totalFunctions, UINT nclusters);
 		void addFunction(UINT ftnNo, UINT clusterNo);
-		void Print();
+		void Print(std::ostream & fout);
 		float Cost();
 		float BalancingPenalty();
 		float CommunicationCost();
@@ -47,11 +48,14 @@ class Partition
 			if (srcPart._Clusters)
 			{
 				// allocate memory for our copy
-				_Clusters = new Cluster[_nClusters];
-				if(_Clusters == NULL)
+				try
 				{
-					cout<<"Could not allocate memory for clusters in partition"<<endl;
-					exit(1);
+					_Clusters = new Cluster[_nClusters];
+				}
+				catch (const std::bad_alloc& e) 
+				{
+					cout<<e.what()<<endl;
+					throw Exception("Allocation Failed",__FILE__,__LINE__);
 				}
 				
 				// Copy the parameter the newly allocated memory

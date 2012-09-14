@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iomanip>
 #include <cmath>
+#include <sstream>
 
 #include "utility.h"
 
@@ -18,11 +19,11 @@ void Timer::Stop()
 	gettimeofday(&_StopTime,NULL);
 }
 
-void Timer::Print()
+void Timer::Print(std::ostream & fout)
 {
 	double t1=_StartTime.tv_sec+(_StartTime.tv_usec/1000000.0);
 	double t2=_StopTime.tv_sec+(_StopTime.tv_usec/1000000.0);
-	cout<<"Time Elapsed = "<<PrintTime(t2-t1)<<endl;
+	fout<<"Time Elapsed = "<<PrintTime(t2-t1)<<endl;
 }
 
 //sorting in descending order
@@ -86,3 +87,24 @@ std::string EstimateTime(long long partitions)
 	totalSec = partitions * TimePerPart;	//total seconds
 	return PrintTime(totalSec);
 }
+
+std::string int2str(int no)
+{
+	ostringstream oss;   // stream used for the conversion
+	oss<<no;      // insert the textual representation of 'Number' in the characters in the stream
+	return oss.str(); 
+}
+
+std::string MakeFileName(std::string start, int n, int k, std::string ext)
+{
+	string fName, tempstr;
+	fName = start;
+	tempstr = "_";	fName += tempstr;
+	fName += int2str(n);
+	tempstr = "_";	fName += tempstr;
+	fName += int2str(k);
+	fName += ext;
+	
+	return fName;
+}
+

@@ -5,6 +5,8 @@
 #include <iostream>
 #include <cstdlib>
 
+#include "exception.h"
+
 typedef unsigned int UINT;
 
 using namespace std;
@@ -46,7 +48,7 @@ class Cluster
 		//are not considered neighbours here, just for sake of simplicity
 		void getNeighbours(std::set<UINT>& Neighbours);
 		
-		void Print();
+		void Print(std::ostream & fout);
 		
 		
 		Cluster& operator=(const Cluster& srcCluster)
@@ -67,13 +69,16 @@ class Cluster
 			if (srcCluster._Functions)
 			{
 				// allocate memory for our copy
-				_Functions = new UINT [_FunctionCapacity]; 
-				if(_Functions == NULL)
+				try
 				{
-					cout<<"Memory Error"<<endl;
-					exit(1);
+					_Functions = new UINT [_FunctionCapacity]; 
 				}
-				
+				catch (const std::bad_alloc& e) 
+				{
+					cout<<e.what()<<endl;
+					throw Exception("Allocation Failed",__FILE__,__LINE__);
+				}
+
 				// Copy the parameter the newly allocated memory
 				for(UINT i=0;i<_FunctionCount;i++)
 				{

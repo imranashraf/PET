@@ -3,20 +3,27 @@
 #include "globals.h"
 #include "function.h"
 #include "rng.h"
+#include "exception.h"
 
 void Function::setExecContrib(float contrib)
 {
 	_ExecContrib = contrib;
 }
 
-void Function::Print()
+void Function::Print(std::ostream & fout)
 {
-	cout<<"("<<_FunctionNo<<" , "<<_ExecContrib<<")"<<endl;
+	fout<<"("<<_FunctionNo<<" , "<<_ExecContrib<<")"<<endl;
 }
 
 void Function::CreateRanks()
 {
-	_Ranks = new double[g_k];
-	if(_Ranks==NULL)
-		std::cout<<"Could not allocate memory for Ranks "<<std::endl;
+	try
+	{
+		_Ranks = new double[g_k];
+	}
+	catch (const std::bad_alloc& e) 
+	{
+		cout<<e.what()<<endl;
+		throw Exception("Allocation Failed",__FILE__,__LINE__);
+	}
 }

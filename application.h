@@ -29,7 +29,7 @@ class Application
 		void setClusterNo(UINT fno, UINT cno){ _Functions[fno].setClusterNo(cno); }
 		UINT getClusterNo(UINT fno){return _Functions[fno].getClusterNo();}
 		
-		void Print();
+		void Print(std::ostream & fout);
 		void Print2Dot();
 		
 		void Clear()

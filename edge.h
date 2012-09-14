@@ -13,7 +13,7 @@ class Edge
 		Edge(float weight){_Weight = weight;}
 		void setWeight(float weight){_Weight = weight;}
 		float getWeight(){return _Weight;}
-		void Print();
+		void Print(std::ostream & fout);
 		
 };
 

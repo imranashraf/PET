@@ -58,7 +58,7 @@ class Function
 			return *this;
 		}
 		
-		void Print();
+		void Print(std::ostream & fout);
 		~Function()
 		{
 			delete[] _Ranks;

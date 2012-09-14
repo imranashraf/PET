@@ -7,7 +7,7 @@
 #include "partition.h"
 
 //number of samples of Costs stored for cost distribution analysis
-const unsigned int nCOSTSAMPLES = 10e4;
+const unsigned int nCOSTSAMPLES = 70000000;
 
 typedef void (*eval_func) (int n, int k, int *partition);
 

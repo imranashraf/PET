@@ -1,5 +1,3 @@
-# TODO exceptions
-
 CC=g++
 CFLAGS=-Wall -O3 -fopenmp
 LDFLAGS= -fopenmp
@@ -8,7 +6,7 @@ CSRCS=
 
 CPPSRCS=globals.cpp main.cpp rng.cpp edge.cpp application.cpp function.cpp \
 	cluster.cpp partition.cpp algorithm.cpp bruteforce.cpp \
-	heuristic.cpp count.cpp utility.cpp
+	heuristic.cpp count.cpp utility.cpp exception.cpp
 
 OBJECTS=$(CSRCS:.c=.o)
 OBJECTS+=$(CPPSRCS:.cpp=.o)
@@ -27,11 +25,11 @@ $(EXEC): $(OBJECTS)
 
 run: $(EXEC)     #   n  k 
 	@-./$(EXEC)  10  3
-	@-cat graph.dot 2> /dev/null | dot -Tpdf -o graph.pdf
+# 	@-cat graph.dot 2> /dev/null | dot -Tpdf -o graph.pdf
 
 debug: CFLAGS= -Wall -g -fopenmp 
 debug: all   #   n  k 
-	@- gdb $(EXEC) 
+# 	@- gdb $(EXEC) 
 
 valgrind: CFLAGS= -Wall -g -fopenmp 
 valgrind: clean all
@@ -54,4 +52,4 @@ open:
 	
 
 clean:
-	@-rm -f $(OBJECTS) $(EXEC) *~ gmon.out graph.dot graph.pdf profile.txt profile.pdf costs.txt
+	@-rm -f $(OBJECTS) $(EXEC) *~ gmon.out graph_*.dot graph_*.pdf profile.txt profile.pdf costs_*.txt output_*.txt

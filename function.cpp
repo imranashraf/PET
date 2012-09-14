@@ -12,7 +12,7 @@ void Function::setExecContrib(float contrib)
 
 void Function::Print(std::ostream & fout)
 {
-	fout<<"("<<_FunctionNo<<" , "<<_ExecContrib<<")"<<endl;
+	fout<<"("<<_FunctionNo<<","<<_ExecContrib<<")";
 }
 
 void Function::CreateRanks()

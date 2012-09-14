@@ -13,6 +13,9 @@
 //comment the following to stop storing the scores of all partions produced in bruteforce algorithm
 #define STORE_COSTS
 
+//comment the following if you want to show output results on screen
+// #define TOFILE
+
 typedef unsigned int UINT;
 typedef unsigned long long int ULL;
 

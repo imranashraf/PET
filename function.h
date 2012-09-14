@@ -7,8 +7,6 @@
 typedef unsigned long long ULL;
 typedef unsigned int UINT;
 
-static int count = 0;
-
 using namespace std;
 
 class Function
@@ -21,17 +19,11 @@ class Function
 		double * _Ranks;
 
 	public:
-		Function(){_ExecContrib=0; _FunctionNo=count++; _ClusterNo=-1;}
-		Function(float contrib)
-		{
-			_ExecContrib = contrib;
-			_FunctionNo=count++;
-			_ClusterNo=-1;
-		}
-
+		Function(){_ExecContrib=0; _FunctionNo=-1; _ClusterNo=-1;}
+		void setFunctionNo(UINT fno){_FunctionNo = fno;}
+		UINT getFunctionNo(){return _FunctionNo;}
 		void setExecContrib(float contrib);
 		float getExecContrib(){return _ExecContrib;}
-		UINT getFunctionNo(){return _FunctionNo;}
 		
 		void CreateRanks();
 		
@@ -42,7 +34,6 @@ class Function
 		{
 			_ClusterNo=-1;
 		}
-		
 		
 		Function& operator=(const Function& srcFunc)
 		{

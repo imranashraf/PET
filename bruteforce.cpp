@@ -26,9 +26,9 @@ static void _Bruteforce(int n)
 		
         for(UINT j=0;j<g_n;j++)
 		{
- 			#ifdef DEBUG
+/* 			#ifdef DEBUG
  			cout<<"Function "<<j<<" is in Cluster "<<partition[j]<<endl;
-			#endif
+			#endif*/
 			#ifdef STORE_PARTITIONS
 			Partitions[parCount].addFunction(j,partition[j]);
 			#endif
@@ -44,8 +44,7 @@ static void _Bruteforce(int n)
 		#endif
 
 		#ifdef DEBUG
-		tempPart.Print();
-		cout<<"Cost of Partition = "<<tempPart.Cost()<<endl<<endl;
+		tempPart.Print(cout);
 		#endif
 		
 		if( (tempPart.Cost() ) < (bestPartition->Cost() ) )

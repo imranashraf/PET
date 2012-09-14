@@ -142,16 +142,20 @@ void Simulate()
 	Algorithm * bforce;	
 	Timer *timer;
 	long long totalPartitions;
-	ofstream fout;
 	
+	#ifdef TOFILE
 	//open output file
+	ofstream fout;
 	string outFileName = MakeFileName("output",g_n,g_k,".txt");
 	fout.open(outFileName.c_str());
 	if(fout.fail())
 	{
 		throw Exception("File Opening Error",__FILE__,__LINE__);
 	}
-	
+	#else
+	ostream & fout = cout;
+	#endif
+
 	//create the timer
 	try
 	{
@@ -264,7 +268,9 @@ void Simulate()
 	fout<<"\nDetails of Partition found by Heuristic Algorithm ..."<<endl;
 	heurPartition->Print(fout);
 
+	#ifdef TOFILE
 	fout.close();
+	#endif
 	delete bforce;
 	delete bestPartition; 
 	delete timer;

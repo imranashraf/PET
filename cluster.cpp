@@ -4,6 +4,7 @@
 
 #include "cluster.h"
 #include "globals.h"
+#include "exception.h"
 
 using namespace std;
 
@@ -15,11 +16,14 @@ Cluster::Cluster(UINT totalFunctions)
 	
 	//for simplicity, we reserve a space equivalent to the space
 	//of total number of Functions in this application.
-	_Functions = new UINT [_FunctionCapacity]; 
-	if(_Functions == NULL)
+	try
 	{
-		cout<<"Memory Error"<<endl;
-		exit(1);
+		_Functions = new UINT [_FunctionCapacity]; 
+	}
+	catch (const std::bad_alloc& e) 
+	{
+		cout<<e.what()<<endl;
+		throw Exception("Allocation Failed",__FILE__,__LINE__);
 	}
 }
 
@@ -79,11 +83,14 @@ void Cluster::setFunctionCapacity(UINT totalFunctions)
 	
 	//for simplicity, we reserve a space equivalent to the space
 	//of total number of Functions in this application.
-	_Functions = new UINT [_FunctionCapacity]; 
-	if(_Functions == NULL)
+	try
 	{
-		cout<<"Memory Error"<<endl;
-		exit(1);
+		_Functions = new UINT [_FunctionCapacity]; 
+	}
+	catch (const std::bad_alloc& e) 
+	{
+		cout<<e.what()<<endl;
+		throw Exception("Allocation Failed",__FILE__,__LINE__);
 	}
 }
 

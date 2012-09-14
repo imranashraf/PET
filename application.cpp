@@ -26,7 +26,10 @@ Application::Application(unsigned int nftns)
 		cout<<e.what()<<endl;
 		throw Exception("Allocation Failed",__FILE__,__LINE__);
 	}
-		
+	
+	for(i=0;i<_TotalFunctions;i++)
+		_Functions[i].setFunctionNo(i);
+	
 	try
 	{
 		_Edges = new Edge* [_TotalFunctions];
@@ -41,7 +44,6 @@ Application::Application(unsigned int nftns)
 		cout<<e.what()<<endl;
 		throw Exception("Allocation Failed",__FILE__,__LINE__);
 	}
-
 }
 
 void Application::Init()
@@ -116,13 +118,16 @@ void Application::Init()
 void Application::Print(std::ostream & fout)
 {
 	unsigned int i,j;
-	
+	int defaultPrecision = cout.precision();
 	fout<<setiosflags(ios::fixed | ios::showpoint);
 	fout<<setprecision(2);
 	
 	fout<<endl<<"Functions"<<endl;
 	for(i=0; i< _TotalFunctions; i++)
+	{
 		_Functions[i].Print(fout);
+		fout<<endl;
+	}
 	
 	fout<<endl<<"Edges";
 
@@ -142,7 +147,8 @@ void Application::Print(std::ostream & fout)
 			fout<<endl;
 	}
 	fout<<endl;
-	fout<<resetiosflags(ios::fixed | ios::showpoint);
+	fout<<resetiosflags(ios::floatfield | ios::showpoint );
+	fout.precision(defaultPrecision);
 }
 
 void Application::Print2Dot()
@@ -229,6 +235,7 @@ void Application::Save()
 	
 	appDataFile<<setiosflags(ios::fixed | ios::showpoint);
 	appDataFile<<setprecision(2);
+	int defaultPrecision = appDataFile.precision();
 	
 	appDataFile<<"Functions"<<endl;
 	for(i=0; i< _TotalFunctions; i++)
@@ -245,6 +252,7 @@ void Application::Save()
 	}
 	appDataFile<<endl;
 	appDataFile<<resetiosflags(ios::fixed | ios::showpoint);
+	appDataFile.precision(defaultPrecision);
 	
 	appDataFile.close();
 }

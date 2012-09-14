@@ -1,3 +1,4 @@
+#TODO fix floating point number printing
 CC=g++
 CFLAGS=-Wall -O3 -fopenmp
 LDFLAGS= -fopenmp

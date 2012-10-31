@@ -1,4 +1,4 @@
-clustAlgo
-=========
+PET: Partition Evaluation Tool
+===============================
 
-This repository will contain the work being done to compare our heuristic clustering algorithm against the exhaustive search.
+This repository contains our tool which can perform partition evaluation of varios partitioning algorithms.

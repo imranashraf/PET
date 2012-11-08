@@ -49,7 +49,7 @@ open:
 	kate makefile globals.h globals.cpp main.cpp algorithm.h algorithm.cpp bruteforce.h bruteforce.cpp \
 	heuristic.h heuristic.cpp \
 	application.h application.cpp edge.h edge.cpp function.h function.cpp \
-	partition.h partition.cpp cluster.h cluster.cpp &
+	partition.h partition.cpp cluster.h cluster.cpp &> /dev/null &
 	
 
 clean:

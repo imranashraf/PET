@@ -124,11 +124,16 @@ int main(int argc, char *argv[])
 	}
 	else
 	{
-		cout<<"Syntax 1: Save Mode "<<argv[0]<<" [n k] "<<endl;
+		cout<<"Syntax 1: Save Mode "<<argv[0]<<" n k "<<endl;
 		cout<<"\tn (No of functions) ,k (No of clusters) are both integers"<<endl;
 		cout<<"\tApplication generated in this case will be stored to appData.txt"<<endl;
-		cout<<"Syntax 2: Restore Mode"<<argv[0]<<" [n k] "<<endl;
+		
+		cout<<"Syntax 2: Restore Mode"<<argv[0]<<endl;
 		cout<<"\t Without n and k, application will be loaded from appData.txt"<<endl;
+		
+		cout<<"Syntax 3: Long Run Mode"<<argv[0]<<" nLow nHigh kLow kHigh "<<endl;
+		cout<<"\t Simulations will be run for a range of n and k as specified in the arguments"<<endl;
+		
 		exit(-1);
 	}
 		
@@ -139,7 +144,9 @@ int main(int argc, char *argv[])
 void Simulate()
 {
 	Algorithm * heuristic;
+	#ifndef HEURISTIC_ONLY
 	Algorithm * bforce;	
+	#endif
 	Timer *timer;
 	long long totalPartitions;
 	
@@ -172,7 +179,13 @@ void Simulate()
 	fout<<endl<<"Application Summary"<<endl;
 	fout<<"===================================="<<endl;
 	g_applic->Print(fout);
+	g_applic->Print2Dot();
+	
+	totalPartitions = Count(g_n,g_k);
+	fout<<"Total number of possible partitions= "<<totalPartitions<<endl;
+	fout<<"Approximate Time required to Evaluate these partitions = "<< EstimateTime(totalPartitions);
 
+	#ifndef HEURISTIC_ONLY
 	/********  Exhaustive Search ********/
 	fout<<"====================================";
 	fout<<endl<<"Exhaustive Search Summary"<<endl;
@@ -187,11 +200,6 @@ void Simulate()
 		cerr<<e.what()<<endl;
 		throw Exception("Allocation Failed",__FILE__,__LINE__);
 	}
-
-	totalPartitions = Count(g_n,g_k);
-	fout<<"Total Partitions to be Evaluated = "<<totalPartitions<<endl;
-	fout<<"Approximate Time required to Evaluate "<<totalPartitions
-		<<" partitions = "<< EstimateTime(totalPartitions);
 
 	timer->Start();
 	bforce->Apply(); 
@@ -240,10 +248,10 @@ void Simulate()
 
 	fout<<"\nDetails of Best Partition found by Exhaustive Search ..."<<endl;
 	bestPartition->Print(fout);
-
-	g_applic->Print2Dot();
-
-	/********  Heuristic ********/
+	#endif
+	
+	
+	/********  Heuristic Search ********/
 	fout<<"====================================";
 	fout<<endl<<"Heuristic Search Summary"<<endl;
 	fout<<"===================================="<<endl;
@@ -271,11 +279,15 @@ void Simulate()
 	#ifdef TOFILE
 	fout.close();
 	#endif
+	#ifndef HEURISTIC_ONLY
 	delete bforce;
+	#endif
 	delete bestPartition; 
 	delete timer;
 	delete g_applic;
 	delete heuristic;
 	delete heurPartition;
+	#ifdef STORE_COSTS
 	delete[] Costs;
+	#endif
 }

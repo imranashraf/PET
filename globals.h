@@ -8,10 +8,15 @@
 // #define DEBUG
 
 //comment the following to not store all the partitions produced in bruteforce algorithm
+//do it for small simulations only as it will require more memory
 // #define STORE_PARTITIONS
 
 //comment the following to stop storing the scores of all partions produced in bruteforce algorithm
+//do it for small simulations only as it will require more memory and hard disk space
 #define STORE_COSTS
+
+//uncomment the following if you want to run heuristic only
+#define HEURISTIC_ONLY
 
 //comment the following if you want to show output results on screen
 // #define TOFILE

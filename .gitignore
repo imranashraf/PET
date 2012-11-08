@@ -22,4 +22,6 @@ graph_*.pdf
 costs_*.txt
 output_*.txt
 appData.txt
+quadData.txt
+maipData.txt
 

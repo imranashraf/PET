@@ -1,6 +1,8 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <set>
+#include <map>
 
 #include "application.h"
 #include "rng.h"
@@ -9,6 +11,11 @@
 #include "exception.h"
 
 using namespace std;
+
+set<string> SeenFname;
+map <string,unsigned int> NametoADD;
+map <unsigned int,string> ADDtoName;
+unsigned int GlobalfunctionNo=0;
 
 Application::Application(unsigned int nftns)
 {
@@ -304,5 +311,96 @@ void Application::Restore()
 	cout<<"Done !"<<endl;
 	
 	appDataFile.close();
+}
+
+void Application::RestoreQ2()
+{
+	unsigned int i,j;
+	int fno;
+	unsigned long long bytes;
+	float contrib;
+	float temp;	
+	string str, str1, str2;
+	ifstream qfile, mfile;
+	qfile.open("quadData.txt");
+	if ( qfile.fail() )
+	{
+		throw Exception("File Opening Error",__FILE__,__LINE__);
+	}
+	
+	mfile.open("maipData.txt");
+	if ( mfile.fail() )
+	{
+		throw Exception("File Opening Error",__FILE__,__LINE__);
+	}
+	
+	while(mfile)
+	{
+		mfile>>str>>contrib;
+		if(!SeenFname.count(str))  // this is the first time I see this function name in charge of access
+		{
+			SeenFname.insert(str);  // mark this function name as seen
+			GlobalfunctionNo++;      // create a dummy Function Number for this function
+			NametoADD[str]=GlobalfunctionNo;   // create the string -> Number binding
+			ADDtoName[GlobalfunctionNo]=str;   // create the Number -> String binding
+		} 
+ 		//cout<<str<<"\t"<<contrib<<endl;
+	}
+
+	while(qfile)
+	{
+		qfile>>str1>>str2>>bytes;
+		if(!SeenFname.count(str1))  // this is the first time I see this function name in charge of access
+		{
+			SeenFname.insert(str1);  // mark this function name as seen
+			GlobalfunctionNo++;      // create a dummy Function Number for this function
+			NametoADD[str1]=GlobalfunctionNo;   // create the string -> Number binding
+			ADDtoName[GlobalfunctionNo]=str1;   // create the Number -> String binding
+		} 
+		
+		if(!SeenFname.count(str2))  // this is the first time I see this function name in charge of access
+		{
+			SeenFname.insert(str2);  // mark this function name as seen
+			GlobalfunctionNo++;      // create a dummy Function Number for this function
+			NametoADD[str2]=GlobalfunctionNo;   // create the string -> Number binding
+			ADDtoName[GlobalfunctionNo]=str2;   // create the Number -> String binding
+		} 
+		//cout<<str1<<"\t"<<str2<<"\t"<<bytes<<endl;
+	}
+	cout<<"GlobalfunctionNo = "<<GlobalfunctionNo<<endl;
+
+// 	try
+// 	{
+// 		g_applic = new Application(g_n);
+// 	}
+// 	catch (const std::bad_alloc& e) 
+// 	{
+// 		cout<<e.what()<<endl;
+// 		throw Exception("Allocation Failed",__FILE__,__LINE__);
+// 	}
+	
+/*	qfile>>str;
+	cout<<"Restoring "<<str<<"... ";
+	for(i=0; i< g_applic->_TotalFunctions; i++)
+	{
+		qfile>>temp;
+		g_applic->_Functions[i].setExecContrib(temp);
+	}
+	cout<<"Done !"<<endl;
+	
+	qfile>>str;
+	cout<<"Restoring "<<str<<"... ";
+	for(i=0;i<(g_applic->_TotalFunctions);i++)
+	{
+		for(j=0;j<(g_applic->_TotalFunctions);j++)
+		{
+			qfile>>temp;
+			g_applic->_Edges[i][j].setWeight(temp);
+		}
+	}
+	cout<<"Done !"<<endl;*/
+	
+	qfile.close();
+	mfile.close();
 }
 

@@ -43,6 +43,7 @@ class Application
 
 		void Save();
 		void Restore();
+		void RestoreQ2();
 		
 		~Application()
 		{

@@ -45,6 +45,8 @@ int main(int argc, char *argv[])
 	else if(argc == 3) //Save Mode (random application will be generated and stored to a file for later use)
 	{
 		cout<<"Save Mode (Random application will be generated and stored to a file for later use)"<<endl;
+		g_applic->RestoreQ2();
+		
 		g_n = atoi(argv[1]); //number of functions
 		g_k = atoi(argv[2]); //number of clusters in a partition
 		if(g_k >= g_n)

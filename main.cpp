@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <fstream>
+#include <exception>
 
 #include "bruteforce.h"
 #include "heuristic.h"
@@ -15,132 +16,211 @@
 #include "exception.h"
 
 using namespace std;
+void SetSimulation(int argc, char * argv[]);
 void Simulate();
+void usage();
 
 int main(int argc, char *argv[])
 {
-
 	cout<<"Starting Simulation"<<endl;
+	
+	try
+	{
+		SetSimulation(argc,argv);
+	}
+	catch(Exception &e)
+	{
+		cerr<<"Exception occurred at "<<e.File()<<":"<<e.Line()<<endl 
+		<<"\twith reason:\"" <<e.Reason()<<endl;
+	}
+	
+	cout<<"End of Simulation"<<endl;
+	return 0; 
+}
 
+void SetSimulation(int argc, char * argv[])
+{
+	string fname, maipfname, quadfname;
+	int Mode;
+	
+	if(argc>=2)
+		Mode = atoi(argv[1]);
+	else
+	{
+		usage();
+		throw Exception("Invalid command line arguments",__FILE__,__LINE__);
+	}
+	
 	/********  Application Generation Mode (Save/Restore) ********/
 	cout<<endl<<"===========================================";
 	cout<<endl<<" Application Generation (Save/Restore Mode)";
 	cout<<endl<<"==========================================="<<endl;
-	if(argc == 1) //Restore Mode (No random application will be generated, instead restored from file)
+	switch(Mode)
 	{
-		cout<<"Restore Mode (No random application will be generated, instead restored from file)"<<endl;
-		cout<<"Restoring from file"<<endl;
-		g_applic->Restore();
-		
-		try
-		{
-			Simulate();
-		}
-		catch(Exception &e)
-		{
-			cerr<<"Exception occurred at "<<e.File()<<":"<<e.Line()<<endl 
-			<<"\twith reason:\"" <<e.Reason()<<endl;
-		}
-	}
-	else if(argc == 3) //Save Mode (random application will be generated and stored to a file for later use)
-	{
-		cout<<"Save Mode (Random application will be generated and stored to a file for later use)"<<endl;
-		g_applic->RestoreQ2();
-		
-		g_n = atoi(argv[1]); //number of functions
-		g_k = atoi(argv[2]); //number of clusters in a partition
-		if(g_k >= g_n)
-		{
-			cout<<"k should be greater than n"<<endl;
-			exit(-1);
-		}
-		
-		try
-		{
-			g_applic = new Application(g_n);
-		}
-		catch (const std::bad_alloc& e) 
-		{
-			cerr<<e.what()<<endl;
-			throw Exception("Allocation Failed",__FILE__,__LINE__);
-		}
-		
-		g_applic->Init();
-		cout<<"Saving application to appData.txt ...";
-		g_applic->Save();
-		cout<<" Done ! "<<endl;
-		
-		try
-		{
-			Simulate();
-		}
-		catch(Exception &e)
-		{
-			cerr<<"Exception occurred at "<<e.File()<<":"<<e.Line()<<endl 
-			<<"\twith reason:\"" <<e.Reason()<<endl;
-		}
-	}
-	else if(argc == 5) //long run
-	{
-		cout<<"Long Run Mode"<<endl;
-		UINT nLower, nHigher, kLower, kHigher;
-		
-		nLower  = atoi(argv[1]); 
-		nHigher = atoi(argv[2]); 
-		kLower  = atoi(argv[3]); 
-		kHigher = atoi(argv[4]); 
-		
-		UINT n,k;
-
-		for(k=kLower; k<=kHigher; k++)
-		{
-			for(n=nLower; n<=nHigher; n++)			
+		case 1:
+			cout<<"Save Mode (Random application will be generated and stored to a file for later use)"<<endl;
+			if(argc != 4) //Random Mode (Random application will be generated and stored to a file)
+				throw Exception("Invalid command line arguments",__FILE__,__LINE__);
+			
+			g_n = atoi(argv[2]); //number of functions
+			g_k = atoi(argv[3]); //number of clusters in a partition
+			if(g_k >= g_n)
+				throw Exception("g_n should be greater than g_k",__FILE__,__LINE__);
+			
+			//create application
+			try
 			{
-				if(k>=n)
-					continue;
+				g_applic = new Application(g_n);
+			}
+			catch (const std::bad_alloc& e) 
+			{
+				cerr<<e.what()<<endl;
+				throw Exception("Allocation Failed",__FILE__,__LINE__);
+			}
+		
+			g_applic->Init();
+			cout<<"Saving application to appData.txt ...";
+			g_applic->Save();
+			cout<<" Done ! "<<endl;
+		
+			try
+			{
+				Simulate();
+			}
+			catch(Exception &e)
+			{
+				cerr<<"Exception occurred at "<<e.File()<<":"<<e.Line()<<endl 
+				<<"\twith reason:\"" <<e.Reason()<<endl;
+			}
+		break;
+		//////////////////////////////////////////////////////////////////////
+		
+		case 2:	//Restore Mode (Application will be restored from file)
+			cout<<"Restore Mode (Application will be restored from file)"<<endl;
+			if(argc != 4) 
+				throw Exception("Invalid command line arguments",__FILE__,__LINE__);
+			
+			fname = argv[2];
+			g_k = atoi(argv[3]);
+			g_n = get_g_n(fname); //get g_n according to the number of functions in appData.txt file
+			if(g_k >= g_n)
+				throw Exception("g_n should be greater than g_k",__FILE__,__LINE__);
+			
+			//create application
+			try
+			{
+				g_applic = new Application(g_n);
+			}
+			catch (const std::bad_alloc& e) 
+			{
+				cerr<<e.what()<<endl;
+				throw Exception("Allocation Failed",__FILE__,__LINE__);
+			}
 
-				g_n = n; //number of functions
-				g_k = k; //number of clusters in a partition
-				try
+			g_applic->Restore();
+			
+			try
+			{
+				Simulate();
+			}
+			catch(Exception &e)
+			{
+				cerr<<"Exception occurred at "<<e.File()<<":"<<e.Line()<<endl 
+				<<"\twith reason:\"" <<e.Reason()<<endl;
+			}
+		break;
+		//////////////////////////////////////////////////////////////////////
+		case 3:
+			cout<<"Restore Q2 Mode (Application will be restored from maip and quad data files)"<<endl;
+			if(argc != 5) 
+				throw Exception("Invalid command line arguments",__FILE__,__LINE__);
+			
+			maipfname = argv[2]; 
+			quadfname = argv[3];
+			g_k = atoi(argv[4]); //number of clusters
+			g_n = getq2_g_n(maipfname, quadfname); //get g_n from maip and quad files
+			if(g_k >= g_n)
+				throw Exception("g_n should be greater than g_k",__FILE__,__LINE__);
+			
+			//create application
+			try
+			{
+				g_applic = new Application(g_n);
+			}
+			catch (const std::bad_alloc& e) 
+			{
+				cerr<<e.what()<<endl;
+				throw Exception("Allocation Failed",__FILE__,__LINE__);
+			}
+			
+			//read q2 files to restore application data
+			cout<<"Restoring from file ...";
+			g_applic->RestoreQ2();
+			cout<<"Done !"<<endl;
+			
+			//start simulation
+			try
+			{
+				Simulate();
+			}
+			catch(Exception &e)
+			{
+				cerr<<"Exception occurred at "<<e.File()<<":"<<e.Line()<<endl 
+				<<"\twith reason:\"" <<e.Reason()<<endl;
+			}
+		break;
+		//////////////////////////////////////////////////////////////////////
+		case 4:
+			UINT nLower, nHigher, kLower, kHigher;
+			UINT n,k;			
+			cout<<"Long Run Mode"<<endl;
+			if(argc != 6) 
+				throw Exception("Invalid command line arguments",__FILE__,__LINE__);
+
+			nLower  = atoi(argv[2]); 
+			nHigher = atoi(argv[3]); 
+			kLower  = atoi(argv[4]); 
+			kHigher = atoi(argv[5]); 
+
+			for(k=kLower; k<=kHigher; k++)
+			{
+				for(n=nLower; n<=nHigher; n++)			
 				{
-					g_applic = new Application(g_n);
-				}
-				catch (const std::bad_alloc& e) 
-				{
-					cerr<<e.what()<<endl;
-					throw Exception("Allocation Failed",__FILE__,__LINE__);
-				}
-				g_applic->Init();
-				
-				try
-				{
-					Simulate();
-				}
-				catch(Exception &e)
-				{
-					cerr<<"Exception occurred at "<<e.File()<<":"<<e.Line()<<endl 
-					<<"\twith reason:\"" <<e.Reason()<<endl;
+					if(k>=n)
+						continue;
+
+					g_n = n; //number of functions
+					g_k = k; //number of clusters in a partition
+					try
+					{
+						g_applic = new Application(g_n);
+					}
+					catch (const std::bad_alloc& e) 
+					{
+						cerr<<e.what()<<endl;
+						throw Exception("Allocation Failed",__FILE__,__LINE__);
+					}
+					g_applic->Init();
+					
+					try
+					{
+						Simulate();
+					}
+					catch(Exception &e)
+					{
+						cerr<<"Exception occurred at "<<e.File()<<":"<<e.Line()<<endl 
+						<<"\twith reason:\"" <<e.Reason()<<endl;
+					}
 				}
 			}
-		}
+			
+		break;
+		//////////////////////////////////////////////////////////////////////
+		default:
+			usage();
+			throw Exception("Invalid command line arguments",__FILE__,__LINE__);
+		break;
 	}
-	else
-	{
-		cout<<"Syntax 1: Save Mode "<<argv[0]<<" n k "<<endl;
-		cout<<"\tn (No of functions) ,k (No of clusters) are both integers"<<endl;
-		cout<<"\tApplication generated in this case will be stored to appData.txt"<<endl;
-		
-		cout<<"Syntax 2: Restore Mode"<<argv[0]<<endl;
-		cout<<"\t Without n and k, application will be loaded from appData.txt"<<endl;
-		
-		cout<<"Syntax 3: Long Run Mode"<<argv[0]<<" nLow nHigh kLow kHigh "<<endl;
-		cout<<"\t Simulations will be run for a range of n and k as specified in the arguments"<<endl;
-		
-		exit(-1);
-	}
-		
-	cout<<"End of Simulation"<<endl;
-	return 0; 
 }
 
 void Simulate()
@@ -150,7 +230,7 @@ void Simulate()
 	Algorithm * bforce;	
 	#endif
 	Timer *timer;
-	long long totalPartitions;
+	unsigned long long totalPartitions;
 	
 	#ifdef TOFILE
 	//open output file
@@ -292,4 +372,18 @@ void Simulate()
 	#ifdef STORE_COSTS
 	delete[] Costs;
 	#endif
+}
+
+void usage()
+{
+	/*
+	1 Random Mode		< argc == 4 >	./partool MODE(1) <n> <k>
+	2 Restore Mode		< argc == 4 >	./partool MODE(2) <appFileName> <k>
+	3 Q2 Mode			< argc == 5 >	./partool MODE(3) <maipFileName> <quadFileName> <k>
+	4 Long Run Mode		< argc == 6 >	./partool MODE(4) <nLower> <nHigher> <kLower> <kHigher>
+	*/
+	cout<<"Mode 1: Random Mode  		\n  ./partool 1 <n> <k> "<<endl;
+	cout<<"Mode 2: Restore Mode 		\n  ./partool 2 <appFileName> <k> "<<endl;
+	cout<<"Mode 3: Q2 Mode 			\n  ./partool 3 <maipFileName> <quadFileName> <k>"<<endl;
+	cout<<"Mode 4: Long Run Mode 	\n  ./partool 4 <nLower> <nHigher> <kLower> <kHigher>"<<endl;
 }

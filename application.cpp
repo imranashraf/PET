@@ -12,11 +12,6 @@
 
 using namespace std;
 
-set<string> SeenFname;
-map <string,unsigned int> NametoADD;
-map <unsigned int,string> ADDtoName;
-unsigned int GlobalfunctionNo=0;
-
 Application::Application(unsigned int nftns)
 {
 	RNG rng;
@@ -238,7 +233,7 @@ void Application::Save()
 		throw Exception("File Opening Error",__FILE__,__LINE__);
 	}
 	
-	appDataFile<<g_n<<"\t"<<g_k<<endl;
+	appDataFile<<g_n<<endl;
 	
 	appDataFile<<setiosflags(ios::fixed | ios::showpoint);
 	appDataFile<<setprecision(2);
@@ -267,7 +262,8 @@ void Application::Save()
 void Application::Restore()
 {
 	unsigned int i,j;
-	float temp;	
+	float temp;
+	unsigned int tempi;
 	string str;
 	ifstream appDataFile;
 	string appfname("appData.txt");
@@ -277,18 +273,8 @@ void Application::Restore()
 		throw Exception("File Opening Error",__FILE__,__LINE__);
 	}
 	
-	appDataFile>>g_n>>g_k;
+	appDataFile>>tempi; //is n
 
-	try
-	{
-		g_applic = new Application(g_n);
-	}
-	catch (const std::bad_alloc& e) 
-	{
-		cout<<e.what()<<endl;
-		throw Exception("Allocation Failed",__FILE__,__LINE__);
-	}
-	
 	appDataFile>>str;
 	cout<<"Restoring "<<str<<"... ";
 	for(i=0; i< g_applic->_TotalFunctions; i++)
@@ -316,10 +302,8 @@ void Application::Restore()
 void Application::RestoreQ2()
 {
 	unsigned int i,j;
-	int fno;
 	unsigned long long bytes;
-	float contrib;
-	float temp;	
+	double contrib;
 	string str, str1, str2;
 	ifstream qfile, mfile;
 	qfile.open("quadData.txt");
@@ -334,73 +318,61 @@ void Application::RestoreQ2()
 		throw Exception("File Opening Error",__FILE__,__LINE__);
 	}
 	
+	//read contributions from maipData file (values are already sorted,
+	//	a simplifying requirement for initial selection)
+	for(i=0; i< _TotalFunctions; i++)
+	{
+		_Functions[i].setExecContrib(0.0);
+	}
+	
 	while(mfile)
 	{
 		mfile>>str>>contrib;
-		if(!SeenFname.count(str))  // this is the first time I see this function name in charge of access
-		{
-			SeenFname.insert(str);  // mark this function name as seen
-			GlobalfunctionNo++;      // create a dummy Function Number for this function
-			NametoADD[str]=GlobalfunctionNo;   // create the string -> Number binding
-			ADDtoName[GlobalfunctionNo]=str;   // create the Number -> String binding
-		} 
- 		//cout<<str<<"\t"<<contrib<<endl;
+		int fno = NametoADD[str];
+		_Functions[fno].setExecContrib(contrib);
 	}
+	
+	//read communication values from quadData file
+	double totalcomm=0;
+	double maxcomm=0;
+	
+	//initialize communication to 0.0 for the links which are not there
+	for(i=0 ; i < _TotalFunctions ; i++)
+	{
+		for(j=0;j< _TotalFunctions;j++)
+		{
+			_Edges[i][j].setWeight(0.0); 
+		}
+	}	
 
+	//assign communication and also calculate total and maximum
 	while(qfile)
 	{
 		qfile>>str1>>str2>>bytes;
-		if(!SeenFname.count(str1))  // this is the first time I see this function name in charge of access
-		{
-			SeenFname.insert(str1);  // mark this function name as seen
-			GlobalfunctionNo++;      // create a dummy Function Number for this function
-			NametoADD[str1]=GlobalfunctionNo;   // create the string -> Number binding
-			ADDtoName[GlobalfunctionNo]=str1;   // create the Number -> String binding
-		} 
-		
-		if(!SeenFname.count(str2))  // this is the first time I see this function name in charge of access
-		{
-			SeenFname.insert(str2);  // mark this function name as seen
-			GlobalfunctionNo++;      // create a dummy Function Number for this function
-			NametoADD[str2]=GlobalfunctionNo;   // create the string -> Number binding
-			ADDtoName[GlobalfunctionNo]=str2;   // create the Number -> String binding
-		} 
-		//cout<<str1<<"\t"<<str2<<"\t"<<bytes<<endl;
+		unsigned int pfno = NametoADD[str1];
+		unsigned int cfno = NametoADD[str2];
+		_Edges[pfno][cfno].setWeight(bytes); 
+		totalcomm += bytes;
+		if(bytes > maxcomm) maxcomm = bytes;
 	}
-	cout<<"GlobalfunctionNo = "<<GlobalfunctionNo<<endl;
-
-// 	try
-// 	{
-// 		g_applic = new Application(g_n);
-// 	}
-// 	catch (const std::bad_alloc& e) 
-// 	{
-// 		cout<<e.what()<<endl;
-// 		throw Exception("Allocation Failed",__FILE__,__LINE__);
-// 	}
 	
-/*	qfile>>str;
-	cout<<"Restoring "<<str<<"... ";
-	for(i=0; i< g_applic->_TotalFunctions; i++)
-	{
-		qfile>>temp;
-		g_applic->_Functions[i].setExecContrib(temp);
-	}
-	cout<<"Done !"<<endl;
+	_MaxComm = maxcomm;
+	_TotalComm = totalcomm;
 	
-	qfile>>str;
-	cout<<"Restoring "<<str<<"... ";
-	for(i=0;i<(g_applic->_TotalFunctions);i++)
+	//change to percentages
+	for(i=0 ; i < _TotalFunctions ; i++)
 	{
-		for(j=0;j<(g_applic->_TotalFunctions);j++)
+		for(j=0;j< _TotalFunctions;j++)
 		{
-			qfile>>temp;
-			g_applic->_Edges[i][j].setWeight(temp);
+			_Edges[i][j].setWeight( _Edges[i][j].getWeight()/totalcomm * 100 ); 
 		}
 	}
-	cout<<"Done !"<<endl;*/
 	
 	qfile.close();
 	mfile.close();
 }
 
+void Filter(unsigned int nThreshold)
+{
+	
+}

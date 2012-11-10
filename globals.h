@@ -1,6 +1,10 @@
 #ifndef _GLOBALS_H
 #define _GLOBALS_H
 
+#include <set>
+#include <map>
+#include <string>
+
 #include "partition.h"
 #include "application.h"
 
@@ -49,5 +53,10 @@ extern float PERCENT_CONNECTIVITY;
 extern float ALPHA;
 extern float BETA;
 extern float GAMMA;
+
+//for q2 files name to fno mappings
+extern std::set<std::string> SeenFname;
+extern std::map <std::string,unsigned int> NametoADD;
+extern std::map <unsigned int,std::string> ADDtoName;
 
 #endif

@@ -1,6 +1,11 @@
 #include <cstdlib>
 #include <cmath>
 #include <cassert>
+#include <iostream>
+#include <climits>
+#include "exception.h"
+
+using namespace std;
 
 // long long factorial(long long number)
 //  {
@@ -74,13 +79,21 @@ long long permutations(int n, int k)
     return value;
 }
 
-long long Count(int n, int k)
+unsigned long long Count(int n, int k)
 {
     int x;
-    long long total = 0;
+	double fact, comb, ster, total = 0;
 
     for(x=0;x<k;x++)
-        total += factorial(k-x)*combinations(k,x)*sterling_2nd(n-k,k-x);
-
-    return total;
+	{
+		fact = factorial(k-x);
+		comb = combinations(k,x);
+		ster = sterling_2nd(n-k,k-x);
+		
+		total += fact*comb*ster;
+		if(total < 0 || total > ULLONG_MAX )
+			throw Exception("Large Number of total partitions",__FILE__,__LINE__);
+	}
+	
+	return total;
 }

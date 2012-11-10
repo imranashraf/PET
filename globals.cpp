@@ -27,3 +27,8 @@ float ALPHA = 1.0;
 float BETA  = 1.0;
 float GAMMA = 1.0;
 
+//for q2 files name to fno mappings
+std::set<std::string> SeenFname;
+std::map <std::string,unsigned int> NametoADD;
+std::map <unsigned int,std::string> ADDtoName;
+

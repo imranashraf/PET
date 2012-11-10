@@ -24,13 +24,24 @@ $(EXEC): $(OBJECTS)
 %.o: %.c
 	$(CC) -c $(CFLAGS) $< -o $@ 
 
+mode1: $(EXEC)
+	@-./$(EXEC)  1 9  3
+
+mode2: $(EXEC)
+	@-./$(EXEC)  2 appData.txt  3
+
+mode3: $(EXEC)
+	@-./$(EXEC)  3 maipData.txt  quadData.txt 3
+
+mode4: $(EXEC)
+	@-./$(EXEC)  4 5 10 2 4
+
 run: $(EXEC)     #   n  k 
 	@-./$(EXEC)  10  3
 # 	@-cat graph.dot 2> /dev/null | dot -Tpdf -o graph.pdf
 
 debug: CFLAGS= -Wall -g -fopenmp 
-debug: all   #   n  k 
-# 	@- gdb $(EXEC) 
+debug: all
 
 valgrind: CFLAGS= -Wall -g -fopenmp 
 valgrind: clean all
@@ -39,8 +50,8 @@ valgrind: clean all
 gprof: CFLAGS= -Wall -g -O3 -fopenmp -pg 
 gprof: LDFLAGS=-fopenmp -pg
 gprof: clean all
-gprof:    	 #   n  k 
-	@-./$(EXEC)  12  4
+gprof:    	 # Mode  n  k 
+	@-./$(EXEC) 1 12  4
 	@-gprof -b ./$(EXEC) > profile.txt
 	@-cat profile.txt | ./gprof2dot.py --skew=0.01 | dot -Tpdf -o profile.pdf 
 # 	@-cat profile.txt | ./gprof2dot.py -e0 -n0 --skew=0.01 | dot -Tpdf -o profile.pdf   #all functions

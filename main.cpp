@@ -43,9 +43,6 @@ void SetSimulation(int argc, char * argv[])
 	string fname, maipfname, quadfname;
 	int Mode;
 	
-	string fname, maipfname, quadfname;
-	int Mode;
-	cout<<"Starting Simulation"<<endl;
 	if(argc>=2)
 		Mode = atoi(argv[1]);
 	else
@@ -167,45 +164,14 @@ void SetSimulation(int argc, char * argv[])
 			g_applic->RestoreQ2();
 			cout<<"Done !"<<endl;
 			
-			//start simulation
-			try
-			{
-				Simulate();
-			}
-			catch(Exception &e)
-			{
-				cerr<<"Exception occurred at "<<e.File()<<":"<<e.Line()<<endl 
-				<<"\twith reason:\"" <<e.Reason()<<endl;
-			}
-		break;
-		//////////////////////////////////////////////////////////////////////
-		case 3:
-			cout<<"Restore Q2 Mode (Application will be restored from maip and quad data files)"<<endl;
-			if(argc != 5) 
-				throw Exception("Invalid command line arguments",__FILE__,__LINE__);
+			#ifdef FILTER
+			//store the current application
+			g_unfiltered_applic = g_applic;
+			g_applic->Filter();
 			
-			maipfname = argv[2]; 
-			quadfname = argv[3];
-			g_k = atoi(argv[4]); //number of clusters
-			g_n = getq2_g_n(maipfname, quadfname); //get g_n from maip and quad files
-			if(g_k >= g_n)
-				throw Exception("g_n should be greater than g_k",__FILE__,__LINE__);
-			
-			//create application
-			try
-			{
-				g_applic = new Application(g_n);
-			}
-			catch (const std::bad_alloc& e) 
-			{
-				cerr<<e.what()<<endl;
-				throw Exception("Allocation Failed",__FILE__,__LINE__);
-			}
-			
-			//read q2 files to restore application data
-			cout<<"Restoring from file ...";
-			g_applic->RestoreQ2();
-			cout<<"Done !"<<endl;
+			g_applic = g_filtered_applic;
+			g_n=g_applic->getTotalFunctions();
+			#endif
 			
 			//start simulation
 			try
@@ -270,9 +236,6 @@ void SetSimulation(int argc, char * argv[])
 			throw Exception("Invalid command line arguments",__FILE__,__LINE__);
 		break;
 	}
-		
-	cout<<"End of Simulation"<<endl;
-	return 0; 
 }
 
 void Simulate()
@@ -314,6 +277,11 @@ void Simulate()
 	fout<<"===================================="<<endl;
 	g_applic->Print(fout);
 	g_applic->Print2Dot();
+	
+	#ifdef FILTER
+	fout<<"Execution contribution of filtered functions "<<TotalFilteredContrib<<endl;
+	fout<<"Communication of filtered functions "<<TotalFilteredComm<<endl;
+	#endif
 	
 	totalPartitions = Count(g_n,g_k);
 	fout<<"Total number of possible partitions= "<<totalPartitions<<endl;
@@ -418,7 +386,14 @@ void Simulate()
 	#endif
 	delete bestPartition; 
 	delete timer;
+	
+ 	#ifdef FILTER
+ 	delete g_filtered_applic;
+ 	delete g_unfiltered_applic;
+	#else
 	delete g_applic;
+	#endif
+	
 	delete heuristic;
 	delete heurPartition;
 	#ifdef STORE_COSTS

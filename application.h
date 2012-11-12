@@ -5,7 +5,6 @@
 #include "edge.h"
 
 typedef unsigned int UINT;
-
 class Application
 {
 	private:
@@ -21,10 +20,11 @@ class Application
 		void Init();
 		UINT getTotalFunctions() const
 			{ return _TotalFunctions; }
+			
 		float getFunctionContrib(UINT fno){ return _Functions[fno].getExecContrib(); }
+		void setFunctionContrib(UINT fno, double contrib){_Functions[fno].setExecContrib(contrib);}
 		float getEdgeWeight(UINT i, UINT j){return _Edges[i][j].getWeight();}
-		
-		void CreateRanks();
+		void setEdgeWeight(UINT i, UINT j, double weight){_Edges[i][j].setWeight(weight);}
 		
 		void setClusterNo(UINT fno, UINT cno){ _Functions[fno].setClusterNo(cno); }
 		UINT getClusterNo(UINT fno){return _Functions[fno].getClusterNo();}
@@ -44,6 +44,7 @@ class Application
 		void Save();
 		void Restore();
 		void RestoreQ2();
+		void Filter();
 		
 		~Application()
 		{

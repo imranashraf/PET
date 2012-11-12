@@ -1,4 +1,5 @@
 #TODO fix floating point number printing
+#TODO remove all globals for application and number of functions
 CC=g++
 CFLAGS=-Wall -O3 -fopenmp
 LDFLAGS= -fopenmp
@@ -37,8 +38,6 @@ mode4: $(EXEC)
 	@-./$(EXEC)  4 5 10 2 4
 
 run: mode1
-run: $(EXEC)     #   n  k 
-	@-./$(EXEC)  10  3
 # 	@-cat graph.dot 2> /dev/null | dot -Tpdf -o graph.pdf
 
 debug: CFLAGS= -Wall -g -fopenmp 

@@ -16,7 +16,6 @@ class Function
 		UINT _FunctionNo;
 		UINT _ClusterNo;	//no of the cluster to which this function belongs
 							//-1 for not assigned yet
-		double * _Ranks;
 
 	public:
 		Function(){_ExecContrib=0; _FunctionNo=-1; _ClusterNo=-1;}
@@ -24,8 +23,6 @@ class Function
 		UINT getFunctionNo(){return _FunctionNo;}
 		void setExecContrib(float contrib);
 		float getExecContrib(){return _ExecContrib;}
-		
-		void CreateRanks();
 		
 		void setClusterNo(UINT cno){_ClusterNo = cno;}
 		UINT getClusterNo(){return _ClusterNo;}
@@ -50,11 +47,7 @@ class Function
 		}
 		
 		void Print(std::ostream & fout);
-		~Function()
-		{
-			delete[] _Ranks;
-			_Ranks=NULL;
-		}
+		~Function()	{}
 };
 
 #endif

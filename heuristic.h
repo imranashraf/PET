@@ -13,10 +13,9 @@ typedef unsigned int UINT;
 class Heuristic : public Algorithm
 {
 	public:
-		Heuristic();
+		Heuristic() {}
 		void Apply();
 		void InitialSelection();
-// 		void InitialSelection(Partition & heurPartition);
 };
 
 #endif

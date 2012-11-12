@@ -8,11 +8,6 @@
 
 using namespace std;
 
-Heuristic::Heuristic()
-{ 
-	g_applic->CreateRanks();
-}
-
 void Heuristic::InitialSelection()
 {
 	UINT fno,cno;

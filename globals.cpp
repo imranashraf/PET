@@ -4,7 +4,9 @@
 UINT g_n;	//number of functions
 UINT g_k;	//number of clusters
 
-Application * g_applic;		//the application to be partitioned
+Application * g_applic;		//the application (filtered or orignal) to be partitioned
+Application * g_unfiltered_applic;		//the unfiltered application to be partitioned
+Application * g_filtered_applic;		//the filtered application to be partitioned
 
 #ifdef STORE_PARTITIONS
 Partition* Partitions;		//the partitions found
@@ -32,3 +34,8 @@ std::set<std::string> SeenFname;
 std::map <std::string,unsigned int> NametoADD;
 std::map <unsigned int,std::string> ADDtoName;
 
+//Threshold value (no of functions) selected based on :
+unsigned int EXEC_THRESHOLD = 6;	//execution contribution (maip)
+unsigned int COMM_THRESHOLD = 6;	//communication contribution (quad)
+double TotalFilteredContrib;
+double TotalFilteredComm;

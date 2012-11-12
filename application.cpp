@@ -3,6 +3,8 @@
 #include <fstream>
 #include <set>
 #include <map>
+#include <vector>
+#include <list>
 
 #include "application.h"
 #include "rng.h"
@@ -216,12 +218,6 @@ void Application::Print2Dot()
 	dotf.close();
 }
 
-void Application::CreateRanks()
-{
-	for(UINT i =0 ; i<_TotalFunctions;i++)
-		_Functions[i].CreateRanks();
-}
-
 void Application::Save()
 {
 	unsigned int i,j;
@@ -233,7 +229,6 @@ void Application::Save()
 		throw Exception("File Opening Error",__FILE__,__LINE__);
 	}
 	
-<<<<<<< HEAD
 	appDataFile<<g_n<<endl;
 	
 	appDataFile<<setiosflags(ios::fixed | ios::showpoint);
@@ -374,7 +369,94 @@ void Application::RestoreQ2()
 	mfile.close();
 }
 
-void Filter(unsigned int nThreshold)
+class MyData
 {
+	public:
+		int edgeNo;
+		double edgeWeight;
+		bool operator<(MyData rhs) { return edgeWeight > rhs.edgeWeight; }
+};
+
+void Application::Filter()
+{
+	unsigned int nContribThresh = EXEC_THRESHOLD;
+	unsigned int nCommThresh = COMM_THRESHOLD;
+	unsigned int nTotalThresh = nContribThresh + nCommThresh;	//these are the total number of functions in the filtered application
+	TotalFilteredComm=0, TotalFilteredContrib=0;
+	
+	set<unsigned int>filteredFtnNos;
+	list<MyData> edgeList;
+	
+	if(nContribThresh > g_n)
+		throw Exception("nContribThresh should be less than n",__FILE__,__LINE__);
+	if(nCommThresh > g_n )
+		throw Exception("nCommThresh should be less than n",__FILE__,__LINE__);
+	if(nTotalThresh > g_n )
+		throw Exception("nTotalThresh should be less than n",__FILE__,__LINE__);
+	
+	MyData data;
+	unsigned int e=0, i,j;
+	for(i=0 ; i < _TotalFunctions ; i++)
+	{
+		for(j=0;j< _TotalFunctions;j++)
+		{
+			data.edgeNo = e++;
+			data.edgeWeight = _Edges[i][j].getWeight();
+			edgeList.push_back(data);
+		}
+	}
+	
+	edgeList.sort();
+	
+	//make set of filtered function numbers
+	unsigned int f, edge, prod, cons;
+	for(f=0; f<nContribThresh; f++)
+	{
+		filteredFtnNos.insert(f);	//top nContribThresh ftns filtered (as they are already in ascending order)
+	}
+	for (list<MyData>::const_iterator citer = edgeList.begin(); (citer != edgeList.end()) ; ++citer)
+	{
+		edge = (*citer).edgeNo;
+		prod = edge / g_n;	//row
+		cons = edge % g_n;	//col
+		if (f<nTotalThresh && filteredFtnNos.count(prod)==0)	{ filteredFtnNos.insert(prod); f++; }
+		if (f<nTotalThresh && filteredFtnNos.count(cons)==0)	{ filteredFtnNos.insert(cons); f++; }
+		
+		if(f>=nTotalThresh) break;
+	}
+	
+	//create the filtered application
+	try
+	{
+		g_filtered_applic = new Application(nTotalThresh);
+	}
+	catch (const std::bad_alloc& e) 
+	{
+		cerr<<e.what()<<endl;
+		throw Exception("Allocation Failed",__FILE__,__LINE__);
+	}
+	
+	//set the execution contributions of functions in new application
+	double contrib;
+	set<unsigned int>::iterator it;
+	for ( i=0 , it=filteredFtnNos.begin() ; it != filteredFtnNos.end(); i++ , it++ )
+	{
+		contrib = g_applic->getFunctionContrib(*it);
+  		g_filtered_applic->setFunctionContrib(i,contrib);
+		TotalFilteredContrib+=contrib;
+	}
+	
+	//set the communication percentage of edges of new application
+	double weight;
+	set<unsigned int>::iterator it1, it2;
+	for ( i=0, it1=filteredFtnNos.begin(); it1 != filteredFtnNos.end(); i++, it1++ )
+	{
+		for ( j=0, it2=filteredFtnNos.begin(); it2 != filteredFtnNos.end(); j++, it2++ )
+		{
+			weight = g_applic->getEdgeWeight(*it1,*it2);
+			g_filtered_applic->setEdgeWeight(i,j,weight);
+			TotalFilteredComm+=weight;
+		}
+	}
 	
 }

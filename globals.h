@@ -20,7 +20,7 @@
 #define STORE_COSTS
 
 //uncomment the following if you want to run heuristic only
-#define HEURISTIC_ONLY
+// #define HEURISTIC_ONLY
 
 //comment the following if you want to show output results on screen
 // #define TOFILE
@@ -43,6 +43,8 @@ extern float* Costs;
 #endif
 
 extern Application* g_applic;
+extern Application * g_unfiltered_applic;
+extern Application * g_filtered_applic;
 
 extern ULL commLow;
 extern ULL commHigh;
@@ -58,5 +60,13 @@ extern float GAMMA;
 extern std::set<std::string> SeenFname;
 extern std::map <std::string,unsigned int> NametoADD;
 extern std::map <unsigned int,std::string> ADDtoName;
+
+//comment the following if you do not want to filter functions in Q2 mode
+#define FILTER
+
+extern unsigned int EXEC_THRESHOLD;
+extern unsigned int COMM_THRESHOLD;
+extern double TotalFilteredContrib;
+extern double TotalFilteredComm;
 
 #endif

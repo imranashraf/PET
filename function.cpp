@@ -14,16 +14,3 @@ void Function::Print(std::ostream & fout)
 {
 	fout<<"("<<_FunctionNo<<","<<_ExecContrib<<")";
 }
-
-void Function::CreateRanks()
-{
-	try
-	{
-		_Ranks = new double[g_k];
-	}
-	catch (const std::bad_alloc& e) 
-	{
-		cout<<e.what()<<endl;
-		throw Exception("Allocation Failed",__FILE__,__LINE__);
-	}
-}

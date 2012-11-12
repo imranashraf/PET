@@ -233,6 +233,7 @@ void Application::Save()
 		throw Exception("File Opening Error",__FILE__,__LINE__);
 	}
 	
+<<<<<<< HEAD
 	appDataFile<<g_n<<endl;
 	
 	appDataFile<<setiosflags(ios::fixed | ios::showpoint);
@@ -365,6 +366,7 @@ void Application::RestoreQ2()
 		for(j=0;j< _TotalFunctions;j++)
 		{
 			_Edges[i][j].setWeight( _Edges[i][j].getWeight()/totalcomm * 100 ); 
+	
 		}
 	}
 	

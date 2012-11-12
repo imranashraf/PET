@@ -37,6 +37,8 @@ mode4: $(EXEC)
 	@-./$(EXEC)  4 5 10 2 4
 
 run: mode1
+run: $(EXEC)     #   n  k 
+	@-./$(EXEC)  10  3
 # 	@-cat graph.dot 2> /dev/null | dot -Tpdf -o graph.pdf
 
 debug: CFLAGS= -Wall -g -fopenmp 

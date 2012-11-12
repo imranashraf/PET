@@ -43,6 +43,9 @@ void SetSimulation(int argc, char * argv[])
 	string fname, maipfname, quadfname;
 	int Mode;
 	
+	string fname, maipfname, quadfname;
+	int Mode;
+	cout<<"Starting Simulation"<<endl;
 	if(argc>=2)
 		Mode = atoi(argv[1]);
 	else
@@ -77,6 +80,12 @@ void SetSimulation(int argc, char * argv[])
 				cerr<<e.what()<<endl;
 				throw Exception("Allocation Failed",__FILE__,__LINE__);
 			}
+		
+			g_applic->Init();
+			cout<<"Saving application to appData.txt ...";
+			g_applic->Save();
+			cout<<" Done ! "<<endl;
+		
 		
 			g_applic->Init();
 			cout<<"Saving application to appData.txt ...";
@@ -119,6 +128,46 @@ void SetSimulation(int argc, char * argv[])
 
 			g_applic->Restore();
 			
+			try
+			{
+				Simulate();
+			}
+			catch(Exception &e)
+			{
+				cerr<<"Exception occurred at "<<e.File()<<":"<<e.Line()<<endl 
+				<<"\twith reason:\"" <<e.Reason()<<endl;
+			}
+		break;
+		//////////////////////////////////////////////////////////////////////
+		case 3:
+			cout<<"Restore Q2 Mode (Application will be restored from maip and quad data files)"<<endl;
+			if(argc != 5) 
+				throw Exception("Invalid command line arguments",__FILE__,__LINE__);
+			
+			maipfname = argv[2]; 
+			quadfname = argv[3];
+			g_k = atoi(argv[4]); //number of clusters
+			g_n = getq2_g_n(maipfname, quadfname); //get g_n from maip and quad files
+			if(g_k >= g_n)
+				throw Exception("g_n should be greater than g_k",__FILE__,__LINE__);
+			
+			//create application
+			try
+			{
+				g_applic = new Application(g_n);
+			}
+			catch (const std::bad_alloc& e) 
+			{
+				cerr<<e.what()<<endl;
+				throw Exception("Allocation Failed",__FILE__,__LINE__);
+			}
+			
+			//read q2 files to restore application data
+			cout<<"Restoring from file ...";
+			g_applic->RestoreQ2();
+			cout<<"Done !"<<endl;
+			
+			//start simulation
 			try
 			{
 				Simulate();
@@ -221,6 +270,9 @@ void SetSimulation(int argc, char * argv[])
 			throw Exception("Invalid command line arguments",__FILE__,__LINE__);
 		break;
 	}
+		
+	cout<<"End of Simulation"<<endl;
+	return 0; 
 }
 
 void Simulate()
@@ -382,8 +434,8 @@ void usage()
 	3 Q2 Mode			< argc == 5 >	./partool MODE(3) <maipFileName> <quadFileName> <k>
 	4 Long Run Mode		< argc == 6 >	./partool MODE(4) <nLower> <nHigher> <kLower> <kHigher>
 	*/
-	cout<<"Mode 1: Random Mode  		\n  ./partool 1 <n> <k> "<<endl;
-	cout<<"Mode 2: Restore Mode 		\n  ./partool 2 <appFileName> <k> "<<endl;
-	cout<<"Mode 3: Q2 Mode 			\n  ./partool 3 <maipFileName> <quadFileName> <k>"<<endl;
-	cout<<"Mode 4: Long Run Mode 	\n  ./partool 4 <nLower> <nHigher> <kLower> <kHigher>"<<endl;
+	cout<<"Mode 1: Random Mode  \n  ./partool 1 <n> <k> "<<endl;
+	cout<<"Mode 2: Restore Mode \n  ./partool 2 <appFileName> <k> "<<endl;
+	cout<<"Mode 3: Q2 Mode \n  ./partool 3 <maipFileName> <quadFileName> <k>"<<endl;
+	cout<<"Mode 4: Long Run Mode \n  ./partool 4 <nLower> <nHigher> <kLower> <kHigher>"<<endl;
 }

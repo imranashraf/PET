@@ -17,6 +17,8 @@ class Partition
 		Partition(UINT totalFunctions, UINT nclusters);
 		void setCluster(UINT totalFunctions, UINT nclusters);
 		void addFunction(UINT ftnNo, UINT clusterNo);
+		void removeFunction(UINT ftnNo);
+		
 		void Print(std::ostream & fout);
 		float Cost();
 		float BalancingPenalty();

@@ -25,7 +25,7 @@ ULL execLow  = 10;
 ULL execHigh = 1000;
 float PERCENT_CONNECTIVITY = 50;
 
-float ALPHA = 1.0;
+float ALPHA = 0.5;
 float BETA  = 1.0;
 float GAMMA = 1.0;
 

@@ -46,6 +46,20 @@ void Partition::addFunction(UINT ftnNo, UINT clusterNo)
 	_Clusters[clusterNo].addFunction(ftnNo,clusterNo);
 }
 
+void Partition::removeFunction(UINT ftnNo)
+{
+	UINT i;
+	
+	for( i=0; i< _nClusters ; i++)
+	{
+		if( _Clusters[i].inCluster(ftnNo) == true )
+		{
+			_Clusters[i].removeFunction(ftnNo);
+			break;
+		}
+	}
+}
+
 float Partition::BalancingPenalty()
 {
 	float EC=0.0, BP=0.0;

@@ -110,6 +110,27 @@ void Cluster::addFunction(UINT fno , UINT cno)
 	
 }
 
+void Cluster::removeFunction(UINT fno)
+{
+	UINT i=0;
+	for(i=0;i<_FunctionCount;i++)
+	{
+		if(_Functions[i] == fno)
+		{
+			if(_FunctionCount > 0)
+			{
+				_FunctionCount--;
+				g_applic->setClusterNo(fno, -1);
+			}
+			else //should not come here in the current implementation
+			{
+				cout<<"Cluster Empty"<<endl;
+				exit(1);
+			}
+		}		
+	}
+}
+
 void Cluster::getNeighbours(std::set<UINT>& Neighbours)
 {
 	UINT fno,i,j;

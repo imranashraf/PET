@@ -14,6 +14,7 @@
 #include "globals.h"
 #include "utility.h"
 #include "exception.h"
+#include "SimulatedAnnealer.h"
 
 using namespace std;
 void SetSimulation(int argc, char * argv[]);
@@ -241,6 +242,7 @@ void SetSimulation(int argc, char * argv[])
 void Simulate()
 {
 	Algorithm * heuristic;
+	Algorithm * sannealer;
 	#ifndef HEURISTIC_ONLY
 	Algorithm * bforce;	
 	#endif
@@ -378,6 +380,36 @@ void Simulate()
 	fout<<"\nDetails of Partition found by Heuristic Algorithm ..."<<endl;
 	heurPartition->Print(fout);
 
+	char ch;
+	cout<<"Press Key + Enter"<<endl;
+	cin>>ch;
+	
+	/********  Simulated Annealing ********/
+	fout<<"====================================";
+	fout<<endl<<"Simmulated Annealing Summary"<<endl;
+	fout<<"===================================="<<endl;
+
+	try
+	{
+		sannealer = new SimulatedAnnealer();	
+	}
+	catch (const std::bad_alloc& e) 
+	{
+		cerr<<e.what()<<endl;
+		throw Exception("Allocation Failed",__FILE__,__LINE__);
+	}
+	
+	g_applic->Clear();
+
+	timer->Start();
+	sannealer->Apply(); 
+	timer->Stop();
+	timer->Print(fout); //print time
+
+	//fout<<"\nDetails of Partition found by Heuristic Algorithm ..."<<endl;
+	//heurPartition->Print(fout);
+	
+	//closing
 	#ifdef TOFILE
 	fout.close();
 	#endif

@@ -29,7 +29,10 @@ class Cluster
 		Cluster(){_FunctionCount=0; _Status = UnFinished; _Functions=NULL;}
 		Cluster(UINT totalFunctions);
 		void setFunctionCapacity(UINT totalFunctions);
+		
 		void addFunction(UINT fno, UINT cno);
+		void removeFunction(UINT fno);
+		
 		float ExecCost();
 		float ExternalComm();
 		float InternalComm();

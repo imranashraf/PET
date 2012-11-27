@@ -20,7 +20,7 @@ SimulatedAnnealer::SimulatedAnnealer()
 	
 	try
 	{
-		bestPartition = new Partition(g_n,g_k);
+		bestSAnPartition = new Partition(g_n,g_k);
 	}
 	catch (const std::bad_alloc& e) 
 	{
@@ -28,16 +28,15 @@ SimulatedAnnealer::SimulatedAnnealer()
 		throw Exception("Allocation Failed",__FILE__,__LINE__);
 	}
 	
-	initTemp = 1;
-	decayRate = 0.999;
-	iterations = 1000;
+	initTemp = 100;
+	decayRate = 0.99;
+	iterations = 10000;
 }
 
 void SimulatedAnnealer::InitialSelection()
 {
 	UINT fno,cno;
-	cout<<"Inside InitialSelection"<<endl;
-
+	
 	for( cno=0; cno<g_k; cno++)
 	{
 		fno = cno; 	//The functions are sorted in descending order
@@ -46,10 +45,9 @@ void SimulatedAnnealer::InitialSelection()
 
 	for( fno=g_k; fno<g_n; fno++)
 	{
-		cno = ( abs( rng.rand_int31() ) % ( (g_k-1) - 0 + 1 ) );
+		cno = 0 + ( abs( rng.rand_int31() ) % ( (g_k-1) - 0 + 1 ) );
 		currPartition->addFunction(fno,cno);
 	}
-	cout<<"Done !!!"<<endl;
 }
 
 void SimulatedAnnealer::Apply() 
@@ -58,12 +56,9 @@ void SimulatedAnnealer::Apply()
 	double nextCost;
 	Partition * prevPartition;
 	
-	cout<<"Inside Apply"<<endl;
-	
 	InitialSelection();
 	currCost= currPartition->Cost();
 	minCost = currCost;
-	
 	
 	try
 	{
@@ -77,16 +72,24 @@ void SimulatedAnnealer::Apply()
 	
 	for (int i = 0; i < iterations; i++) 
 	{
+		#ifdef DEBUG
 		if (i % 100 == 0) 
 		{
 			cout<<endl<<i<<"\t"<<minCost<<"\t"<<currCost<<endl;
-			currPartition->Print(cout);
 		}
+		#endif
 		
-		prevPartition = currPartition; //save currPartition
+		*prevPartition = *currPartition; //save currPartition
 		Step(); //step to a new partition (currPartition will be modified)
 		
 		nextCost = currPartition->Cost();
+		
+		#ifdef DEBUG
+		cout<<rng.rand_closed01()
+			<<"\t"
+			<<exp( (currCost - nextCost) / temperature)
+			<<endl; 
+		#endif
 		
 		if (nextCost <= currCost || 
 			rng.rand_closed01() /**/ < exp((currCost - nextCost) / temperature)) 
@@ -94,36 +97,27 @@ void SimulatedAnnealer::Apply()
 			currCost = nextCost;
 			if (nextCost < minCost)
 			{
-				bestPartition = currPartition;	//clone
+				*bestSAnPartition = *currPartition;	//clone
 				minCost = nextCost;
 			}
 		}
 		else
-			currPartition = prevPartition;	//undo
+			*currPartition = *prevPartition;	//undo
 		
 		temperature = temperature*decayRate; /**/
 	}
 	
-	cout<<"Cost of the Best Partition found by Simmulated Annealing = "<<minCost<<endl;
-	cout<<"Best Partition found by Simmulated Annealing"<<endl;
-	bestPartition->Print(cout);
-	
 	delete prevPartition;
-	cout<<"Done !!!"<<endl;
 }
 
 void SimulatedAnnealer::Step()
 {
 	UINT fno, cno;
-	cout<<"Inside Step"<<endl;
-	
-	fno = ( abs( rng.rand_int31() ) % ( (g_n-1) - (g_k) + 1 ) );  //not changing the ftns from initial selection
-	cno = ( abs( rng.rand_int31() ) % ( (g_k-1) - 0 + 1 ) );
-	
-	cout<<"adding function "<<fno<<" to cluster "<<cno<<endl;
+
+	fno = g_k + ( abs( rng.rand_int31() ) % ( (g_n-1) - (g_k) + 1 ) );  //not changing the ftns from initial selection
+	cno = 0 + ( abs( rng.rand_int31() ) % ( (g_k-1) - 0 + 1 ) );
 	
 	currPartition->removeFunction(fno);
 	currPartition->addFunction(fno,cno);
-	cout<<"Done !!!"<<endl;
 }
 

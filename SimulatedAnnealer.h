@@ -11,7 +11,6 @@ class SimulatedAnnealer : public Algorithm
 {
     private:
 		Partition 	*currPartition;
-		Partition	*bestPartition;
 		double	currCost;
 		double	minCost;
 		double	initTemp;
@@ -22,7 +21,7 @@ class SimulatedAnnealer : public Algorithm
     public:
 		SimulatedAnnealer();
 		void InitialSelection();
-    		void Apply();
+    	void Apply();
 		void Step();
 };
 

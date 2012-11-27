@@ -311,7 +311,7 @@ void Simulate()
 
 	#ifdef STORE_PARTITIONS
 	fout<<"Partitions evaluated are :"<<endl;
-	for(int i=0 ; i < totalPartitions ; i++)
+	for(unsigned int i=0 ; i < totalPartitions ; i++)
 	{
 		fout<<endl<<"Partition "<<i<<endl;
 		Partitions[i].Print(fout);
@@ -351,7 +351,7 @@ void Simulate()
 	timer->Print(fout); //print time
 
 	fout<<"\nDetails of Best Partition found by Exhaustive Search ..."<<endl;
-	bestPartition->Print(fout);
+	bestExhPart->Print(fout);
 	#endif
 	
 	
@@ -377,13 +377,9 @@ void Simulate()
 	timer->Stop();
 	timer->Print(fout); //print time
 
-	fout<<"\nDetails of Partition found by Heuristic Algorithm ..."<<endl;
-	heurPartition->Print(fout);
+	fout<<"\nDetails of Best Partition found by Heuristic Algorithm ..."<<endl;
+	bestHeurPart->Print(fout);
 
-	char ch;
-	cout<<"Press Key + Enter"<<endl;
-	cin>>ch;
-	
 	/********  Simulated Annealing ********/
 	fout<<"====================================";
 	fout<<endl<<"Simmulated Annealing Summary"<<endl;
@@ -406,8 +402,8 @@ void Simulate()
 	timer->Stop();
 	timer->Print(fout); //print time
 
-	//fout<<"\nDetails of Partition found by Heuristic Algorithm ..."<<endl;
-	//heurPartition->Print(fout);
+	fout<<"\nDetails of Best Partition found by Simmulated Annealing..."<<endl;
+	bestSAnPartition->Print(fout);
 	
 	//closing
 	#ifdef TOFILE
@@ -416,8 +412,11 @@ void Simulate()
 	#ifndef HEURISTIC_ONLY
 	delete bforce;
 	#endif
-	delete bestPartition; 
+	delete bestExhPart; 
 	delete timer;
+	
+	delete sannealer;
+	delete bestSAnPartition;
 	
  	#ifdef FILTER
  	delete g_filtered_applic;
@@ -427,7 +426,7 @@ void Simulate()
 	#endif
 	
 	delete heuristic;
-	delete heurPartition;
+	delete bestHeurPart;
 	#ifdef STORE_COSTS
 	delete[] Costs;
 	#endif

@@ -23,17 +23,13 @@ static void _Bruteforce(int n)
     {
 		//store this partition here or do something with it
 		Partition tempPart(g_n,g_k);
-		
+
         for(UINT j=0;j<g_n;j++)
 		{
-/* 			#ifdef DEBUG
- 			cout<<"Function "<<j<<" is in Cluster "<<partition[j]<<endl;
-			#endif*/
 			#ifdef STORE_PARTITIONS
-			Partitions[parCount].addFunction(j,partition[j]);
+			Partitions[parCount].addFunction(j,partition[g_n-j-1]);
 			#endif
-			
-			tempPart.addFunction( j , partition[j] );
+			tempPart.addFunction( j , partition[g_n-j-1] );
 		}
 		#ifdef DEBUG
  		cout<<endl;
@@ -47,8 +43,8 @@ static void _Bruteforce(int n)
 		tempPart.Print(cout);
 		#endif
 		
-		if( (tempPart.Cost() ) < (bestPartition->Cost() ) )
-			*bestPartition = tempPart;
+		if( (tempPart.Cost() ) < (bestExhPart->Cost() ) )
+			*bestExhPart = tempPart;
 
 		parCount++;
 		if(parCount % 100000 == 0)
@@ -84,7 +80,7 @@ void Bruteforce_kfixed(int n, int k)
         partition[i] = i+k-n;
 
     _Bruteforce(n-k);
-
+	
 	delete[] partition;
 
 }
@@ -96,7 +92,7 @@ void Bruteforce::Apply()
 	
 	try
 	{
-		bestPartition = new Partition(g_n,g_k);
+		bestExhPart = new Partition(g_n,g_k);
 	}
 	catch (const std::bad_alloc& e) 
 	{

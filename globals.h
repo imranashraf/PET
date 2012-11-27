@@ -17,7 +17,7 @@
 
 //comment the following to stop storing the scores of all partions produced in bruteforce algorithm
 //do it for small simulations only as it will require more memory and hard disk space
-#define STORE_COSTS
+// #define STORE_COSTS
 
 //uncomment the following if you want to run heuristic only
 // #define HEURISTIC_ONLY
@@ -35,8 +35,9 @@ extern UINT g_k;	//number of clusters
 extern Partition* Partitions;
 #endif
 
-extern Partition* bestPartition;	//best partition found by exhaustive search
-extern Partition* heurPartition;	//partition found by heuristic algorithm
+extern Partition* bestExhPart;	//best partition found by exhaustive search
+extern Partition* bestHeurPart;	//partition found by heuristic algorithm
+extern Partition* bestSAnPartition;	//partition found by Simmulated Annealing
 
 #ifdef STORE_COSTS
 extern float* Costs;
@@ -68,5 +69,7 @@ extern unsigned int EXEC_THRESHOLD;
 extern unsigned int COMM_THRESHOLD;
 extern double TotalFilteredContrib;
 extern double TotalFilteredComm;
+
+void Pause();
 
 #endif

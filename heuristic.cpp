@@ -15,7 +15,7 @@ void Heuristic::InitialSelection()
 	for( cno=0; cno<g_k; cno++)
 	{
 		fno = cno; 	//The functions are sorted in descending order
-		heurPartition->addFunction(fno,cno);
+		bestHeurPart->addFunction(fno,cno);
 	}
 }
 
@@ -59,7 +59,7 @@ void Heuristic::Apply()
 	
 	try
 	{
-		heurPartition = new Partition(g_n,g_k);
+		bestHeurPart = new Partition(g_n,g_k);
 	}
 	catch (const std::bad_alloc& e) 
 	{
@@ -109,8 +109,6 @@ void Heuristic::Apply()
 		throw Exception("Allocation Failed",__FILE__,__LINE__);
 	}
 	
-	
-// 	InitialSelection(heurPartition);
 	InitialSelection();
 	
 	UINT finishedClusters=0;	//counter to keep track of finished clusters
@@ -122,17 +120,17 @@ void Heuristic::Apply()
 			Marked[cno] = -1; //no function is marked for any cluster
 			Candidates[cno].clear();
 			
-			if( (heurPartition->getClusterStatus(cno)) == UnFinished)
+			if( (bestHeurPart->getClusterStatus(cno)) == UnFinished)
 			{
 				//find the neighbouring nodes of cluster cno
 				Neighbours.clear();	//first clear the set
-				heurPartition->getClusterNeighbours(cno, Neighbours);
+				bestHeurPart->getClusterNeighbours(cno, Neighbours);
 				nNeighbours= Neighbours.size();	
 				
 				//if no neighbouring node exists, mark cluster as finished
 				if(nNeighbours == 0)
 				{
-					heurPartition->setClusterStatus(Finished,cno);
+					bestHeurPart->setClusterStatus(Finished,cno);
 					finishedClusters++;
 					continue;
 				}
@@ -175,7 +173,6 @@ void Heuristic::Apply()
 			{
 				if( Marked[cno1] == Marked[cno2] )
 				{
-// 					cout<<"Resolving Conflict, fno = "<<Marked[cno1]<<" for cno = "<<cno1<<" and cno "<<cno2<<endl;
 					//Here we are giving priority based on rank of the tempfno for cno1 or cno2
 					UINT tempfno = Marked[cno1];	//or Marked[cno2]
 					if( Ranks[cno1][tempfno] > Ranks[cno2][tempfno] )
@@ -192,15 +189,10 @@ void Heuristic::Apply()
 		{
 			if(Marked[cno] != -1)	//if there is candidate marked for merging
 			{
-// 				cout<<"Adding "<<Marked[cno]<<" to cluster "<<cno<<endl;				
-				heurPartition->addFunction(Marked[cno],cno);		//merge it to cluster cno
+				bestHeurPart->addFunction(Marked[cno],cno);		//merge it to cluster cno
 				Marked[cno] = -1;
 			}
 		}
-/*		cout<<endl<<"End of Iteration, finishedClusters = "<<finishedClusters<<endl;
-		heurPartition->Print();
-		cout<<"Press ENTER to continue ..."<<endl;
-		getchar();*/
 	}
 	
 	for(cno=0;cno<k;cno++)

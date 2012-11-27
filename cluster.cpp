@@ -69,7 +69,6 @@ float Cluster::ExecCost()
 	
 	for(i=0; i<_FunctionCount; i++)
 	{
-// 		cout<<i<<"  "<<_FunctionCount<<"  "<<_FunctionCapacity<<endl;
 		EC += g_applic->getFunctionContrib( _Functions[i] );
 	}
 		
@@ -112,15 +111,19 @@ void Cluster::addFunction(UINT fno , UINT cno)
 
 void Cluster::removeFunction(UINT fno)
 {
-	UINT i=0;
+	UINT i,j;
+	
 	for(i=0;i<_FunctionCount;i++)
 	{
 		if(_Functions[i] == fno)
 		{
 			if(_FunctionCount > 0)
 			{
-				_FunctionCount--;
 				g_applic->setClusterNo(fno, -1);
+				_FunctionCount--;
+				
+				for(j=i;j<_FunctionCount;j++) //shift back the functions after this
+					_Functions[j] = _Functions[j+1];
 			}
 			else //should not come here in the current implementation
 			{

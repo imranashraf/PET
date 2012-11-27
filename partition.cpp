@@ -139,9 +139,19 @@ void Partition::Print(std::ostream & fout)
 	}
 	
 	fout<<fixed;
-	fout<<"Cost of Partition = "<<Cost()<<endl;
-	fout<<"\tBalancingPenalty = "<<BalancingPenalty()<<endl;
-	fout<<"\tCommunicationCost = "<<CommunicationCost()<<endl;
-	fout<<"\tCouplingDegree = "<<CouplingDegree()<<endl;
+	
+	fout<<"Cost = "<<Cost()
+		<<" ("
+		<<" BP = "<<BalancingPenalty()
+		<<" CC = "<<CommunicationCost()
+		<<" CD = "<<CouplingDegree()
+		<<" )"
+		<<endl;
+	
+// 	fout<<"Cost of Partition = "<<Cost()<<endl;
+// 	fout<<"\tBalancingPenalty = "<<BalancingPenalty()<<endl;
+// 	fout<<"\tCommunicationCost = "<<CommunicationCost()<<endl;
+// 	fout<<"\tCouplingDegree = "<<CouplingDegree()<<endl;
+	
 	fout.unsetf(ios::fixed | ios::scientific);
 }

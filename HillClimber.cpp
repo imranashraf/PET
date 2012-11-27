@@ -1,12 +1,12 @@
 #include <iostream>
 #include <cmath>
 
-#include "SimulatedAnnealer.h"
+#include "HillClimber.h"
 #include "globals.h"
 
 using namespace std;
 
-SimulatedAnnealer::SimulatedAnnealer()
+HillClimber::HillClimber()
 {
 	try
 	{
@@ -20,7 +20,7 @@ SimulatedAnnealer::SimulatedAnnealer()
 	
 	try
 	{
-		bestSAPartition = new Partition(g_n,g_k);
+		bestHCPartition = new Partition(g_n,g_k);
 	}
 	catch (const std::bad_alloc& e) 
 	{
@@ -33,7 +33,7 @@ SimulatedAnnealer::SimulatedAnnealer()
 	iterations = 10000;
 }
 
-void SimulatedAnnealer::InitialSelection()
+void HillClimber::InitialSelection()
 {
 	UINT fno,cno;
 	
@@ -50,9 +50,8 @@ void SimulatedAnnealer::InitialSelection()
 	}
 }
 
-void SimulatedAnnealer::Apply() 
+void HillClimber::Apply() 
 {
-	double temperature = initTemp; /**/
 	double nextCost;
 	Partition * prevPartition;
 	
@@ -91,26 +90,23 @@ void SimulatedAnnealer::Apply()
 			<<endl; 
 		#endif
 		
-		if (nextCost <= currCost || 
-			rng.rand_closed01() /**/ < exp((currCost - nextCost) / temperature)) 
+		if (nextCost <= currCost) 
 		{
 			currCost = nextCost;
 			if (nextCost < minCost)
 			{
-				*bestSAPartition = *currPartition;	//clone
+				*bestHCPartition = *currPartition;	//clone
 				minCost = nextCost;
 			}
 		}
 		else
 			*currPartition = *prevPartition;	//undo
-		
-		temperature = temperature*decayRate; /**/
 	}
 	
 	delete prevPartition;
 }
 
-void SimulatedAnnealer::Step()
+void HillClimber::Step()
 {
 	UINT fno, cno;
 

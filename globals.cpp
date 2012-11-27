@@ -12,9 +12,10 @@ Application * g_filtered_applic;		//the filtered application to be partitioned
 Partition* Partitions;		//the partitions found
 #endif
 
-Partition* bestExhPart;	//best partition found by exhaustive search
-Partition* bestHeurPart;	//partition found by heuristic algorithm
-Partition* bestSAnPartition;
+Partition* bestESPartition;	//best partition found by exhaustive search
+Partition* bestHSPartition;	//best partition found by heuristic search
+Partition* bestSAPartition;	//best partition found by simmulated annealing
+Partition* bestHCPartition;	//best partition found by hill climbing
 
 #ifdef STORE_COSTS
 float * Costs;				//the costs of the partitions found by exhaustive search

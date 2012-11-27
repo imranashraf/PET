@@ -7,8 +7,8 @@ LIBS=-lm
 CSRCS=
 
 CPPSRCS=globals.cpp main.cpp rng.cpp edge.cpp application.cpp function.cpp \
-	cluster.cpp partition.cpp algorithm.cpp bruteforce.cpp \
-	heuristic.cpp count.cpp utility.cpp exception.cpp SimulatedAnnealer.cpp
+	cluster.cpp partition.cpp count.cpp utility.cpp exception.cpp \
+	algorithm.cpp bruteforce.cpp heuristic.cpp SimulatedAnnealer.cpp HillClimber.cpp
 
 OBJECTS=$(CSRCS:.c=.o)
 OBJECTS+=$(CPPSRCS:.cpp=.o)
@@ -60,8 +60,10 @@ open:
 	kate makefile globals.h globals.cpp main.cpp algorithm.h algorithm.cpp bruteforce.h bruteforce.cpp \
 	heuristic.h heuristic.cpp \
 	SimulatedAnnealer.h SimulatedAnnealer.cpp \
+	HillClimber.h HillClimber.cpp \
 	application.h application.cpp edge.h edge.cpp function.h function.cpp \
-	partition.h partition.cpp cluster.h cluster.cpp &> /dev/null &
+	partition.h partition.cpp cluster.h cluster.cpp utility.h utility.cpp \
+	count.h count.cpp &> /dev/null &
 	
 
 clean:

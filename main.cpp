@@ -15,6 +15,7 @@
 #include "utility.h"
 #include "exception.h"
 #include "SimulatedAnnealer.h"
+#include "HillClimber.h"
 
 using namespace std;
 void SetSimulation(int argc, char * argv[]);
@@ -243,9 +244,12 @@ void Simulate()
 {
 	Algorithm * heuristic;
 	Algorithm * sannealer;
-	#ifndef HEURISTIC_ONLY
+	Algorithm * hclimber;
+	
+	#ifdef RUN_EXHAUSTIVE
 	Algorithm * bforce;	
 	#endif
+	
 	Timer *timer;
 	unsigned long long totalPartitions;
 	
@@ -289,7 +293,7 @@ void Simulate()
 	fout<<"Total number of possible partitions= "<<totalPartitions<<endl;
 	fout<<"Approximate Time required to Evaluate these partitions = "<< EstimateTime(totalPartitions);
 
-	#ifndef HEURISTIC_ONLY
+	#ifdef RUN_EXHAUSTIVE
 	/********  Exhaustive Search ********/
 	fout<<"====================================";
 	fout<<endl<<"Exhaustive Search Summary"<<endl;
@@ -351,7 +355,7 @@ void Simulate()
 	timer->Print(fout); //print time
 
 	fout<<"\nDetails of Best Partition found by Exhaustive Search ..."<<endl;
-	bestExhPart->Print(fout);
+	bestESPartition->Print(fout);
 	#endif
 	
 	
@@ -378,7 +382,7 @@ void Simulate()
 	timer->Print(fout); //print time
 
 	fout<<"\nDetails of Best Partition found by Heuristic Algorithm ..."<<endl;
-	bestHeurPart->Print(fout);
+	bestHSPartition->Print(fout);
 
 	/********  Simulated Annealing ********/
 	fout<<"====================================";
@@ -403,20 +407,50 @@ void Simulate()
 	timer->Print(fout); //print time
 
 	fout<<"\nDetails of Best Partition found by Simmulated Annealing..."<<endl;
-	bestSAnPartition->Print(fout);
+	bestSAPartition->Print(fout);
+
+	/********  Hill Climbing ********/
+	fout<<"====================================";
+	fout<<endl<<"Hill Climbing Summary"<<endl;
+	fout<<"===================================="<<endl;
+
+	try
+	{
+		hclimber = new HillClimber();	
+	}
+	catch (const std::bad_alloc& e) 
+	{
+		cerr<<e.what()<<endl;
+		throw Exception("Allocation Failed",__FILE__,__LINE__);
+	}
+	
+	g_applic->Clear();
+
+	timer->Start();
+	hclimber->Apply(); 
+	timer->Stop();
+	timer->Print(fout); //print time
+
+	fout<<"\nDetails of Best Partition found by Hill Climbing..."<<endl;
+	bestHCPartition->Print(fout);
+	
+	/****************************************/
 	
 	//closing
 	#ifdef TOFILE
 	fout.close();
 	#endif
-	#ifndef HEURISTIC_ONLY
+	#ifdef RUN_EXHAUSTIVE
 	delete bforce;
 	#endif
-	delete bestExhPart; 
+	delete bestESPartition; 
 	delete timer;
 	
 	delete sannealer;
-	delete bestSAnPartition;
+	delete bestSAPartition;
+	
+	delete hclimber;
+	delete bestHCPartition;
 	
  	#ifdef FILTER
  	delete g_filtered_applic;
@@ -426,7 +460,7 @@ void Simulate()
 	#endif
 	
 	delete heuristic;
-	delete bestHeurPart;
+	delete bestHSPartition;
 	#ifdef STORE_COSTS
 	delete[] Costs;
 	#endif

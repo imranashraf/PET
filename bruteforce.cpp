@@ -43,12 +43,12 @@ static void _Bruteforce(int n)
 		tempPart.Print(cout);
 		#endif
 		
-		if( (tempPart.Cost() ) < (bestExhPart->Cost() ) )
-			*bestExhPart = tempPart;
+		if( (tempPart.Cost() ) < (bestESPartition->Cost() ) )
+			*bestESPartition = tempPart;
 
 		parCount++;
 		if(parCount % 100000 == 0)
-			cout<<"\rProgress  = "<<setw(3)<<(parCount*100)/nPartitions<<" %"<<flush;
+			cout<<"\rProgress  = "<<setw(3)<<parCount/nPartitions*100.0<<" %"<<flush;
     }
     else
     {
@@ -92,7 +92,7 @@ void Bruteforce::Apply()
 	
 	try
 	{
-		bestExhPart = new Partition(g_n,g_k);
+		bestESPartition = new Partition(g_n,g_k);
 	}
 	catch (const std::bad_alloc& e) 
 	{
@@ -127,7 +127,7 @@ void Bruteforce::Apply()
 	}
 	#endif
 	
-	cout<<"Progress  = "<<setw(3)<<(parCount*100)/nPartitions<<" %"<<flush;
+	cout<<"Progress  = "<<setw(3)<<parCount/nPartitions*100.0<<" %"<<flush;
 	Bruteforce_kfixed( g_n , g_k);
 	cout<<endl;
 }

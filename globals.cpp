@@ -16,6 +16,7 @@ Partition* bestESPartition;	//best partition found by exhaustive search
 Partition* bestHSPartition;	//best partition found by heuristic search
 Partition* bestSAPartition;	//best partition found by simmulated annealing
 Partition* bestHCPartition;	//best partition found by hill climbing
+Partition* bestTSPartition;	//best partition found by Tabu Search
 
 #ifdef STORE_COSTS
 float * Costs;				//the costs of the partitions found by exhaustive search

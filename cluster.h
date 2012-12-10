@@ -28,7 +28,12 @@ class Cluster
 	public:
 		Cluster(){_FunctionCount=0; _Status = UnFinished; _Functions=NULL;}
 		Cluster(UINT totalFunctions);
+		
+		void setFunctionCount(UINT fcount) {_FunctionCount = fcount;}
+		UINT getFunctionCount() { return _FunctionCount; }
+		
 		void setFunctionCapacity(UINT totalFunctions);
+		UINT getFunctionCapacity() { return _FunctionCapacity; }
 		
 		void addFunction(UINT fno, UINT cno);
 		void removeFunction(UINT fno);

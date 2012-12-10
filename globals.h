@@ -39,6 +39,7 @@ extern Partition* bestESPartition;	//best partition found by exhaustive search
 extern Partition* bestHSPartition;	//best partition found by heuristic search
 extern Partition* bestSAPartition;	//best partition found by Simmulated Annealing
 extern Partition* bestHCPartition;	//best partition found by hill climbing
+extern Partition* bestTSPartition;	//best partition found by Tabu Search
 
 #ifdef STORE_COSTS
 extern float* Costs;

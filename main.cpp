@@ -16,6 +16,7 @@
 #include "exception.h"
 #include "SimulatedAnnealer.h"
 #include "HillClimber.h"
+#include "TabuSearcher.h"
 
 using namespace std;
 void SetSimulation(int argc, char * argv[]);
@@ -245,13 +246,13 @@ void Simulate()
 	Algorithm * heuristic;
 	Algorithm * sannealer;
 	Algorithm * hclimber;
+	Algorithm * tsearcher;
 	
 	#ifdef RUN_EXHAUSTIVE
 	Algorithm * bforce;	
 	#endif
 	
 	Timer *timer;
-	unsigned long long totalPartitions;
 	
 	#ifdef TOFILE
 	//open output file
@@ -289,11 +290,12 @@ void Simulate()
 	fout<<"Communication of filtered functions "<<TotalFilteredComm<<endl;
 	#endif
 	
+	#ifdef RUN_EXHAUSTIVE
+	unsigned long long totalPartitions;
 	totalPartitions = Count(g_n,g_k);
 	fout<<"Total number of possible partitions= "<<totalPartitions<<endl;
 	fout<<"Approximate Time required to Evaluate these partitions = "<< EstimateTime(totalPartitions);
-
-	#ifdef RUN_EXHAUSTIVE
+	
 	/********  Exhaustive Search ********/
 	fout<<"====================================";
 	fout<<endl<<"Exhaustive Search Summary"<<endl;
@@ -314,6 +316,8 @@ void Simulate()
 	timer->Stop();
 
 	#ifdef STORE_PARTITIONS
+	unsigned long long totalPartitions;
+	totalPartitions = Count(g_n,g_k);
 	fout<<"Partitions evaluated are :"<<endl;
 	for(unsigned int i=0 ; i < totalPartitions ; i++)
 	{
@@ -434,6 +438,31 @@ void Simulate()
 	fout<<"\nDetails of Best Partition found by Hill Climbing..."<<endl;
 	bestHCPartition->Print(fout);
 	
+	/********  Tabu Search  ********/
+	fout<<"====================================";
+	fout<<endl<<"Tabu Search Summary"<<endl;
+	fout<<"===================================="<<endl;
+	
+	try
+	{
+		tsearcher = new TabuSearcher();	
+	}
+	catch (const std::bad_alloc& e) 
+	{
+		cerr<<e.what()<<endl;
+		throw Exception("Allocation Failed",__FILE__,__LINE__);
+	}
+	
+	g_applic->Clear();
+	
+	timer->Start();
+	tsearcher->Apply(); 
+	timer->Stop();
+	timer->Print(fout); //print time
+	
+	fout<<"\nDetails of Best Partition found by Tabu Search..."<<endl;
+	bestTSPartition->Print(fout);
+	
 	/****************************************/
 	
 	//closing
@@ -451,6 +480,9 @@ void Simulate()
 	
 	delete hclimber;
 	delete bestHCPartition;
+
+	delete tsearcher;
+	delete bestTSPartition;
 	
  	#ifdef FILTER
  	delete g_filtered_applic;
@@ -461,6 +493,7 @@ void Simulate()
 	
 	delete heuristic;
 	delete bestHSPartition;
+	
 	#ifdef STORE_COSTS
 	delete[] Costs;
 	#endif

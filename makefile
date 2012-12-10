@@ -1,5 +1,8 @@
+#TODO fix copy constructors
+#TODO use STL
 #TODO fix floating point number printing
 #TODO remove all globals for application and number of functions
+#TODO Heuristic adds all remaining functions to same cluster, Check !!!
 CC=g++
 CFLAGS=-Wall -O3 -fopenmp
 LDFLAGS= -fopenmp
@@ -8,7 +11,7 @@ CSRCS=
 
 CPPSRCS=globals.cpp main.cpp rng.cpp edge.cpp application.cpp function.cpp \
 	cluster.cpp partition.cpp count.cpp utility.cpp exception.cpp \
-	algorithm.cpp bruteforce.cpp heuristic.cpp SimulatedAnnealer.cpp HillClimber.cpp
+	algorithm.cpp bruteforce.cpp heuristic.cpp SimulatedAnnealer.cpp HillClimber.cpp TabuSearcher.cpp
 
 OBJECTS=$(CSRCS:.c=.o)
 OBJECTS+=$(CPPSRCS:.cpp=.o)
@@ -61,6 +64,7 @@ open:
 	heuristic.h heuristic.cpp \
 	SimulatedAnnealer.h SimulatedAnnealer.cpp \
 	HillClimber.h HillClimber.cpp \
+	TabuSearcher.h TabuSearcher.cpp \
 	application.h application.cpp edge.h edge.cpp function.h function.cpp \
 	partition.h partition.cpp cluster.h cluster.cpp utility.h utility.cpp \
 	count.h count.cpp &> /dev/null &

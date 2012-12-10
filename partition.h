@@ -15,6 +15,15 @@ class Partition
 	public:
 		Partition(){_nClusters=0;}
 		Partition(UINT totalFunctions, UINT nclusters);
+		Partition(const Partition& part);
+		
+		UINT getnClusters(){ return _nClusters;}
+		
+		UINT getClusterFunctionCount(UINT cno)
+		{
+			return (_Clusters[cno].getFunctionCount() );
+		}
+		
 		void setCluster(UINT totalFunctions, UINT nclusters);
 		void addFunction(UINT ftnNo, UINT clusterNo);
 		void removeFunction(UINT ftnNo);

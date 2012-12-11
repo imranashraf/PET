@@ -59,7 +59,7 @@ void TabuList::decrementTabu()
 	}
 }
 
-void TabuList::printTabu()
+void TabuList::printTabu(std::ostream & fout = std::cout)
 {
 	for(UINT i = 0; i<size_x; i++)
 	{
@@ -67,11 +67,11 @@ void TabuList::printTabu()
 		{
 			for(UINT k = 0; k<size_z; k++)
 			{
-				cout<<tList[i][j][k]<<"  ";
+				fout<<tList[i][j][k]<<"  ";
 			}
-			cout<<endl;
+			fout<<endl;
 		} 
-		cout<<endl;
+		fout<<endl;
 	}
 }
 
@@ -140,23 +140,23 @@ void TabuSearcher::Apply()
 	
 	*bestTSPartition = *currPartition;
 	minCost= currPartition->Cost();
-
-	cout<<"Initial minCost TS "<<minCost<<endl;
+	
+	dout<<"Initial minCost TS "<<minCost<<endl;
 
 	for (int i = 0; i < iterations; i++) 
 	{
 		*currPartition = getBestNeighbour();
 		currCost = currPartition->Cost();
-		cout<<endl<<"currCost TS "<<currCost<<endl;
 
-// 		cout<<"Current tabu list "<<endl;
-// 		tabuList->printTabu();
+		dout<<endl<<"currCost TS "<<currCost<<endl;
+		dout<<"Current tabu list "<<endl;
+		tabuList->printTabu(dout);
 		
 		if(currCost < minCost)
 		{
 			*bestTSPartition = *currPartition;
 			minCost = currCost;
-			cout<<endl<<"minCost TS "<<minCost<<endl;
+			dout<<endl<<"minCost TS "<<minCost<<endl;
 		}
 	}
 }
@@ -188,6 +188,7 @@ Partition TabuSearcher::getBestNeighbour()
 			}
 			
 			TotalFunctions = currPartition->getClusterFunctionCount(srcCNo);
+			
 			#ifdef RND_INIT_TS
 			for(fno=0; fno<TotalFunctions; fno++)
 			#else
@@ -214,11 +215,14 @@ Partition TabuSearcher::getBestNeighbour()
 		}
 	}
 
+	tabuList->tabuMove(tsrcCNo, tdstCNo, tfno);
+	tabuList->decrementTabu();		
+
 // 	if(tfno != 0)
-	{
-		tabuList->tabuMove(tsrcCNo, tdstCNo, tfno);
-		tabuList->decrementTabu();		
-	}
+// 	{
+// 		tabuList->tabuMove(tsrcCNo, tdstCNo, tfno);
+// 		tabuList->decrementTabu();		
+// 	}
 
 	return bestSol;
 }

@@ -31,17 +31,13 @@ static void _Bruteforce(int n)
 			#endif
 			tempPart.addFunction( j , partition[g_n-j-1] );
 		}
-		#ifdef DEBUG
- 		cout<<endl;
-		#endif
+ 		dout<<endl;
 
 		#ifdef STORE_COSTS
 		Costs[parCount%nCOSTSAMPLES] = tempPart.Cost();
 		#endif
 
-		#ifdef DEBUG
-		tempPart.Print(cout);
-		#endif
+		tempPart.Print(dout);
 		
 		if( (tempPart.Cost() ) < (bestESPartition->Cost() ) )
 			*bestESPartition = tempPart;

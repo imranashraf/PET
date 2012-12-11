@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void Edge::Print(std::ostream & fout)
+void Edge::Print(std::ostream & fout = std::cout)
 {
 	fout<<"Weight = "<<_Weight<<endl;
 }

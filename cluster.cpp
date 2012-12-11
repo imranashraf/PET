@@ -157,7 +157,7 @@ void Cluster::getNeighbours(std::set<UINT>& Neighbours)
 	}
 }
 
-void Cluster::Print(std::ostream & fout)
+void Cluster::Print(std::ostream & fout = std::cout)
 {
 	fout<<_FunctionCount<<" functions ( ";
 	for(UINT i =0; i< _FunctionCount; i++)

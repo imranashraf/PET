@@ -152,7 +152,7 @@ float Partition::Cost()
 	return cost;
 }
 
-void Partition::Print(std::ostream & fout)
+void Partition::Print(std::ostream & fout = std::cout)
 {
 	UINT i;
 	for(i=0;i<_nClusters;i++)

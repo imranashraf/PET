@@ -10,7 +10,7 @@ void Function::setExecContrib(float contrib)
 	_ExecContrib = contrib;
 }
 
-void Function::Print(std::ostream & fout)
+void Function::Print(std::ostream & fout = std::cout)
 {
 	fout<<"("<<_FunctionNo<<","<<_ExecContrib<<")";
 }

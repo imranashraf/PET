@@ -1,6 +1,9 @@
 
 #include "globals.h"
 
+//null stream for debugging
+std::ostream cnull(0);
+
 UINT g_n;	//number of functions
 UINT g_k;	//number of clusters
 

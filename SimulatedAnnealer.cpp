@@ -76,24 +76,17 @@ void SimulatedAnnealer::Apply()
 	
 	for (int i = 0; i < iterations; i++) 
 	{
-		#ifdef DEBUG
-		if (i % 100 == 0) 
-		{
-			cout<<endl<<i<<"\t"<<minCost<<"\t"<<currCost<<endl;
-		}
-		#endif
+		dout<<endl<<i<<"\t"<<minCost<<"\t"<<currCost<<endl;
 		
 		*prevPartition = *currPartition; //save currPartition
 		Step(); //step to a new partition (currPartition will be modified)
 		
 		nextCost = currPartition->Cost();
 		
-		#ifdef DEBUG
-		cout<<rng.rand_closed01()
+		dout<<rng.rand_closed01()
 			<<"\t"
 			<<exp( (currCost - nextCost) / temperature)
 			<<endl; 
-		#endif
 		
 		if (nextCost <= currCost || 
 			rng.rand_closed01() < exp((currCost - nextCost) / temperature)) /**/

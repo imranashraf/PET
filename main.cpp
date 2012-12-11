@@ -15,7 +15,6 @@
 #include "utility.h"
 #include "exception.h"
 #include "SimulatedAnnealer.h"
-#include "HillClimber.h"
 #include "TabuSearcher.h"
 
 using namespace std;
@@ -245,7 +244,6 @@ void Simulate()
 {
 	Algorithm * heuristic;
 	Algorithm * sannealer;
-	Algorithm * hclimber;
 	Algorithm * tsearcher;
 	
 	#ifdef RUN_EXHAUSTIVE
@@ -413,31 +411,6 @@ void Simulate()
 	fout<<"\nDetails of Best Partition found by Simmulated Annealing..."<<endl;
 	bestSAPartition->Print(fout);
 
-	/********  Hill Climbing ********/
-	fout<<"====================================";
-	fout<<endl<<"Hill Climbing Summary"<<endl;
-	fout<<"===================================="<<endl;
-
-	try
-	{
-		hclimber = new HillClimber();	
-	}
-	catch (const std::bad_alloc& e) 
-	{
-		cerr<<e.what()<<endl;
-		throw Exception("Allocation Failed",__FILE__,__LINE__);
-	}
-	
-	g_applic->Clear();
-
-	timer->Start();
-	hclimber->Apply(); 
-	timer->Stop();
-	timer->Print(fout); //print time
-
-	fout<<"\nDetails of Best Partition found by Hill Climbing..."<<endl;
-	bestHCPartition->Print(fout);
-	
 	/********  Tabu Search  ********/
 	fout<<"====================================";
 	fout<<endl<<"Tabu Search Summary"<<endl;
@@ -478,7 +451,6 @@ void Simulate()
 	delete sannealer;
 	delete bestSAPartition;
 	
-	delete hclimber;
 	delete bestHCPartition;
 
 	delete tsearcher;

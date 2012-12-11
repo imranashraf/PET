@@ -11,14 +11,23 @@ CSRCS=
 
 CPPSRCS=globals.cpp main.cpp rng.cpp edge.cpp application.cpp function.cpp \
 	cluster.cpp partition.cpp count.cpp utility.cpp exception.cpp \
-	algorithm.cpp bruteforce.cpp heuristic.cpp SimulatedAnnealer.cpp HillClimber.cpp TabuSearcher.cpp
+	algorithm.cpp bruteforce.cpp heuristic.cpp SimulatedAnnealer.cpp TabuSearcher.cpp
 
 OBJECTS=$(CSRCS:.c=.o)
 OBJECTS+=$(CPPSRCS:.cpp=.o)
 
 EXEC=partool
 
-all:$(EXEC)
+all: depend $(EXEC)
+
+depend: .depend
+
+.depend: $(CPPSRCS)
+	@-rm -f ./.depend
+	$(CC) $(CFLAGS) -MM $^ > ./.depend;
+
+include .depend
+
 $(EXEC): $(OBJECTS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
 
@@ -63,7 +72,6 @@ open:
 	kate makefile globals.h globals.cpp main.cpp algorithm.h algorithm.cpp bruteforce.h bruteforce.cpp \
 	heuristic.h heuristic.cpp \
 	SimulatedAnnealer.h SimulatedAnnealer.cpp \
-	HillClimber.h HillClimber.cpp \
 	TabuSearcher.h TabuSearcher.cpp \
 	application.h application.cpp edge.h edge.cpp function.h function.cpp \
 	partition.h partition.cpp cluster.h cluster.cpp utility.h utility.cpp \
@@ -71,4 +79,4 @@ open:
 	
 
 clean:
-	@-rm -f $(OBJECTS) $(EXEC) *~ gmon.out graph_*.dot graph_*.pdf profile.txt profile.pdf costs_*.txt output_*.txt
+	@-rm -f .depend $(OBJECTS) $(EXEC) *~ gmon.out graph_*.dot graph_*.pdf profile.txt profile.pdf costs_*.txt output_*.txt

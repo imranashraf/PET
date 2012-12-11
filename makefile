@@ -5,7 +5,7 @@
 #TODO Heuristic adds all remaining functions to same cluster, Check !!!
 CC=g++
 CFLAGS=-Wall -O3 -fopenmp
-LDFLAGS= -fopenmp
+LDFLAGS=-fopenmp
 LIBS=-lm
 CSRCS=
 

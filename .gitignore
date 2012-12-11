@@ -22,6 +22,7 @@ graph_*.pdf
 costs_*.txt
 output_*.txt
 appData.txt
+.depend
 #quadData.txt
 #maipData.txt
 

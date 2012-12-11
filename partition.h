@@ -11,9 +11,11 @@ class Partition
 	private:
 		UINT _nClusters;
 		Cluster * _Clusters;
+		float _Cost;
+		bool ModificationFlag;
 		
 	public:
-		Partition(){_nClusters=0;}
+		Partition(){_nClusters=0; ModificationFlag=true;}
 		Partition(UINT totalFunctions, UINT nclusters);
 		Partition(const Partition& part);
 		
@@ -45,6 +47,7 @@ class Partition
 		// Assignment operator
 		Partition& operator=(const Partition& srcPart)
 		{
+			ModificationFlag=true;
 			// check for self-assignment
 			if (this == &srcPart)
 				return *this;

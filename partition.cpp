@@ -9,6 +9,7 @@ using namespace std;
 
 Partition::Partition(UINT totalFunctions, UINT nclusters)
 {
+	ModificationFlag=true;
 	_nClusters = nclusters; 
 	try
 	{
@@ -23,10 +24,12 @@ Partition::Partition(UINT totalFunctions, UINT nclusters)
 	for(UINT i=0;i<_nClusters;i++)
 		_Clusters[i].setFunctionCapacity(totalFunctions);
 	
+	_Cost=0; //TODO change to NA 
 }
 
 Partition::Partition(const Partition& part)
 {
+	ModificationFlag=true;
 	//UINT n = part.getnClusters();
 	//TODO working but Not good
 	_nClusters = g_k;
@@ -45,6 +48,7 @@ Partition::Partition(const Partition& part)
 	{
 		_Clusters[i] = part._Clusters[i];
 	}
+	_Cost=0;
 }
 
 void Partition::setCluster(UINT totalFunctions, UINT nclusters)
@@ -66,6 +70,7 @@ void Partition::setCluster(UINT totalFunctions, UINT nclusters)
 
 void Partition::addFunction(UINT ftnNo, UINT clusterNo)
 {
+	ModificationFlag=true;	//a function is added so partition modified
 	_Clusters[clusterNo].addFunction(ftnNo,clusterNo);
 }
 
@@ -78,6 +83,7 @@ void Partition::removeFunction(UINT ftnNo)
 		if( _Clusters[i].inCluster(ftnNo) == true )
 		{
 			_Clusters[i].removeFunction(ftnNo);
+			ModificationFlag=true;	//a function is added so partition modified
 			break;
 		}
 	}
@@ -140,16 +146,18 @@ float Partition::CouplingDegree()
 
 float Partition::Cost()
 {
-	float cost=0.0;
-	float BP, CC, CD;
+	if(ModificationFlag == true)
+	{
+		ModificationFlag=false;
+		float BP, CC, CD;
+		BP = BalancingPenalty();
+		CC = CommunicationCost();
+		CD = CouplingDegree();
+		
+		_Cost = ALPHA * BP + BETA * CC + GAMMA*1.0/CD;
+	}
 
-	BP = BalancingPenalty();
-	CC = CommunicationCost();
-	CD = CouplingDegree();
-	
- 	cost = ALPHA * BP + BETA * CC + GAMMA*1.0/CD;
-
-	return cost;
+	return _Cost;
 }
 
 void Partition::Print(std::ostream & fout = std::cout)

@@ -9,7 +9,7 @@
 
 typedef unsigned int UINT;
 
-#define TABU_SIZE 4
+#define TABU_SIZE 5
 #define TABU_TENURE 9
 
 //comment the following if random initial solution is not required

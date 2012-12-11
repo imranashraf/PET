@@ -11,7 +11,8 @@ CSRCS=
 
 CPPSRCS=globals.cpp main.cpp rng.cpp edge.cpp application.cpp function.cpp \
 	cluster.cpp partition.cpp count.cpp utility.cpp exception.cpp \
-	algorithm.cpp bruteforce.cpp heuristic.cpp SimulatedAnnealer.cpp TabuSearcher.cpp
+	algorithm.cpp bruteforce.cpp heuristic.cpp SimulatedAnnealer.cpp \
+	TabuSearcher.cpp EvolutionarySearcher.cpp
 
 OBJECTS=$(CSRCS:.c=.o)
 OBJECTS+=$(CPPSRCS:.cpp=.o)
@@ -73,6 +74,7 @@ open:
 	heuristic.h heuristic.cpp \
 	SimulatedAnnealer.h SimulatedAnnealer.cpp \
 	TabuSearcher.h TabuSearcher.cpp \
+	EvolutionarySearcher.h EvolutionarySearcher.cpp \
 	application.h application.cpp edge.h edge.cpp function.h function.cpp \
 	partition.h partition.cpp cluster.h cluster.cpp utility.h utility.cpp \
 	count.h count.cpp &> /dev/null &

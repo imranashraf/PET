@@ -16,6 +16,7 @@
 #include "exception.h"
 #include "SimulatedAnnealer.h"
 #include "TabuSearcher.h"
+#include "EvolutionarySearcher.h"
 
 using namespace std;
 void SetSimulation(int argc, char * argv[]);
@@ -245,6 +246,7 @@ void Simulate()
 	Algorithm * heuristic;
 	Algorithm * sannealer;
 	Algorithm * tsearcher;
+	Algorithm * esearcher;
 	
 	#ifdef RUN_EXHAUSTIVE
 	Algorithm * bforce;	
@@ -357,7 +359,7 @@ void Simulate()
 	timer->Print(fout); //print time
 
 	fout<<"\nDetails of Best Partition found by Exhaustive Search ..."<<endl;
-	bestESPartition->Print(fout);
+	bestBFPartition->Print(fout);
 	#endif
 	
 	
@@ -435,23 +437,53 @@ void Simulate()
 	
 	fout<<"\nDetails of Best Partition found by Tabu Search..."<<endl;
 	bestTSPartition->Print(fout);
+
+	/********  Evolutionary Search  ********/
+	fout<<"====================================";
+	fout<<endl<<"Evolutionary Search Summary"<<endl;
+	fout<<"===================================="<<endl;
+	
+	try
+	{
+		esearcher = new EvolutionarySearcher();	
+	}
+	catch (const std::bad_alloc& e) 
+	{
+		cerr<<e.what()<<endl;
+		throw Exception("Allocation Failed",__FILE__,__LINE__);
+	}
+	
+	g_applic->Clear();
+	
+	timer->Start();
+	esearcher->Apply(); 
+	timer->Stop();
+	timer->Print(fout); //print time
+	
+	fout<<"\nDetails of Best Partition found by Evolutionary Search..."<<endl;
+	bestESPartition->Print(fout);
 	
 	/****************************************/
 	
 	//closing
+	delete timer;
+	
 	#ifdef TOFILE
 	fout.close();
 	#endif
 	#ifdef RUN_EXHAUSTIVE
 	delete bforce;
+	delete bestBFPartition; 
 	#endif
-	delete bestESPartition; 
-	delete timer;
-	
+
+	delete heuristic;
+	delete bestHSPartition;
+
 	delete sannealer;
 	delete bestSAPartition;
 	
-	delete bestHCPartition;
+	delete esearcher;
+	delete bestESPartition;
 
 	delete tsearcher;
 	delete bestTSPartition;
@@ -462,9 +494,6 @@ void Simulate()
 	#else
 	delete g_applic;
 	#endif
-	
-	delete heuristic;
-	delete bestHSPartition;
 	
 	#ifdef STORE_COSTS
 	delete[] Costs;

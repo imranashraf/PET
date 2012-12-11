@@ -39,8 +39,8 @@ static void _Bruteforce(int n)
 
 		tempPart.Print(dout);
 		
-		if( (tempPart.Cost() ) < (bestESPartition->Cost() ) )
-			*bestESPartition = tempPart;
+		if( (tempPart.Cost() ) < (bestBFPartition->Cost() ) )
+			*bestBFPartition = tempPart;
 
 		parCount++;
 		if(parCount % 100000 == 0)
@@ -88,7 +88,7 @@ void Bruteforce::Apply()
 	
 	try
 	{
-		bestESPartition = new Partition(g_n,g_k);
+		bestBFPartition = new Partition(g_n,g_k);
 	}
 	catch (const std::bad_alloc& e) 
 	{

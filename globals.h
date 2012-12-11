@@ -4,12 +4,21 @@
 #include <set>
 #include <map>
 #include <string>
+#include <iostream>
 
 #include "partition.h"
 #include "application.h"
 
 //comment the following to hide debugging output
 // #define DEBUG
+
+extern std::ostream cnull;
+
+#ifdef DEBUG 
+	#define dout (std::cout)
+#else
+	#define dout (cnull)
+#endif
 
 //comment the following to not store all the partitions produced in bruteforce algorithm
 //do it for small simulations only as it will require more memory

@@ -26,7 +26,7 @@ class TabuList
 		void tabuMove(UINT srcCNo, UINT dstCNo, UINT fno);
 		UINT getTabuValue(UINT srcCNo, UINT dstCNo, UINT fno);
 		void decrementTabu();
-		void printTabu();
+		void printTabu(std::ostream & );
 		
 		~TabuList()
 		{

@@ -119,7 +119,7 @@ void Application::Init()
 }
 
 
-void Application::Print(std::ostream & fout)
+void Application::Print(std::ostream & fout = std::cout)
 {
 	unsigned int i,j;
 	int defaultPrecision = cout.precision();

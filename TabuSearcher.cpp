@@ -6,6 +6,77 @@
 
 using namespace std;
 
+TabuList::TabuList(UINT nclusters, UINT nfunctions)
+{
+	size_x = nclusters;
+	size_y = nclusters;
+	size_z = nfunctions;
+	
+	tList = new UINT **[size_x];
+	for (UINT i = 0; i < size_x; ++i) 
+	{
+		tList[i] = new UINT* [size_y];
+		for (UINT j = 0; j < size_y; ++j) 
+		{
+			tList[i][j] = new UINT[size_z];
+		}
+	}
+	
+	for (UINT i = 0; i < size_x; ++i) 
+	{
+		for (UINT j = 0; j < size_y; ++j) 
+		{
+			for (UINT k = 0; k < size_z; ++k) 
+			{
+				tList[i][j][k] = 0;
+			}
+		}
+	}
+}
+
+void TabuList::tabuMove(UINT srcCNo, UINT dstCNo, UINT fno)
+{ 
+	tList[srcCNo][dstCNo][fno]+= TABU_TENURE;
+}
+
+UINT TabuList::getTabuValue(UINT srcCNo, UINT dstCNo, UINT fno)
+{ 
+	return tList[srcCNo][dstCNo][fno];
+}
+
+void TabuList::decrementTabu()
+{
+	for(UINT i = 0; i<size_x; i++)
+	{
+		for(UINT j = 0; j<size_y; j++)
+		{
+			for(UINT k = 0; k<size_z; k++)
+			{
+				if( tList[i][j][k] >= 1)
+					tList[i][j][k]--;
+			}
+		} 
+	}
+}
+
+void TabuList::printTabu()
+{
+	for(UINT i = 0; i<size_x; i++)
+	{
+		for(UINT j = 0; j<size_y; j++)
+		{
+			for(UINT k = 0; k<size_z; k++)
+			{
+				cout<<tList[i][j][k]<<"  ";
+			}
+			cout<<endl;
+		} 
+		cout<<endl;
+	}
+}
+
+////////////////////////////////////////////
+
 TabuSearcher::TabuSearcher()
 {
 	try
@@ -39,20 +110,24 @@ TabuSearcher::TabuSearcher()
 		throw Exception("Allocation Failed",__FILE__,__LINE__);
 	}
 	
-	iterations = 1000;
+	iterations = 100;
 }
 
 void TabuSearcher::InitialSelection()
 {
 	UINT fno, cno;
-	
+
+	#ifdef RND_INIT_TS
+	for( fno=0; fno<g_n; fno++)
+	#else	
 	for( cno=0; cno<g_k; cno++)
 	{
 		fno = cno; 	//The functions are sorted in descending order
 		currPartition->addFunction(fno,cno);
 	}
-
+	
 	for( fno=g_k; fno<g_n; fno++)
+	#endif
 	{
 		cno = 0 + ( abs( rng.rand_int31() ) % ( (g_k-1) - 0 + 1 ) );
 		currPartition->addFunction(fno,cno);
@@ -62,39 +137,46 @@ void TabuSearcher::InitialSelection()
 void TabuSearcher::Apply() 
 {
 	InitialSelection();
-	currCost= currPartition->Cost();
-	minCost = currCost;
-	*bestTSPartition = *currPartition;
 	
+	*bestTSPartition = *currPartition;
+	minCost= currPartition->Cost();
+
+	cout<<"Initial minCost TS "<<minCost<<endl;
+
 	for (int i = 0; i < iterations; i++) 
 	{
 		*currPartition = getBestNeighbour();
 		currCost = currPartition->Cost();
+		cout<<endl<<"currCost TS "<<currCost<<endl;
+
+// 		cout<<"Current tabu list "<<endl;
+// 		tabuList->printTabu();
 		
 		if(currCost < minCost)
 		{
-			minCost = currCost;
 			*bestTSPartition = *currPartition;
-			cout<<endl<<"MinCost TS "<<minCost<<endl;
+			minCost = currCost;
+			cout<<endl<<"minCost TS "<<minCost<<endl;
 		}
 	}
-	
 }
 
 Partition TabuSearcher::getBestNeighbour()
 {
-	Partition tempPart(g_n, g_k);
-	double tempCost;
-	double newMinCost;
-	Partition bestNeighbour(g_n, g_k);
-
+	Partition bestSol(g_n, g_k);
+	double bestCost;
+	
+	Partition newBestSol(g_n, g_k);
+	double newBestCost;
+	
 	UINT TotalClusters = g_k;
 	UINT TotalFunctions;
 	UINT srcCNo, dstCNo, fno;
 	UINT tsrcCNo=0, tdstCNo=0, tfno=0;
-	bool betterFound = false;
+	bool firstNeighbor = true;
 	
-	newMinCost = minCost;
+	bestSol = *currPartition;
+	bestCost = bestSol.Cost();
 	
 	for(srcCNo = 0; srcCNo < TotalClusters; srcCNo++)
 	{
@@ -105,34 +187,38 @@ Partition TabuSearcher::getBestNeighbour()
 				continue;
 			}
 			
-			tempPart = *currPartition;
 			TotalFunctions = currPartition->getClusterFunctionCount(srcCNo);
-			for(fno=TotalClusters; fno<TotalFunctions; fno++)	//initial selection is kept same (start from 0 to consider all)
+			#ifdef RND_INIT_TS
+			for(fno=0; fno<TotalFunctions; fno++)
+			#else
+			for(fno=TotalClusters; fno<TotalFunctions; fno++)	//initial selection is kept same (start from 0 to consider all)			
+			#endif
 			{
-				tempPart.removeFunction(fno);
-				tempPart.addFunction(fno,dstCNo);
-				tempCost = tempPart.Cost();
-				if( (tempCost < newMinCost) && (tabuList->getTabuValue(srcCNo,dstCNo,fno) == 0) )
+				newBestSol = bestSol;
+				newBestSol.removeFunction(fno);
+				newBestSol.addFunction(fno,dstCNo);
+				
+				newBestCost = newBestSol.Cost();
+				
+				if( (newBestCost < bestCost || firstNeighbor) && (tabuList->getTabuValue(srcCNo,dstCNo,fno) == 0) )
 				{
-					betterFound = true;
+					firstNeighbor = false;
+					bestSol = newBestSol;
+					bestCost = newBestCost;
+					
 					tsrcCNo = srcCNo;
 					tdstCNo = dstCNo;
 					tfno = fno;
-					bestNeighbour = tempPart;
 				}
 			}
 		}
 	}
 
-	tabuList->decrementTabu();
-	if(betterFound)
+// 	if(tfno != 0)
 	{
 		tabuList->tabuMove(tsrcCNo, tdstCNo, tfno);
-	}
-	else
-	{
-		bestNeighbour = *currPartition;
+		tabuList->decrementTabu();		
 	}
 
-	return bestNeighbour;
+	return bestSol;
 }

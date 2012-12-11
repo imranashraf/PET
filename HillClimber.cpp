@@ -28,22 +28,24 @@ HillClimber::HillClimber()
 		throw Exception("Allocation Failed",__FILE__,__LINE__);
 	}
 	
-	initTemp = 100;
-	decayRate = 0.99;
-	iterations = 10000;
+	iterations = 100;
 }
 
 void HillClimber::InitialSelection()
 {
 	UINT fno,cno;
 	
+	#ifdef RND_INIT_HC
+	for( fno=0; fno<g_n; fno++)
+	#else
 	for( cno=0; cno<g_k; cno++)
 	{
 		fno = cno; 	//The functions are sorted in descending order
 		currPartition->addFunction(fno,cno);
 	}
-
+	
 	for( fno=g_k; fno<g_n; fno++)
+	#endif
 	{
 		cno = 0 + ( abs( rng.rand_int31() ) % ( (g_k-1) - 0 + 1 ) );
 		currPartition->addFunction(fno,cno);
@@ -110,7 +112,12 @@ void HillClimber::Step()
 {
 	UINT fno, cno;
 
+	#ifdef RND_INIT_HC
+	fno = 0 + ( abs( rng.rand_int31() ) % ( (g_n-1) - (0) + 1 ) );  //changing the ftns from initial selection
+	#else
 	fno = g_k + ( abs( rng.rand_int31() ) % ( (g_n-1) - (g_k) + 1 ) );  //not changing the ftns from initial selection
+	#endif
+	
 	cno = 0 + ( abs( rng.rand_int31() ) % ( (g_k-1) - 0 + 1 ) );
 	
 	currPartition->removeFunction(fno);

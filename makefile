@@ -54,7 +54,7 @@ gprof: CFLAGS= -Wall -g -O3 -fopenmp -pg
 gprof: LDFLAGS=-fopenmp -pg
 gprof: clean all
 gprof:    	 # Mode  n  k 
-	@-./$(EXEC) 1 12  4
+	@-./$(EXEC) 1 20  4
 	@-gprof -b ./$(EXEC) > profile.txt
 	@-cat profile.txt | ./gprof2dot.py --skew=0.01 | dot -Tpdf -o profile.pdf 
 # 	@-cat profile.txt | ./gprof2dot.py -e0 -n0 --skew=0.01 | dot -Tpdf -o profile.pdf   #all functions

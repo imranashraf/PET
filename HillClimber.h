@@ -5,6 +5,9 @@
 #include "partition.h"
 #include "rng.h"
 
+//comment the following if random initial solution is not required
+#define RND_INIT_HC
+
 typedef unsigned int UINT;
 
 class HillClimber : public Algorithm
@@ -13,8 +16,6 @@ class HillClimber : public Algorithm
 		Partition 	*currPartition;
 		double	currCost;
 		double	minCost;
-		double	initTemp;
-		double	decayRate;
 		long iterations;
 		RNG rng;
 

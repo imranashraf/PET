@@ -25,7 +25,7 @@ float * Costs;				//the costs of the partitions found by exhaustive search
 ULL commLow  = 4;
 ULL commHigh = 1000000;
 ULL execLow  = 10;
-ULL execHigh = 1000;
+ULL execHigh = 100000;
 float PERCENT_CONNECTIVITY = 50;
 
 float ALPHA = 1.0;

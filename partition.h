@@ -1,6 +1,8 @@
 #ifndef _PARTITION_H
 #define _PARTITION_H
 
+#include <vector>
+
 #include "cluster.h"
 #include "exception.h"
 
@@ -24,6 +26,11 @@ class Partition
 		UINT getClusterFunctionCount(UINT cno)
 		{
 			return (_Clusters[cno].getFunctionCount() );
+		}
+		
+		void getClusterFunctionNos(UINT cno, std::vector<UINT>& fNos)
+		{
+			_Clusters[cno].getFunctionNos(fNos);
 		}
 		
 		void setCluster(UINT totalFunctions, UINT nclusters);

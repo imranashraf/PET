@@ -5,23 +5,25 @@
 #include "partition.h"
 #include "rng.h"
 
+//comment the following if random initial solution is not required
+#define RND_INIT_ES
+
 #define Pm 0.038   
 #define Pc 0.6     
-#define PoplSize  15 
+#define PoplSize  10 
 
 class EvolutionarySearcher : public Algorithm
 {
 	private:
 		Partition* Population;	//current population
-		int Fittest;			//index of the fittest
-		int TotalGenerations;	//total number of generations
+		UINT Fittest;			//index of the fittest
+		UINT TotalGenerations;	//total number of generations
 		RNG rng;
 		
 	public:
 		EvolutionarySearcher();
 		void InitialSelection();
-		void Eval_Fitness();
-		void Find_Fittest();
+		void FindFittest();
 		void Reproduce();
 		void Mutate();
 		void Apply();

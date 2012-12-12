@@ -2,6 +2,7 @@
 #define _CLUSTER_H
 
 #include <set>
+#include <vector>
 #include <iostream>
 #include <cstdlib>
 
@@ -31,6 +32,16 @@ class Cluster
 		
 		void setFunctionCount(UINT fcount) {_FunctionCount = fcount;}
 		UINT getFunctionCount() { return _FunctionCount; }
+		
+		void getFunctionNos(std::vector<UINT>& fNos)
+		{
+			UINT fno;
+			for(UINT i=0; i<_FunctionCount; i++)
+			{
+				fno = _Functions[i];
+				fNos.push_back(fno);
+			}
+		}
 		
 		void setFunctionCapacity(UINT totalFunctions);
 		UINT getFunctionCapacity() { return _FunctionCapacity; }

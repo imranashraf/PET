@@ -1,7 +1,9 @@
-#include<iostream>
-
+#include <iostream>
+#include <vector>
 #include "globals.h"
 #include "EvolutionarySearcher.h"
+
+using namespace std;
 
 EvolutionarySearcher::EvolutionarySearcher()
 {
@@ -57,126 +59,79 @@ void EvolutionarySearcher::InitialSelection()
 
 void EvolutionarySearcher::Apply()
 {
+	UINT g;
+	
 	InitialSelection();
-	Print(cout);
-	*bestESPartition = Population[0];
+	FindFittest();
+	Print(dout);
+	
+	for(g=0 ; g<TotalGenerations; g++)
+	{
+		Reproduce();
+		FindFittest();
+	}
+	
+	*bestESPartition = Population[Fittest];
+}
+
+void EvolutionarySearcher::FindFittest()
+{
+	int i;
+	Fittest=0;
+	double minCost=Population[Fittest].Cost();
+	double currCost;
+	
+	for(i=1;i<PoplSize;i++)
+	{
+		currCost = Population[i].Cost();
+		if(currCost < minCost )
+			Fittest=i;
+	}
+}
+
+void EvolutionarySearcher::Reproduce()
+{
+	UINT i;
+	UINT fno, cno;
+	UINT TotalClusters = g_k;
+	vector<UINT> fNos;
+	
+	for(i=0;i<PoplSize;i++)
+	{
+		//to not reproduce with itself
+		//it would be a waste of time 
+		if(i==Fittest) continue;
+		
+		for(cno=0; cno < TotalClusters; cno++)
+		{
+			//either the gene will be kept the same or it will be changed
+			//to be what the best chromosome has
+			
+			Population[i].getClusterFunctionNos(cno, fNos);
+			
+			if(fNos.size() == 1) continue;	//we do not remove the last alone function from a cluster
+			
+			for (vector<UINT>::iterator it = fNos.begin(); it!=fNos.end(); ++it) 
+			{
+				if( (rand()%100) > 100*Pc)	continue;	//we do not reproduce
+
+				fno = *it;
+				Population[i].removeFunction(fno);
+				Population[i].addFunction(fno,cno);
+			}
+		}
+	}
 }
 
 void EvolutionarySearcher::Print(std::ostream & fout = std::cout)
 {
 	for(UINT g = 0; g<PoplSize; g++)
 	{
-		Population[g].Print(cout);
+		Population[g].Print(fout);
 	}
 }
 
 /*
-
-EvolutionarySearcher::Apply()
-{
-	int g,i;
-	
-	Init_Population();
-	printf("inital population is : \n ");
-	for(i=0;i<Array_Size;i++)
-	{
-		printf("%d ",Population[Fittest][i]);
-	}
-	printf(" and fitness = %d \n",Population[Fittest][i]);
-	getch();
-	
-	for(g=0 ; g<TotalGenerations; g++)      //g<TotalGenerations && Population[Fittest][i]<End_Value
-	{
-		Eval_Fitness();
-		Find_Fittest();  
-		Reproduce();
-		Mutate();
-		
-		printf("\n Currrent Fittest after %d generation is : \n",g);
-		for(i=0;i<Array_Size;i++)
-		{
-			printf("%d ",Population[Fittest][i]);
-		}
-		printf(" \n and fitness = %d \n",Population[Fittest][Array_Size]);
-	}
-	printf("\n Fittest Population after %d generations is : \n",g);
-	for(i=0;i<Array_Size;i++)
-	{
-		printf("%d ",Population[Fittest][i]);
-	}
-	printf(" \n \a\a and fitness = %d \n",Population[Fittest][i]);
-}
-
-////////////////////////////////////////////
-//initializing population
-void InitPopulation() 
-{
-     int i,j;
-     
-     for(i=0;i<PoplSize;i++) 
-     {
-         for(j=0;j<Array_Size;j++)
-         {
-             Population[i][j]=(1+rand()%Array_Size);
-         }
-     }
-
-}
-////////////////////////////////////////////
-//Evaluation
-void Eval_Fitness()
-{
-int i;
-     for(i=0;i<PoplSize;i++) 
-     {
-         Population[i][Array_Size]=BSort(i);//will get fitness from the calculation
-     }
-}
-
-///////////////////////////////////////////////////////
-//Find Best
-void Find_Fittest()
-{
-int i;
-
-for(i=0;i<PoplSize;i++)
-    {
-    if(Population[i][Array_Size] > Population[Fittest][Array_Size] )
-        {
-            Fittest=i;
-        }
-    }
-    
-}
-
-
-///////////////////////////////////////////////////////
-//Reproduction
-void Reproduce()
-{
-     int i,j;
-     
-     for(i=0;i<PoplSize;i++)
-		{
-			//to not reproduce with itself
-			//it would be a waste of time 
-			//(although this if could introduce a break in the pipeline, well.. forget about this)
-			if(i!=Fittest)
-			{
-				for(j=0;j<Array_Size;j++)
-				{
-					//either the gene will be kept the same or it will be changed
-					//to be what the best chromosome has
-					if( (rand()%100) < 100*Pc)
-						Population[i][j]=Population[Fittest][j];			
-					else
-						Population[i][j]=Population[i][j];			
-				}
-							
-			}	
-		}
-		
-}
 
 ///////////////////////////////////////////////////////
 // Mutate
@@ -184,21 +139,18 @@ void Mutate()
 {
      int i,j,changed;
      for(i=0;i<PoplSize;i++)
+	{
+		if(i!=Fittest)
 		{
-			if(i!=Fittest)
+			for(j=0;j<Array_Size;j++)
 			{
-				for(j=0;j<Array_Size;j++)
+				if( (rand()%1000) < 1000*Pm)//tune mutation
 				{
-                    if( (rand()%1000) < 1000*Pm)//tune mutation
-                        {
-                        Population[i][j]=(1+rand()%Array_Size);
-                        }
-                        
+					Population[i][j]=(1+rand()%Array_Size);
 				}
-							
-			}	
-		}
-     
+			}
+		}	
+	}
 }
 
 */

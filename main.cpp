@@ -443,6 +443,8 @@ void Simulate()
 	fout<<endl<<"Evolutionary Search Summary"<<endl;
 	fout<<"===================================="<<endl;
 	
+	g_applic->Clear();
+	
 	try
 	{
 		esearcher = new EvolutionarySearcher();	
@@ -452,8 +454,6 @@ void Simulate()
 		cerr<<e.what()<<endl;
 		throw Exception("Allocation Failed",__FILE__,__LINE__);
 	}
-	
-	g_applic->Clear();
 	
 	timer->Start();
 	esearcher->Apply(); 

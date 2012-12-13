@@ -12,7 +12,7 @@ using namespace std;
 //    long long fac = 1;
 //    #pragma omp parallel
 //    {
-//      long long fac_private = 1; /* This value comes from the table shown above */
+//      long long fac_private = 1;
 //      #pragma omp for nowait
 //      for(long long n=2; n<=number; ++n)
 //        fac_private *= n;

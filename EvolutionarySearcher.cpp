@@ -68,6 +68,7 @@ void EvolutionarySearcher::Apply()
 	for(g=0 ; g<TotalGenerations; g++)
 	{
 		Reproduce();
+ 		Mutate();
 		FindFittest();
 	}
 	
@@ -104,21 +105,64 @@ void EvolutionarySearcher::Reproduce()
 		
 		for(cno=0; cno < TotalClusters; cno++)
 		{
+			fNos.clear();
 			//either the gene will be kept the same or it will be changed
 			//to be what the best chromosome has
+			Population[Fittest].getClusterFunctionNos(cno, fNos);	//get the traits from fittest
 			
-			Population[i].getClusterFunctionNos(cno, fNos);
-			
-			if(fNos.size() == 1) continue;	//we do not remove the last alone function from a cluster
+			if(fNos.size() <= 1) continue;	//we do not remove the last alone function from a cluster
 			
 			for (vector<UINT>::iterator it = fNos.begin(); it!=fNos.end(); ++it) 
 			{
 				if( (rand()%100) > 100*Pc)	continue;	//we do not reproduce
 
 				fno = *it;
+				
+				//now add that trit to current population
 				Population[i].removeFunction(fno);
 				Population[i].addFunction(fno,cno);
 			}
+		}
+	}
+}
+
+void EvolutionarySearcher::Mutate()
+{
+	UINT i, TotalFunctions, fno, cno;
+	UINT TotalClusters = g_k;
+
+	for(i=0; i<PoplSize; i++)
+	{
+		for(cno=0; cno < TotalClusters; cno++)
+		{
+			TotalFunctions = Population[i].getClusterFunctionCount(cno);
+		}
+	}
+	
+	return;
+	
+	for(i=0; i<PoplSize; i++)
+	{
+		if(i==Fittest) continue;
+		
+		for(cno=0; cno < TotalClusters; cno++)
+		{
+			if( (rand()%1000) > 1000*Pm) continue; //tune mutation
+
+			TotalFunctions = Population[i].getClusterFunctionCount(cno);
+			
+			if(TotalFunctions <= 1) continue;	//we do not remove the last alone function from a cluster
+			
+			//select a function in the cno cluster for mutation
+			#ifndef RND_INIT_ES
+			fno = 0 + ( abs( rng.rand_int31() ) % ( (TotalFunctions-1) - (0) + 1 ) ); 
+			#else
+			fno = g_k + ( abs( rng.rand_int31() ) % ( (TotalFunctions-1) - (g_k) + 1 ) );  //not changing the ftns from initial selection	
+			#endif
+			
+			//mutate it
+			Population[i].removeFunction(fno);
+			Population[i].addFunction(fno,cno);
 		}
 	}
 }
@@ -130,27 +174,3 @@ void EvolutionarySearcher::Print(std::ostream & fout = std::cout)
 		Population[g].Print(fout);
 	}
 }
-
-/*
-
-///////////////////////////////////////////////////////
-// Mutate
-void Mutate()
-{
-     int i,j,changed;
-     for(i=0;i<PoplSize;i++)
-	{
-		if(i!=Fittest)
-		{
-			for(j=0;j<Array_Size;j++)
-			{
-				if( (rand()%1000) < 1000*Pm)//tune mutation
-				{
-					Population[i][j]=(1+rand()%Array_Size);
-				}
-			}
-		}	
-	}
-}
-
-*/

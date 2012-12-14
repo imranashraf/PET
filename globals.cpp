@@ -51,3 +51,4 @@ void Pause()
 	cout<<"Press Enter"<<endl;
 	getchar();
 }
+

@@ -12,7 +12,7 @@
 using namespace std;
 
 static int *partition;
-unsigned int parCount;
+unsigned long parCount;
 long long nPartitions;
 
 static void _Bruteforce(int n)
@@ -44,7 +44,7 @@ static void _Bruteforce(int n)
 
 		parCount++;
 		if(parCount % 100000 == 0)
-			cout<<"\rProgress  = "<<setw(3)<<parCount/nPartitions*100.0<<" %"<<flush;
+			cout<<"\rProgress  = "<<setprecision(1)<<setw(3)<<(double)parCount/nPartitions*100.0<<" %"<<flush;
     }
     else
     {
@@ -123,7 +123,7 @@ void Bruteforce::Apply()
 	}
 	#endif
 	
-	cout<<"Progress  = "<<setw(3)<<parCount/nPartitions*100.0<<" %"<<flush;
+	cout<<"Progress  = "<<setprecision(1)<<setw(3)<<(double)parCount/nPartitions*100.0<<" %"<<flush;
 	Bruteforce_kfixed( g_n , g_k);
 	cout<<endl;
 }

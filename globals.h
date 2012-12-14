@@ -28,8 +28,17 @@ extern std::ostream cnull;
 //do it for small simulations only as it will require more memory and hard disk space
 // #define STORE_COSTS
 
-//comment the following if you do not want to run exhaustive search
-// #define RUN_EXHAUSTIVE
+//comment the following if you do not want to run Bruteforce search
+#define RUN_BF
+//comment the following if you do not want to run Heuristic Search
+#define RUN_HS
+//comment the following if you do not want to run Simmulated Annealing
+// #define RUN_SA
+//comment the following if you do not want to run Tabu Search
+// #define RUN_TS
+//comment the following if you do not want to run Evolutionary Search
+#define RUN_ES
+
 
 //comment the following if you want to show output results on screen
 // #define TOFILE

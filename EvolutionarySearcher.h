@@ -8,8 +8,8 @@
 //comment the following if random initial solution is not required
 #define RND_INIT_ES
 
-#define Pm 0.038   
-#define Pc 0.6     
+#define Pm 0.025   
+#define Pc 0.75     
 #define PoplSize  10 
 
 class EvolutionarySearcher : public Algorithm

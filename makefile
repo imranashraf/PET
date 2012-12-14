@@ -1,8 +1,3 @@
-#TODO fix copy constructors
-#TODO use STL
-#TODO fix floating point number printing
-#TODO remove all globals for application and number of functions
-#TODO Heuristic adds all remaining functions to same cluster, Check !!!
 CC=g++
 CFLAGS=-Wall -O3 -fopenmp
 LDFLAGS=-fopenmp
@@ -82,3 +77,7 @@ open:
 
 clean:
 	@-rm -f .depend $(OBJECTS) $(EXEC) *~ gmon.out graph_*.dot graph_*.pdf profile.txt profile.pdf costs_*.txt output_*.txt
+
+#TODO remove all globals for application and number of functions
+#TODO Heuristic adds all remaining functions to same cluster, Check !!!
+#TODO use STL as much as possible

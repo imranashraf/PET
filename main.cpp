@@ -243,15 +243,6 @@ void SetSimulation(int argc, char * argv[])
 
 void Simulate()
 {
-	Algorithm * heuristic;
-	Algorithm * sannealer;
-	Algorithm * tsearcher;
-	Algorithm * esearcher;
-	
-	#ifdef RUN_EXHAUSTIVE
-	Algorithm * bforce;	
-	#endif
-	
 	Timer *timer;
 	
 	#ifdef TOFILE
@@ -290,17 +281,17 @@ void Simulate()
 	fout<<"Communication of filtered functions "<<TotalFilteredComm<<endl;
 	#endif
 	
-	#ifdef RUN_EXHAUSTIVE
+	#ifdef RUN_BF
 	unsigned long long totalPartitions;
 	totalPartitions = Count(g_n,g_k);
 	fout<<"Total number of possible partitions= "<<totalPartitions<<endl;
 	fout<<"Approximate Time required to Evaluate these partitions = "<< EstimateTime(totalPartitions);
 	
-	/********  Exhaustive Search ********/
+	/********  Bruteforce Search ********/
 	fout<<"====================================";
-	fout<<endl<<"Exhaustive Search Summary"<<endl;
+	fout<<endl<<"Bruteforce Search Summary"<<endl;
 	fout<<"===================================="<<endl;
-
+	Algorithm * bforce;	
 	try
 	{
 		bforce = new Bruteforce();
@@ -360,14 +351,19 @@ void Simulate()
 
 	fout<<"\nDetails of Best Partition found by Exhaustive Search ..."<<endl;
 	bestBFPartition->Print(fout);
-	#endif
 	
+	delete bforce;
+	delete bestBFPartition; 
 	
+	#endif //RUN_BF
+	
+	#ifdef RUN_HS
 	/********  Heuristic Search ********/
 	fout<<"====================================";
 	fout<<endl<<"Heuristic Search Summary"<<endl;
 	fout<<"===================================="<<endl;
-
+	
+	Algorithm * heuristic;
 	try
 	{
 		heuristic = new Heuristic();	
@@ -388,11 +384,18 @@ void Simulate()
 	fout<<"\nDetails of Best Partition found by Heuristic Algorithm ..."<<endl;
 	bestHSPartition->Print(fout);
 
+	delete heuristic;
+	delete bestHSPartition;
+	
+	#endif //RUN_HS
+	
+	#ifdef RUN_SA
 	/********  Simulated Annealing ********/
 	fout<<"====================================";
 	fout<<endl<<"Simmulated Annealing Summary"<<endl;
 	fout<<"===================================="<<endl;
-
+	
+	Algorithm * sannealer;
 	try
 	{
 		sannealer = new SimulatedAnnealer();	
@@ -413,11 +416,18 @@ void Simulate()
 	fout<<"\nDetails of Best Partition found by Simmulated Annealing..."<<endl;
 	bestSAPartition->Print(fout);
 
+	delete sannealer;
+	delete bestSAPartition;
+	
+	#endif //RUN_SA
+	
+	#ifdef RUN_TS
 	/********  Tabu Search  ********/
 	fout<<"====================================";
 	fout<<endl<<"Tabu Search Summary"<<endl;
 	fout<<"===================================="<<endl;
-	
+
+	Algorithm * tsearcher;
 	try
 	{
 		tsearcher = new TabuSearcher();	
@@ -438,13 +448,18 @@ void Simulate()
 	fout<<"\nDetails of Best Partition found by Tabu Search..."<<endl;
 	bestTSPartition->Print(fout);
 
+	delete tsearcher;
+	delete bestTSPartition;
+	
+	#endif //RUN_TS
+	
+	#ifdef RUN_ES
 	/********  Evolutionary Search  ********/
 	fout<<"====================================";
 	fout<<endl<<"Evolutionary Search Summary"<<endl;
 	fout<<"===================================="<<endl;
 	
-	g_applic->Clear();
-	
+	Algorithm * esearcher;
 	try
 	{
 		esearcher = new EvolutionarySearcher();	
@@ -455,6 +470,8 @@ void Simulate()
 		throw Exception("Allocation Failed",__FILE__,__LINE__);
 	}
 	
+	g_applic->Clear();
+	
 	timer->Start();
 	esearcher->Apply(); 
 	timer->Stop();
@@ -463,6 +480,10 @@ void Simulate()
 	fout<<"\nDetails of Best Partition found by Evolutionary Search..."<<endl;
 	bestESPartition->Print(fout);
 	
+	delete esearcher;
+	delete bestESPartition;
+	
+	#endif //RUN_ES
 	/****************************************/
 	
 	//closing
@@ -471,23 +492,11 @@ void Simulate()
 	#ifdef TOFILE
 	fout.close();
 	#endif
-	#ifdef RUN_EXHAUSTIVE
-	delete bforce;
-	delete bestBFPartition; 
+
+	#ifdef STORE_COSTS
+	delete[] Costs;
 	#endif
 
-	delete heuristic;
-	delete bestHSPartition;
-
-	delete sannealer;
-	delete bestSAPartition;
-	
-	delete esearcher;
-	delete bestESPartition;
-
-	delete tsearcher;
-	delete bestTSPartition;
-	
  	#ifdef FILTER
  	delete g_filtered_applic;
  	delete g_unfiltered_applic;
@@ -495,9 +504,6 @@ void Simulate()
 	delete g_applic;
 	#endif
 	
-	#ifdef STORE_COSTS
-	delete[] Costs;
-	#endif
 }
 
 void usage()

@@ -2,6 +2,7 @@
 #define _PARTITION_H
 
 #include <vector>
+#include <string>
 
 #include "cluster.h"
 #include "exception.h"
@@ -37,7 +38,12 @@ class Partition
 		void addFunction(UINT ftnNo, UINT clusterNo);
 		void removeFunction(UINT ftnNo);
 		
-		void Print(std::ostream & fout);
+		void Print(std::ostream & fout, const std::string & partName);
+		void Print(std::ostream & fout = std::cout)
+		{
+			Print(fout,"");
+		}
+		
 		float Cost();
 		float BalancingPenalty();
 		float CommunicationCost();

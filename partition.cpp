@@ -160,9 +160,10 @@ float Partition::Cost()
 	return _Cost;
 }
 
-void Partition::Print(std::ostream & fout = std::cout)
+void Partition::Print(std::ostream & fout = std::cout , const std::string & partName = "")
 {
 	UINT i;
+	
 	for(i=0;i<_nClusters;i++)
 	{
 		fout<<" Cluster "<<i<<" has ";
@@ -171,18 +172,8 @@ void Partition::Print(std::ostream & fout = std::cout)
 	
 	fout<<fixed;
 	
-	fout<<"Cost = "<<Cost()
-		<<" ("
-		<<" BP = "<<BalancingPenalty()
-		<<" CC = "<<CommunicationCost()
-		<<" CD = "<<CouplingDegree()
-		<<" )"
-		<<endl;
-	
-// 	fout<<"Cost of Partition = "<<Cost()<<endl;
-// 	fout<<"\tBalancingPenalty = "<<BalancingPenalty()<<endl;
-// 	fout<<"\tCommunicationCost = "<<CommunicationCost()<<endl;
-// 	fout<<"\tCouplingDegree = "<<CouplingDegree()<<endl;
-	
-	fout.unsetf(ios::fixed | ios::scientific);
+	fout<<partName<<" Cost = "<<Cost()<<endl
+		<<partName<<" BP   = "<<BalancingPenalty()<<endl
+		<<partName<<" CC   = "<<CommunicationCost()<<endl
+		<<partName<<" CD   = "<<CouplingDegree()<<endl;
 }

@@ -52,3 +52,10 @@ void Pause()
 	getchar();
 }
 
+unsigned long long TotalPartitions;
+unsigned long long PartLimit=70000000;
+
+#ifdef RUN_BF
+double minCost;
+double maxCost;
+#endif

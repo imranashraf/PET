@@ -153,6 +153,7 @@ void Application::Print(std::ostream & fout = std::cout)
 	fout<<endl;
 	fout<<resetiosflags(ios::floatfield | ios::showpoint );
 	fout.precision(defaultPrecision);
+	fout<<fixed;
 }
 
 void Application::Print2Dot()

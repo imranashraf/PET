@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 		<<"\twith reason:\"" <<e.Reason()<<endl;
 	}
 	
-	cout<<"End of Simulation"<<endl;
+	cout<<"\nEnd of Simulation"<<endl;
 	return 0; 
 }
 
@@ -282,10 +282,14 @@ void Simulate()
 	#endif
 	
 	#ifdef RUN_BF
-	unsigned long long totalPartitions;
-	totalPartitions = Count(g_n,g_k);
-	fout<<"Total number of possible partitions= "<<totalPartitions<<endl;
-	fout<<"Approximate Time required to Evaluate these partitions = "<< EstimateTime(totalPartitions);
+	TotalPartitions = Count(g_n,g_k);
+	fout<<"Total number of possible partitions= "<<TotalPartitions<<endl;
+	fout<<"Approximate Time required to Evaluate these partitions= "<<EstimateTime(TotalPartitions);
+
+	#if defined(STORE_PARTITIONS) || defined(STORE_COSTS)	
+	if(TotalPartitions > PartLimit)
+		throw Exception("Total number of partitions are above the limit (set for storage)",__FILE__,__LINE__);
+	#endif
 	
 	/********  Bruteforce Search ********/
 	fout<<"====================================";
@@ -306,11 +310,9 @@ void Simulate()
 	bforce->Apply(); 
 	timer->Stop();
 
-	#ifdef STORE_PARTITIONS
-	unsigned long long totalPartitions;
-	totalPartitions = Count(g_n,g_k);
+	#if defined(PRINT_STORED_PARTITIONS) && defined(STORE_PARTITIONS)
 	fout<<"Partitions evaluated are :"<<endl;
-	for(unsigned int i=0 ; i < totalPartitions ; i++)
+	for(unsigned long long i=0 ; i < TotalPartitions ; i++)
 	{
 		fout<<endl<<"Partition "<<i<<endl;
 		Partitions[i].Print(fout);
@@ -325,32 +327,16 @@ void Simulate()
 	{
 		throw Exception("File Opening Error",__FILE__,__LINE__);
 	}
-
-	float minCost=Costs[0];
-	float maxCost=Costs[0];
-	UINT limit;
+	costFile.close();
+	#endif
 	
-	if(totalPartitions < nCOSTSAMPLES)
-		limit = totalPartitions;
-	else
-		limit = nCOSTSAMPLES;
-	for(UINT i=0 ; i < limit ; i++)
-	{
-		costFile<<Costs[i]<<endl;
-		
-		if(Costs[i]<minCost) minCost = Costs[i];
-		if(Costs[i]>maxCost) maxCost = Costs[i];
-	}
+	timer->Print(fout); //print time
+	
 	fout<<"Minimum Cost = "<<minCost<<endl;
 	fout<<"Maximum Cost = "<<maxCost<<endl;
 
-	costFile.close();
-	#endif
-
-	timer->Print(fout); //print time
-
 	fout<<"\nDetails of Best Partition found by Exhaustive Search ..."<<endl;
-	bestBFPartition->Print(fout);
+	bestBFPartition->Print(fout,"BF");
 	
 	delete bforce;
 	delete bestBFPartition; 
@@ -382,7 +368,7 @@ void Simulate()
 	timer->Print(fout); //print time
 
 	fout<<"\nDetails of Best Partition found by Heuristic Algorithm ..."<<endl;
-	bestHSPartition->Print(fout);
+	bestHSPartition->Print(fout,"HS");
 
 	delete heuristic;
 	delete bestHSPartition;
@@ -414,7 +400,7 @@ void Simulate()
 	timer->Print(fout); //print time
 
 	fout<<"\nDetails of Best Partition found by Simmulated Annealing..."<<endl;
-	bestSAPartition->Print(fout);
+	bestSAPartition->Print(fout,"SA");
 
 	delete sannealer;
 	delete bestSAPartition;
@@ -446,7 +432,7 @@ void Simulate()
 	timer->Print(fout); //print time
 	
 	fout<<"\nDetails of Best Partition found by Tabu Search..."<<endl;
-	bestTSPartition->Print(fout);
+	bestTSPartition->Print(fout,"TS");
 
 	delete tsearcher;
 	delete bestTSPartition;
@@ -478,7 +464,7 @@ void Simulate()
 	timer->Print(fout); //print time
 	
 	fout<<"\nDetails of Best Partition found by Evolutionary Search..."<<endl;
-	bestESPartition->Print(fout);
+	bestESPartition->Print(fout,"ES");
 	
 	delete esearcher;
 	delete bestESPartition;

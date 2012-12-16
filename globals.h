@@ -23,6 +23,7 @@ extern std::ostream cnull;
 //comment the following to not store all the partitions produced in bruteforce algorithm
 //do it for small simulations only as it will require more memory
 // #define STORE_PARTITIONS
+// #define PRINT_STORED_PARTITIONS
 
 //comment the following to stop storing the scores of all partions produced in bruteforce algorithm
 //do it for small simulations only as it will require more memory and hard disk space
@@ -83,13 +84,20 @@ extern std::map <std::string,unsigned int> NametoADD;
 extern std::map <unsigned int,std::string> ADDtoName;
 
 //comment the following if you do not want to filter functions in Q2 mode
-#define FILTER
+// #define FILTER
 
 extern unsigned int EXEC_THRESHOLD;
 extern unsigned int COMM_THRESHOLD;
 extern double TotalFilteredContrib;
 extern double TotalFilteredComm;
 
+extern unsigned long long TotalPartitions;
+extern unsigned long long PartLimit;
 void Pause();
+
+#ifdef RUN_BF
+extern double minCost;
+extern double maxCost;
+#endif
 
 #endif

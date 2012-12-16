@@ -12,8 +12,7 @@
 using namespace std;
 
 static int *partition;
-unsigned long parCount;
-long long nPartitions;
+unsigned long long partCount;
 
 static void _Bruteforce(int n)
 {
@@ -27,24 +26,34 @@ static void _Bruteforce(int n)
         for(UINT j=0;j<g_n;j++)
 		{
 			#ifdef STORE_PARTITIONS
-			Partitions[parCount].addFunction(j,partition[g_n-j-1]);
+			Partitions[partCount].addFunction(j,partition[g_n-j-1]);
 			#endif
 			tempPart.addFunction( j , partition[g_n-j-1] );
 		}
  		dout<<endl;
 
 		#ifdef STORE_COSTS
-		Costs[parCount%nCOSTSAMPLES] = tempPart.Cost();
+		Costs[partCount] = tempPart.Cost();
 		#endif
 
 		tempPart.Print(dout);
 		
-		if( (tempPart.Cost() ) < (bestBFPartition->Cost() ) )
+		
+		double tempCost = tempPart.Cost();
+		if( tempCost <  minCost)
+		{
 			*bestBFPartition = tempPart;
+			minCost = tempCost;
+		}
+		else if(tempCost > maxCost)
+		{
+			maxCost = tempCost;
+		}
+		
+		partCount++;
+		if(partCount % 100000 == 0)
+			cout<<"\rProgress  = "<<(int)( (double)partCount/TotalPartitions*100.0 ) <<" %"<<flush;
 
-		parCount++;
-		if(parCount % 100000 == 0)
-			cout<<"\rProgress  = "<<setprecision(1)<<setw(3)<<(double)parCount/nPartitions*100.0<<" %"<<flush;
     }
     else
     {
@@ -83,8 +92,10 @@ void Bruteforce_kfixed(int n, int k)
 
 void Bruteforce::Apply()
 {
-	parCount=0;
-	nPartitions = Count(g_n,g_k);
+	partCount=0;
+	
+	minCost=100000;
+	maxCost=0;
 	
 	try
 	{
@@ -99,22 +110,21 @@ void Bruteforce::Apply()
 	#ifdef STORE_PARTITIONS
 	try
 	{
-		Partitions = new Partition[nPartitions];
-		for(int i=0;i<nPartitions;i++)
-			Partitions[i].setCluster(g_n,g_k);
+		Partitions = new Partition[TotalPartitions];
 	}
 	catch (const std::bad_alloc& e) 
 	{
 		cout<<e.what()<<endl;
 		throw Exception("Allocation Failed",__FILE__,__LINE__);
 	}
+	for(unsigned long long i=0;i<TotalPartitions;i++)
+		Partitions[i].setCluster(g_n,g_k);
 	#endif
 	
 	#ifdef STORE_COSTS
-	//TODO	Think about the solution of such a big array of Costs
 	try
 	{
-		Costs = new float[nCOSTSAMPLES];
+		Costs = new float[TotalPartitions];
 	}
 	catch (const std::bad_alloc& e) 
 	{
@@ -123,7 +133,7 @@ void Bruteforce::Apply()
 	}
 	#endif
 	
-	cout<<"Progress  = "<<setprecision(1)<<setw(3)<<(double)parCount/nPartitions*100.0<<" %"<<flush;
+	cout<<"Progress  = "<<(int)( (double)partCount/TotalPartitions*100.0 ) <<" %"<<flush;
 	Bruteforce_kfixed( g_n , g_k);
 	cout<<endl;
 }

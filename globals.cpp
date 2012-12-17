@@ -22,7 +22,7 @@ Partition* bestTSPartition;	//best partition found by Tabu Search
 Partition* bestESPartition;	//best partition found by evolutionary search
 
 #ifdef STORE_COSTS
-float * Costs;				//the costs of the partitions found by exhaustive search
+std::vector<float> Costs;	//the costs of the partitions found by exhaustive search
 #endif
 
 ULL commLow  = 4;

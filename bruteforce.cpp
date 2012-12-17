@@ -29,15 +29,11 @@ static void _Bruteforce(int n)
 		#ifdef STORE_PARTITIONS
 		Partitions.push_back(tempPart);
 		#endif
- 		dout<<endl;
 
-		#ifdef STORE_COSTS
-		Costs[partCount] = tempPart.Cost();
-		#endif
-
-		tempPart.Print(dout);
-		
 		double tempCost = tempPart.Cost();
+		#ifdef STORE_COSTS
+		Costs.push_back( tempPart.Cost() );
+		#endif
 		if( tempCost <  minCost)
 		{
 			*bestBFPartition = tempPart;
@@ -47,6 +43,9 @@ static void _Bruteforce(int n)
 		{
 			maxCost = tempCost;
 		}
+
+		dout<<endl;
+		tempPart.Print(dout);
 		
 		partCount++;
 		if(partCount % 100000 == 0)
@@ -103,18 +102,6 @@ void Bruteforce::Apply()
 		cout<<e.what()<<endl;
 		throw Exception("Allocation Failed",__FILE__,__LINE__);
 	}
-	
-	#ifdef STORE_COSTS
-	try
-	{
-		Costs = new float[TotalPartitions];
-	}
-	catch (const std::bad_alloc& e) 
-	{
-		cout<<e.what()<<endl;
-		throw Exception("Allocation Failed",__FILE__,__LINE__);
-	}
-	#endif
 	
 	cout<<"Progress  = "<<(int)( (double)partCount/TotalPartitions*100.0 ) <<" %"<<flush;
 	Bruteforce_kfixed( g_n , g_k);

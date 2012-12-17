@@ -313,8 +313,7 @@ void Simulate()
 	#if defined(STORE_PARTITIONS) && defined(PRINT_STORED_PARTITIONS)
 	fout<<"Partitions evaluated are :"<<endl;
 	unsigned long long i=0;
-	vector<Partition>::iterator iter;
-	for(iter=Partitions.begin() ; iter!=Partitions.end() ; iter++)
+	for(vector<Partition>::iterator iter=Partitions.begin() ; iter!=Partitions.end() ; iter++)
 	{
 		fout<<endl<<"Partition "<<i++<<endl;
 		iter->Print(fout);
@@ -329,6 +328,10 @@ void Simulate()
 	{
 		throw Exception("File Opening Error",__FILE__,__LINE__);
 	}
+	
+	for(vector<float>::iterator iter=Costs.begin(); iter != Costs.end(); iter++)
+		costFile<<(*iter)<<endl;
+	
 	costFile.close();
 	#endif
 	
@@ -481,17 +484,12 @@ void Simulate()
 	fout.close();
 	#endif
 
-	#ifdef STORE_COSTS
-	delete[] Costs;
-	#endif
-
  	#ifdef FILTER
  	delete g_filtered_applic;
  	delete g_unfiltered_applic;
 	#else
 	delete g_applic;
 	#endif
-	
 }
 
 void usage()

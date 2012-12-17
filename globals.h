@@ -28,7 +28,7 @@ extern std::ostream cnull;
 
 //comment the following to stop storing the scores of all partions produced in bruteforce algorithm
 //do it for small simulations only as it will require more memory and hard disk space
-// #define STORE_COSTS
+#define STORE_COSTS
 
 //comment the following if you do not want to run Bruteforce search
 #define RUN_BF
@@ -62,7 +62,7 @@ extern Partition* bestTSPartition;	//best partition found by Tabu Search
 extern Partition* bestESPartition;	//best partition found by evolutionary search
 
 #ifdef STORE_COSTS
-extern float* Costs;
+extern std::vector<float> Costs;
 #endif
 
 extern Application* g_applic;

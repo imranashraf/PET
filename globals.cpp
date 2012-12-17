@@ -12,7 +12,7 @@ Application * g_unfiltered_applic;		//the unfiltered application to be partition
 Application * g_filtered_applic;		//the filtered application to be partitioned
 
 #ifdef STORE_PARTITIONS
-Partition* Partitions;		//the partitions found
+std::vector<Partition> Partitions; 	//the partitions found
 #endif
 
 Partition* bestBFPartition;	//best partition found by exhaustive search

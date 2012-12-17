@@ -7,21 +7,6 @@
 
 using namespace std;
 
-// long long factorial(long long number)
-//  {
-//    long long fac = 1;
-//    #pragma omp parallel
-//    {
-//      long long fac_private = 1;
-//      #pragma omp for nowait
-//      for(long long n=2; n<=number; ++n)
-//        fac_private *= n;
-//      #pragma omp atomic
-//      fac *= fac_private;
-//    }
-//    return fac;
-//  }
-
 long long factorial(long long number)
 {
 	long long fac = 1;

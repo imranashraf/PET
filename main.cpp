@@ -310,12 +310,14 @@ void Simulate()
 	bforce->Apply(); 
 	timer->Stop();
 
-	#if defined(PRINT_STORED_PARTITIONS) && defined(STORE_PARTITIONS)
+	#if defined(STORE_PARTITIONS) && defined(PRINT_STORED_PARTITIONS)
 	fout<<"Partitions evaluated are :"<<endl;
-	for(unsigned long long i=0 ; i < TotalPartitions ; i++)
+	unsigned long long i=0;
+	vector<Partition>::iterator iter;
+	for(iter=Partitions.begin() ; iter!=Partitions.end() ; iter++)
 	{
-		fout<<endl<<"Partition "<<i<<endl;
-		Partitions[i].Print(fout);
+		fout<<endl<<"Partition "<<i++<<endl;
+		iter->Print(fout);
 	}
 	#endif
 

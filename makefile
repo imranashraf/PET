@@ -73,6 +73,7 @@ open:
 clean:
 	@-rm -f .depend $(OBJECTS) $(EXEC) *~ gmon.out graph_*.dot graph_*.pdf profile.txt profile.pdf costs_*.txt output_*.txt
 
+#TODO use STL as much as possible
 #TODO remove all globals for application and number of functions
 #TODO Heuristic adds all remaining functions to same cluster, Check !!!
-#TODO use STL as much as possible
+#TODO minimum value of double

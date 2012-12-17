@@ -22,14 +22,13 @@ static void _Bruteforce(int n)
     {
 		//store this partition here or do something with it
 		Partition tempPart(g_n,g_k);
-
         for(UINT j=0;j<g_n;j++)
 		{
-			#ifdef STORE_PARTITIONS
-			Partitions[partCount].addFunction(j,partition[g_n-j-1]);
-			#endif
 			tempPart.addFunction( j , partition[g_n-j-1] );
 		}
+		#ifdef STORE_PARTITIONS
+		Partitions.push_back(tempPart);
+		#endif
  		dout<<endl;
 
 		#ifdef STORE_COSTS
@@ -37,7 +36,6 @@ static void _Bruteforce(int n)
 		#endif
 
 		tempPart.Print(dout);
-		
 		
 		double tempCost = tempPart.Cost();
 		if( tempCost <  minCost)
@@ -53,7 +51,6 @@ static void _Bruteforce(int n)
 		partCount++;
 		if(partCount % 100000 == 0)
 			cout<<"\rProgress  = "<<(int)( (double)partCount/TotalPartitions*100.0 ) <<" %"<<flush;
-
     }
     else
     {
@@ -106,20 +103,6 @@ void Bruteforce::Apply()
 		cout<<e.what()<<endl;
 		throw Exception("Allocation Failed",__FILE__,__LINE__);
 	}
-	
-	#ifdef STORE_PARTITIONS
-	try
-	{
-		Partitions = new Partition[TotalPartitions];
-	}
-	catch (const std::bad_alloc& e) 
-	{
-		cout<<e.what()<<endl;
-		throw Exception("Allocation Failed",__FILE__,__LINE__);
-	}
-	for(unsigned long long i=0;i<TotalPartitions;i++)
-		Partitions[i].setCluster(g_n,g_k);
-	#endif
 	
 	#ifdef STORE_COSTS
 	try

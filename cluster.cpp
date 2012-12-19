@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <cstdlib>
 #include <cstdio>
 
@@ -13,18 +14,7 @@ Cluster::Cluster(UINT totalFunctions)
 	_FunctionCount = 0; 
 	_Status = UnFinished;
 	_FunctionCapacity = totalFunctions;
-	
-	//for simplicity, we reserve a space equivalent to the space
-	//of total number of Functions in this application.
-	try
-	{
-		_Functions = new UINT [_FunctionCapacity]; 
-	}
-	catch (const std::bad_alloc& e) 
-	{
-		cout<<e.what()<<endl;
-		throw Exception("Allocation Failed",__FILE__,__LINE__);
-	}
+	_Functions.resize(_FunctionCapacity);
 }
 
 bool Cluster::inCluster(UINT fno)
@@ -61,7 +51,7 @@ float Cluster::InternalComm()
 			if( inCluster(i) == true && inCluster(j) == true ) 
 				comm += g_applic->getEdgeWeight(i,j);
 			
-			return comm;
+	return comm;
 }
 
 float Cluster::ExecCost()
@@ -81,18 +71,7 @@ void Cluster::setFunctionCapacity(UINT totalFunctions)
 { 
 	_FunctionCount = 0; 
 	_FunctionCapacity = totalFunctions;
-	
-	//for simplicity, we reserve a space equivalent to the space
-	//of total number of Functions in this application.
-	try
-	{
-		_Functions = new UINT [_FunctionCapacity]; 
-	}
-	catch (const std::bad_alloc& e) 
-	{
-		cout<<e.what()<<endl;
-		throw Exception("Allocation Failed",__FILE__,__LINE__);
-	}
+	_Functions.resize(_FunctionCapacity);
 }
 
 void Cluster::addFunction(UINT fno , UINT cno)
@@ -113,27 +92,14 @@ void Cluster::addFunction(UINT fno , UINT cno)
 
 void Cluster::removeFunction(UINT fno)
 {
-	UINT i,j;
-	
-	for(i=0;i<_FunctionCount;i++)
+	vector<UINT>::iterator it;
+	if( (it = find(_Functions.begin(), _Functions.begin() + _FunctionCount, fno)) !=  _Functions.end() )
 	{
-		if(_Functions[i] == fno)
-		{
-			if(_FunctionCount > 0)
-			{
-				g_applic->setClusterNo(fno, -1);
-				_FunctionCount--;
-				
-				for(j=i;j<_FunctionCount;j++) //shift back the functions after this
-					_Functions[j] = _Functions[j+1];
-			}
-			else //should not come here in the current implementation
-			{
-				cout<<"Cluster Empty"<<endl;
-				exit(1);
-			}
-		}		
+		g_applic->setClusterNo(fno, -1);
+		rotate(_Functions.begin(), it+1, _Functions.begin() + _FunctionCount);
+		_FunctionCount--;
 	}
+	
 }
 
 void Cluster::getNeighbours(std::set<UINT>& Neighbours)

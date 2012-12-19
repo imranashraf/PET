@@ -118,7 +118,14 @@ void SimulatedAnnealer::Step()
 	#endif
 	cno = 0 + ( abs( rng.rand_int31() ) % ( (g_k-1) - 0 + 1 ) );
 	
+	currPartition->Print(cout);
+	cout<<"Remove function "<<fno<<endl;
 	currPartition->removeFunction(fno);
+	currPartition->Print(cout);
+
+	cout<<"Add function "<<fno<<" to cluster "<<cno<<endl;
 	currPartition->addFunction(fno,cno);
+	
+
 }
 

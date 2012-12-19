@@ -85,7 +85,7 @@ std::string PrintTime(long long totalSec)
 std::string EstimateTime(long long partitions)
 {
 	double totalSec;
-	double TimePerPart = 3 * 60.0 / 4194304.0;	//an empirical estimate
+	double TimePerPart = 3 * 60.0 / 4194304.0;	//an empirical estimate (15 , 4)
 	totalSec = partitions * TimePerPart;	//total seconds
 	return PrintTime(totalSec);
 }

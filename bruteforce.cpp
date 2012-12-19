@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
-#include <stdlib.h>
+#include <cmath>
+#include <cstdlib>
 #include <stdio.h>
 #include <assert.h>
 
@@ -12,7 +13,7 @@
 using namespace std;
 
 static int *partition;
-unsigned long long partCount;
+double partCount;
 
 static void _Bruteforce(int n)
 {
@@ -21,15 +22,17 @@ static void _Bruteforce(int n)
     if(n==0)
     {
 		//store this partition here or do something with it
+		#ifdef STORE_PARTITIONS
+		Partitions.push_back(Partition(g_n,g_k));
+		Partition & tempPart = Partitions.back();
+		#else
 		Partition tempPart(g_n,g_k);
+		#endif
         for(UINT j=0;j<g_n;j++)
 		{
-			tempPart.addFunction( j , partition[g_n-j-1] );
+			tempPart.addFunction(j, partition[g_n-j-1] );
 		}
-		#ifdef STORE_PARTITIONS
-		Partitions.push_back(tempPart);
-		#endif
-
+		
 		double tempCost = tempPart.Cost();
 		#ifdef STORE_COSTS
 		Costs.push_back( tempPart.Cost() );
@@ -48,8 +51,8 @@ static void _Bruteforce(int n)
 		tempPart.Print(dout);
 		
 		partCount++;
-		if(partCount % 100000 == 0)
-			cout<<"\rProgress  = "<<(int)( (double)partCount/TotalPartitions*100.0 ) <<" %"<<flush;
+		if(fmod(partCount , 100000) == 0)
+			cout<<"\rProgress  = "<<(int)( partCount/TotalPartitions*100.0 ) <<" %"<<flush;
     }
     else
     {

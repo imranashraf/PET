@@ -9,21 +9,51 @@
 
 using namespace std;
 
-Cluster::Cluster(UINT totalFunctions)
+typedef std::vector<UINT>::iterator cItr;
+
+Cluster::Cluster(UINT fCapacity)
 { 
-	_FunctionCount = 0; 
 	_Status = UnFinished;
-	_FunctionCapacity = totalFunctions;
-	_Functions.resize(_FunctionCapacity);
+	_FunctionCapacity = fCapacity;
+}
+
+void Cluster::setFunctionCapacity(UINT fCapacity)
+{ 
+	_FunctionCapacity = fCapacity;
+}
+
+void Cluster::addFunction(UINT fno , UINT cno)
+{
+	if(_Functions.size() < _FunctionCapacity)
+	{
+		_Functions.push_back(fno);
+		g_applic->setClusterNo(fno, cno);
+	}
+	else //should not come here in the current implementation
+	{
+		cout<<"Cluster Full"<<endl;
+		exit(1);
+	}
+}
+
+void Cluster::removeFunction(UINT fno)
+{
+	//Find new end iterator
+	vector<UINT>::iterator newEnd = std::remove(_Functions.begin(), _Functions.end(), fno);
+	if( newEnd !=  _Functions.end() )
+	{
+		//Erase the "removed" elements.
+		_Functions.erase(newEnd, _Functions.end());
+		g_applic->setClusterNo(fno, -1);
+	}
 }
 
 bool Cluster::inCluster(UINT fno)
 {
-	UINT i;
-	for(i=0; i<_FunctionCount; i++)
-		if(_Functions[i] == fno) return true;
-	
-	return false;
+	if( (find(_Functions.begin(), _Functions.end(), fno)) !=  _Functions.end() )
+		return true;
+	else
+		return false;
 }
 
 float Cluster::ExternalComm()
@@ -57,56 +87,20 @@ float Cluster::InternalComm()
 float Cluster::ExecCost()
 {
 	float EC=0.0;
-	UINT i;
 	
-	for(i=0; i<_FunctionCount; i++)
+	for(cItr it=_Functions.begin(); it != _Functions.end(); it++)
 	{
-		EC += g_applic->getFunctionContrib( _Functions[i] );
+		EC += g_applic->getFunctionContrib(*it);
 	}
 		
 	return EC;
-}
-
-void Cluster::setFunctionCapacity(UINT totalFunctions)
-{ 
-	_FunctionCount = 0; 
-	_FunctionCapacity = totalFunctions;
-	_Functions.resize(_FunctionCapacity);
-}
-
-void Cluster::addFunction(UINT fno , UINT cno)
-{
-	if(_FunctionCount < _FunctionCapacity)
-	{
-		_Functions[_FunctionCount]=fno;
-		_FunctionCount++;
-		g_applic->setClusterNo(fno, cno);
-	}
-	else //should not come here in the current implementation
-	{
-		cout<<"Cluster Full"<<endl;
-		exit(1);
-	}
-	
-}
-
-void Cluster::removeFunction(UINT fno)
-{
-	vector<UINT>::iterator it;
-	if( (it = find(_Functions.begin(), _Functions.begin() + _FunctionCount, fno)) !=  _Functions.end() )
-	{
-		g_applic->setClusterNo(fno, -1);
-		rotate(_Functions.begin(), it+1, _Functions.begin() + _FunctionCount);
-		_FunctionCount--;
-	}
-	
 }
 
 void Cluster::getNeighbours(std::set<UINT>& Neighbours)
 {
 	UINT fno,i,j;
 	UINT tempCnoj;
-	for(i=0; i<_FunctionCount ;i++)	//check for neighbours of all functions in this cluster
+	for(i=0; i<_Functions.size() ;i++)	//check for neighbours of all functions in this cluster
 	{
 		fno = _Functions[i];
 		
@@ -127,10 +121,10 @@ void Cluster::getNeighbours(std::set<UINT>& Neighbours)
 
 void Cluster::Print(std::ostream & fout = std::cout)
 {
-	fout<<_FunctionCount<<" functions ( ";
-	for(UINT i =0; i< _FunctionCount; i++)
+	fout<<_Functions.size()<<" functions ( ";
+	for(cItr it=_Functions.begin(); it != _Functions.end(); it++)
 	{
-		fout<<_Functions[i]<<"  ";
+		fout<<*it<<"  ";
 	}
 	fout<<")"<<endl;
 }

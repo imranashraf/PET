@@ -22,7 +22,7 @@ class Cluster
 		
 	public:
 		Cluster(){_FunctionCount=0; _Status = UnFinished;}
-		Cluster(UINT totalFunctions);
+		Cluster(UINT fCapacity);
 		
 		void setFunctionCount(UINT fcount) {_FunctionCount = fcount;}
 		UINT getFunctionCount() { return _FunctionCount; }

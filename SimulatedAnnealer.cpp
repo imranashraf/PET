@@ -104,6 +104,7 @@ void SimulatedAnnealer::Apply()
 		temperature = temperature*decayRate; /**/
 	}
 	
+	delete currPartition;
 	delete prevPartition;
 }
 

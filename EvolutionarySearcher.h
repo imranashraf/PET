@@ -15,7 +15,8 @@
 class EvolutionarySearcher : public Algorithm
 {
 	private:
-		Partition* Population;	//current population
+// 		Partition* Population;	//current population
+		std::vector<Partition>Population;
 		UINT Fittest;			//index of the fittest
 		UINT TotalGenerations;	//total number of generations
 		RNG rng;
@@ -28,6 +29,11 @@ class EvolutionarySearcher : public Algorithm
 		void Mutate();
 		void Apply();
 		void Print(std::ostream & fout);
+// 		~EvolutionarySearcher()
+// 		{
+// 			delete [] Population;
+// 			Population = NULL;
+// 		}
 };
 
 #endif

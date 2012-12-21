@@ -24,8 +24,13 @@ class SimulatedAnnealer : public Algorithm
     public:
 		SimulatedAnnealer();
 		void InitialSelection();
-    	void Apply();
+		void Apply();
 		void Step();
+		~SimulatedAnnealer()
+		{
+			delete currPartition;
+			currPartition=NULL;
+		}
 };
 
 #endif

@@ -47,8 +47,8 @@ debug: CFLAGS= -Wall -g -fopenmp
 debug: all
 
 valgrind: CFLAGS= -Wall -g -fopenmp 
-valgrind: clean all
-	valgrind --tool=memcheck --log-fd=1 -v --show-reachable=yes --leak-check=yes --track-origins=yes ./$(EXEC) 9 3
+valgrind: all
+	valgrind --tool=memcheck --log-fd=1 -v --show-reachable=yes --leak-check=yes --track-origins=yes ./$(EXEC) 1 9 3
 
 gprof: CFLAGS= -Wall -g -O3 -fopenmp -pg 
 gprof: LDFLAGS=-fopenmp -pg

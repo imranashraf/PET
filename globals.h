@@ -31,13 +31,13 @@ extern std::ostream cnull;
 // #define STORE_COSTS
 
 //comment the following if you do not want to run Bruteforce search
-#define RUN_BF
+// #define RUN_BF
 //comment the following if you do not want to run Heuristic Search
-#define RUN_HS
+// #define RUN_HS
 //comment the following if you do not want to run Simmulated Annealing
-#define RUN_SA
+// #define RUN_SA
 //comment the following if you do not want to run Tabu Search
-#define RUN_TS
+// #define RUN_TS
 //comment the following if you do not want to run Evolutionary Search
 #define RUN_ES
 
@@ -96,9 +96,7 @@ extern unsigned long long TotalPartitions;
 extern unsigned long long PartLimit;
 void Pause();
 
-#ifdef RUN_BF
 extern double minCost;
 extern double maxCost;
-#endif
 
 #endif

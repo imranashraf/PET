@@ -15,22 +15,20 @@ enum Status {UnFinished, Finished};
 class Cluster
 {
 	private:
-		UINT _FunctionCount;
 		UINT _FunctionCapacity;
 		std::vector<UINT> _Functions;
 		Status _Status;
 		
 	public:
-		Cluster(){_FunctionCount=0; _Status = UnFinished;}
+		Cluster(){_Status = UnFinished;}
 		Cluster(UINT fCapacity);
 		
-		void setFunctionCount(UINT fcount) {_FunctionCount = fcount;}
-		UINT getFunctionCount() { return _FunctionCount; }
+		UINT getFunctionCount() { return _Functions.size(); }
 		
 		void getFunctionNos(std::vector<UINT>& fNos)
 		{
 			UINT fno;
-			for(UINT i=0; i<_FunctionCount; i++)
+			for(UINT i=0; i<_Functions.size(); i++)
 			{
 				fno = _Functions[i];
 				fNos.push_back(fno);

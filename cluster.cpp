@@ -61,7 +61,7 @@ float Cluster::ExternalComm()
 	float comm=0.0;
 	UINT i,j;
 	
-	#pragma omp parallel for reduction(+:comm) private(j)
+// 	#pragma omp parallel for reduction(+:comm) private(j)
 	for(i=0; i<g_n ;i++)
 		for(j=0; j<g_n ; j++)
 			if( inCluster(i) == true && inCluster(j) == false ) 
@@ -75,7 +75,7 @@ float Cluster::InternalComm()
 	float comm=0.0;
 	UINT i,j;
 
-	#pragma omp parallel for reduction(+:comm) private(j)
+// 	#pragma omp parallel for reduction(+:comm) private(j)
 	for(i=0; i<g_n ;i++)
 		for(j=0; j<g_n ; j++)
 			if( inCluster(i) == true && inCluster(j) == true ) 

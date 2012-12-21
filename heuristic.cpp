@@ -99,7 +99,8 @@ void Heuristic::Apply()
 	double **Ranks;
 	try
 	{
-		Ranks = new double*[k];	//Ranks 2D array will have the rank of each function for each cluster
+		//Ranks 2D array will have the rank of each function for each cluster
+		Ranks = new double* [k];
 		for(cno=0;cno<k;cno++)
 			Ranks[cno] = new double[n];
 	}

@@ -9,18 +9,21 @@ EvolutionarySearcher::EvolutionarySearcher()
 {
 	TotalGenerations = 100;
 	Fittest = 0;
+	for(int i=0;i<PoplSize;i++)
+		Population.push_back( Partition(g_n,g_k) );
+// 	Population.resize(PoplSize);
 	
-	try
-	{
-		Population = new Partition[PoplSize];
-		for(int i=0;i<PoplSize;i++)
-			Population[i].setCluster(g_n,g_k);
-	}
-	catch (const std::bad_alloc& e) 
-	{
-		cout<<e.what()<<endl;
-		throw Exception("Allocation Failed",__FILE__,__LINE__);
-	}
+// 	try
+// 	{
+// 		Population = new Partition[PoplSize];
+// 		for(int i=0;i<PoplSize;i++)
+// 			Population[i].setCluster(g_n,g_k);
+// 	}
+// 	catch (const std::bad_alloc& e) 
+// 	{
+// 		cout<<e.what()<<endl;
+// 		throw Exception("Allocation Failed",__FILE__,__LINE__);
+// 	}
 	
 	try
 	{

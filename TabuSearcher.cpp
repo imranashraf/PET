@@ -136,6 +136,8 @@ void TabuSearcher::InitialSelection()
 
 void TabuSearcher::Apply() 
 {
+	dout<<"Inside TS Apply() "<<endl;
+	
 	InitialSelection();
 	
 	*bestTSPartition = *currPartition;
@@ -159,10 +161,18 @@ void TabuSearcher::Apply()
 			dout<<endl<<"minCost TS "<<minCost<<endl;
 		}
 	}
+	//TODO check these as they are also destructed in destructor
+	delete currPartition;
+	currPartition=NULL;
+	delete tabuList;
+	tabuList=NULL;
+	dout<<"End TS Apply() "<<endl;
 }
 
 Partition TabuSearcher::getBestNeighbour()
 {
+	dout<<"Inside TS getBestNeighbour() "<<endl;
+	
 	Partition bestSol(g_n, g_k);
 	double bestCost;
 	
@@ -224,5 +234,6 @@ Partition TabuSearcher::getBestNeighbour()
 // 		tabuList->decrementTabu();		
 // 	}
 
+	dout<<"End TS getBestNeighbour() "<<endl;
 	return bestSol;
 }

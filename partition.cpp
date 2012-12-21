@@ -11,59 +11,18 @@ Partition::Partition(UINT totalFunctions, UINT nclusters)
 {
 	ModificationFlag=true;
 	_nClusters = nclusters; 
-	try
-	{
-		_Clusters = new Cluster[_nClusters];
-	}
-	catch (const std::bad_alloc& e) 
-	{
-		cout<<e.what()<<endl;
-		throw Exception("Allocation Failed",__FILE__,__LINE__);
-	}
-	
-	for(UINT i=0;i<_nClusters;i++)
-		_Clusters[i].setFunctionCapacity(totalFunctions);
-	
-	_Cost=0; //TODO change to NA 
-}
 
-Partition::Partition(const Partition& part)
-{
-	ModificationFlag=true;
-	//UINT n = part.getnClusters();
-	//TODO working but Not good
-	_nClusters = g_k;
-	
-	try
-	{
-		_Clusters = new Cluster[_nClusters];
-	}
-	catch (const std::bad_alloc& e) 
-	{
-		cout<<e.what()<<endl;
-		throw Exception("Allocation Failed",__FILE__,__LINE__);
-	}
-	
 	for(UINT i=0;i<_nClusters;i++)
-	{
-		_Clusters[i] = part._Clusters[i];
-	}
-	_Cost=0;
+		_Clusters.push_back( Cluster(totalFunctions) );
+
+	_Cost=0; //TODO change to NA 
 }
 
 void Partition::setCluster(UINT totalFunctions, UINT nclusters)
 {
 	_nClusters = nclusters; 
-	try
-	{
-		_Clusters = new Cluster[_nClusters];
-	}
-	catch (const std::bad_alloc& e) 
-	{
-		cout<<e.what()<<endl;
-		throw Exception("Allocation Failed",__FILE__,__LINE__);
-	}
 	
+	_Clusters.resize(_nClusters);
 	for(UINT i=0;i<_nClusters;i++)
 		_Clusters[i].setFunctionCapacity(totalFunctions);
 }

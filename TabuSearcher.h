@@ -35,12 +35,14 @@ class TabuList
 				for (UINT j = 0; j < size_y; ++j) 
 				{
 					delete [] tList[i][j];
+					tList[i][j]=NULL;
 				}
 				delete [] tList[i];
+				tList[i] = NULL;
 			}
 			
 			delete [] tList;
-			tList = NULL;			
+			tList = NULL;	
 		}
 };
 

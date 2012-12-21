@@ -85,13 +85,7 @@ void SetSimulation(int argc, char * argv[])
 			cout<<"Saving application to appData.txt ...";
 			g_applic->Save();
 			cout<<" Done ! "<<endl;
-		
-		
-			g_applic->Init();
-			cout<<"Saving application to appData.txt ...";
-			g_applic->Save();
-			cout<<" Done ! "<<endl;
-		
+
 			try
 			{
 				Simulate();

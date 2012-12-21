@@ -15,7 +15,7 @@ void Heuristic::InitialSelection()
 	for( cno=0; cno<g_k; cno++)
 	{
 		fno = cno; 	//The functions are sorted in descending order
-		bestHSPartition->addFunction(fno,cno);
+		bestHSPartition.addFunction(fno,cno);
 	}
 }
 
@@ -57,15 +57,7 @@ void Heuristic::Apply()
 	UINT n=g_n, k=g_k;
 	UINT cno,cno1,cno2,fno;
 	
-	try
-	{
-		bestHSPartition = new Partition(g_n,g_k);
-	}
-	catch (const std::bad_alloc& e) 
-	{
-		cout<<e.what()<<endl;
-		throw Exception("Allocation Failed",__FILE__,__LINE__);
-	}
+	bestHSPartition.setCluster(g_n,g_k);
 	
 	int *Marked;
 	try
@@ -121,17 +113,17 @@ void Heuristic::Apply()
 			Marked[cno] = -1; //no function is marked for any cluster
 			Candidates[cno].clear();
 			
-			if( (bestHSPartition->getClusterStatus(cno)) == UnFinished)
+			if( (bestHSPartition.getClusterStatus(cno)) == UnFinished)
 			{
 				//find the neighbouring nodes of cluster cno
 				Neighbours.clear();	//first clear the set
-				bestHSPartition->getClusterNeighbours(cno, Neighbours);
+				bestHSPartition.getClusterNeighbours(cno, Neighbours);
 				nNeighbours= Neighbours.size();	
 				
 				//if no neighbouring node exists, mark cluster as finished
 				if(nNeighbours == 0)
 				{
-					bestHSPartition->setClusterStatus(Finished,cno);
+					bestHSPartition.setClusterStatus(Finished,cno);
 					finishedClusters++;
 					continue;
 				}
@@ -162,7 +154,6 @@ void Heuristic::Apply()
 				
 				//the candidate with the highest rank will be marked for merging to cluster cno
 				Marked[cno] = *(Candidates[cno].begin());		//Mark the first element for merging
-// 				cout<<"Marked "<<*(Candidates[cno].begin())<<" for cno "<<cno<<endl;
 			}
 		}
 				
@@ -190,7 +181,7 @@ void Heuristic::Apply()
 		{
 			if(Marked[cno] != -1)	//if there is candidate marked for merging
 			{
-				bestHSPartition->addFunction(Marked[cno],cno);		//merge it to cluster cno
+				bestHSPartition.addFunction(Marked[cno],cno);		//merge it to cluster cno
 				Marked[cno] = -1;
 			}
 		}

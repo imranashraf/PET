@@ -13,7 +13,7 @@ typedef unsigned int UINT;
 class SimulatedAnnealer : public Algorithm
 {
     private:
-		Partition 	*currPartition;
+		Partition currPartition;
 		double	currCost;
 		double	minCost;
 		double	initTemp;
@@ -26,11 +26,6 @@ class SimulatedAnnealer : public Algorithm
 		void InitialSelection();
 		void Apply();
 		void Step();
-		~SimulatedAnnealer()
-		{
-			delete currPartition;
-			currPartition=NULL;
-		}
 };
 
 #endif

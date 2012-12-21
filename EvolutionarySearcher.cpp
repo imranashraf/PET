@@ -11,6 +11,7 @@ EvolutionarySearcher::EvolutionarySearcher()
 	Fittest = 0;
 	for(int i=0;i<PoplSize;i++)
 		Population.push_back( Partition(g_n,g_k) );
+
 // 	Population.resize(PoplSize);
 	
 // 	try
@@ -24,16 +25,8 @@ EvolutionarySearcher::EvolutionarySearcher()
 // 		cout<<e.what()<<endl;
 // 		throw Exception("Allocation Failed",__FILE__,__LINE__);
 // 	}
-	
-	try
-	{
-		bestESPartition = new Partition(g_n,g_k);
-	}
-	catch (const std::bad_alloc& e) 
-	{
-		cout<<e.what()<<endl;
-		throw Exception("Allocation Failed",__FILE__,__LINE__);
-	}
+
+	bestESPartition.setCluster(g_n, g_k);
 }
 
 void EvolutionarySearcher::InitialSelection()
@@ -75,7 +68,7 @@ void EvolutionarySearcher::Apply()
 		FindFittest();
 	}
 	
-	*bestESPartition = Population[Fittest];
+	bestESPartition = Population[Fittest];
 }
 
 void EvolutionarySearcher::FindFittest()

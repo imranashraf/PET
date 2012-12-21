@@ -7,19 +7,19 @@ std::ostream cnull(0);
 UINT g_n;	//number of functions
 UINT g_k;	//number of clusters
 
-Application * g_applic;		//the application (filtered or orignal) to be partitioned
-Application * g_unfiltered_applic;		//the unfiltered application to be partitioned
-Application * g_filtered_applic;		//the filtered application to be partitioned
+Application* g_applic;		//the application (filtered or orignal) to be partitioned
+Application* g_unfiltered_applic;		//the unfiltered application to be partitioned
+Application* g_filtered_applic;		//the filtered application to be partitioned
 
 #ifdef STORE_PARTITIONS
 std::vector<Partition> Partitions; 	//the partitions found
 #endif
 
-Partition* bestBFPartition;	//best partition found by exhaustive search
-Partition* bestHSPartition;	//best partition found by heuristic search
-Partition* bestSAPartition;	//best partition found by simmulated annealing
-Partition* bestTSPartition;	//best partition found by Tabu Search
-Partition* bestESPartition;	//best partition found by evolutionary search
+Partition bestBFPartition;	//best partition found by exhaustive search
+Partition bestHSPartition;	//best partition found by heuristic search
+Partition bestSAPartition;	//best partition found by simmulated annealing
+Partition bestTSPartition;	//best partition found by Tabu Search
+Partition bestESPartition;	//best partition found by evolutionary search
 
 #ifdef STORE_COSTS
 std::vector<float> Costs;	//the costs of the partitions found by exhaustive search

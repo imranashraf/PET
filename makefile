@@ -53,7 +53,7 @@ valgrind: all
 gprof: CFLAGS= -Wall -g -O3 -fopenmp -pg 
 gprof: LDFLAGS=-fopenmp -pg
 gprof: clean all
-gprof:    	 # Mode  n  k 
+gprof:    	 # <Mode>  <n>  <k> 
 	@-./$(EXEC) 1 20  4
 	@-gprof -b ./$(EXEC) > profile.txt
 	@-cat profile.txt | ./gprof2dot.py --skew=0.01 | dot -Tpdf -o profile.pdf 
@@ -73,7 +73,5 @@ open:
 clean:
 	@-rm -f .depend $(OBJECTS) $(EXEC) *~ gmon.out graph_*.dot graph_*.pdf profile.txt profile.pdf costs_*.txt output_*.txt
 
-#TODO use STL as much as possible
 #TODO remove all globals for application and number of functions
 #TODO Heuristic adds all remaining functions to same cluster, Check !!!
-#TODO minimum value of double

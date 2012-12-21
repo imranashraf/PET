@@ -263,12 +263,14 @@ void Simulate()
 		throw Exception("Allocation Failed",__FILE__,__LINE__);
 	}
 
+	#ifdef PRINT_APPLIC
 	/********  Application Summary Print ********/
 	fout<<"====================================";
 	fout<<endl<<"Application Summary"<<endl;
 	fout<<"===================================="<<endl;
 	g_applic->Print(fout);
 	g_applic->Print2Dot();
+	#endif
 	
 	#ifdef FILTER
 	fout<<"Execution contribution of filtered functions "<<TotalFilteredContrib<<endl;
@@ -335,10 +337,9 @@ void Simulate()
 	fout<<"Maximum Cost = "<<maxCost<<endl;
 
 	fout<<"\nDetails of Best Partition found by Exhaustive Search ..."<<endl;
-	bestBFPartition->Print(fout,"BF");
+	bestBFPartition.Print(fout,"BF");
 	
 	delete bforce;
-	delete bestBFPartition; 
 	
 	#endif //RUN_BF
 	
@@ -367,10 +368,9 @@ void Simulate()
 	timer->Print(fout); //print time
 
 	fout<<"\nDetails of Best Partition found by Heuristic Algorithm ..."<<endl;
-	bestHSPartition->Print(fout,"HS");
+	bestHSPartition.Print(fout,"HS");
 
 	delete heuristic;
-	delete bestHSPartition;
 	
 	#endif //RUN_HS
 	
@@ -399,10 +399,9 @@ void Simulate()
 	timer->Print(fout); //print time
 
 	fout<<"\nDetails of Best Partition found by Simmulated Annealing..."<<endl;
-	bestSAPartition->Print(fout,"SA");
+	bestSAPartition.Print(fout,"SA");
 
 	delete sannealer;
-	delete bestSAPartition;
 	
 	#endif //RUN_SA
 	
@@ -431,10 +430,9 @@ void Simulate()
 	timer->Print(fout); //print time
 	
 	fout<<"\nDetails of Best Partition found by Tabu Search..."<<endl;
-	bestTSPartition->Print(fout,"TS");
+	bestTSPartition.Print(fout,"TS");
 
 	delete tsearcher;
-	delete bestTSPartition;
 	
 	#endif //RUN_TS
 	
@@ -463,10 +461,9 @@ void Simulate()
 	timer->Print(fout); //print time
 	
 	fout<<"\nDetails of Best Partition found by Evolutionary Search..."<<endl;
-	bestESPartition->Print(fout,"ES");
+	bestESPartition.Print(fout,"ES");
 	
 	delete esearcher;
-	delete bestESPartition;
 	
 	#endif //RUN_ES
 	/****************************************/

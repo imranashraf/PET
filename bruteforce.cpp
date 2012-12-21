@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <stdio.h>
 #include <assert.h>
+#include <limits>
 
 #include "bruteforce.h"
 #include "count.h"
@@ -39,7 +40,7 @@ static void _Bruteforce(int n)
 		#endif
 		if( tempCost <  minCost)
 		{
-			*bestBFPartition = tempPart;
+			bestBFPartition = tempPart;
 			minCost = tempCost;
 		}
 		else if(tempCost > maxCost)
@@ -93,18 +94,10 @@ void Bruteforce::Apply()
 {
 	partCount=0;
 	
-	minCost=100000;
-	maxCost=0;
+	minCost=numeric_limits<double>::max( );
+	maxCost=numeric_limits<double>::min( );
 	
-	try
-	{
-		bestBFPartition = new Partition(g_n,g_k);
-	}
-	catch (const std::bad_alloc& e) 
-	{
-		cout<<e.what()<<endl;
-		throw Exception("Allocation Failed",__FILE__,__LINE__);
-	}
+	bestBFPartition.setCluster(g_n,g_k);
 	
 	cout<<"Progress  = "<<(int)( (double)partCount/TotalPartitions*100.0 ) <<" %"<<flush;
 	Bruteforce_kfixed( g_n , g_k);

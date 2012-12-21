@@ -8,25 +8,8 @@ using namespace std;
 
 SimulatedAnnealer::SimulatedAnnealer()
 {
-	try
-	{
-		currPartition = new Partition(g_n,g_k);
-	}
-	catch (const std::bad_alloc& e) 
-	{
-		cout<<e.what()<<endl;
-		throw Exception("Allocation Failed",__FILE__,__LINE__);
-	}
-	
-	try
-	{
-		bestSAPartition = new Partition(g_n,g_k);
-	}
-	catch (const std::bad_alloc& e) 
-	{
-		cout<<e.what()<<endl;
-		throw Exception("Allocation Failed",__FILE__,__LINE__);
-	}
+	currPartition.setCluster(g_n,g_k);
+	bestSAPartition.setCluster(g_n,g_k);
 	
 	initTemp = 100;
 	decayRate = 0.99;
@@ -43,14 +26,14 @@ void SimulatedAnnealer::InitialSelection()
 	for( cno=0; cno<g_k; cno++)
 	{
 		fno = cno; 	//The functions are sorted in descending order
-		currPartition->addFunction(fno,cno);
+		currPartition.addFunction(fno,cno);
 	}
 	
 	for( fno=g_k; fno<g_n; fno++)
 	#endif
 	{
 		cno = 0 + ( abs( rng.rand_int31() ) % ( (g_k-1) - 0 + 1 ) );
-		currPartition->addFunction(fno,cno);
+		currPartition.addFunction(fno,cno);
 	}
 }
 
@@ -58,30 +41,20 @@ void SimulatedAnnealer::Apply()
 {
 	double temperature = initTemp; /**/
 	double nextCost;
-	Partition * prevPartition;
+	Partition prevPartition(g_n, g_k);
 	
 	InitialSelection();
-	currCost= currPartition->Cost();
+	currCost= currPartition.Cost();
 	minCost = currCost;
-	
-	try
-	{
-		prevPartition = new Partition(g_n,g_k);
-	}
-	catch (const std::bad_alloc& e) 
-	{
-		cout<<e.what()<<endl;
-		throw Exception("Allocation Failed",__FILE__,__LINE__);
-	}
 	
 	for (int i = 0; i < iterations; i++) 
 	{
 		dout<<endl<<i<<"\t"<<minCost<<"\t"<<currCost<<endl;
 		
-		*prevPartition = *currPartition; //save currPartition
+		prevPartition = currPartition; //save currPartition
 		Step(); //step to a new partition (currPartition will be modified)
 		
-		nextCost = currPartition->Cost();
+		nextCost = currPartition.Cost();
 		
 		dout<<rng.rand_closed01()
 			<<"\t"
@@ -94,18 +67,15 @@ void SimulatedAnnealer::Apply()
 			currCost = nextCost;
 			if (nextCost < minCost)
 			{
-				*bestSAPartition = *currPartition;	//clone
+				bestSAPartition = currPartition;	//clone
 				minCost = nextCost;
 			}
 		}
 		else
-			*currPartition = *prevPartition;	//undo
+			currPartition = prevPartition;	//undo
 		
 		temperature = temperature*decayRate; /**/
 	}
-	
-	delete currPartition;
-	delete prevPartition;
 }
 
 void SimulatedAnnealer::Step()
@@ -119,7 +89,7 @@ void SimulatedAnnealer::Step()
 	#endif
 	cno = 0 + ( abs( rng.rand_int31() ) % ( (g_k-1) - 0 + 1 ) );
 	
-	currPartition->removeFunction(fno);
-	currPartition->addFunction(fno,cno);
+	currPartition.removeFunction(fno);
+	currPartition.addFunction(fno,cno);
 }
 

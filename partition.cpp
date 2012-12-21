@@ -1,6 +1,7 @@
 #include<cstdlib>
 #include<iostream>
 #include<cmath>
+#include<limits>
 
 #include "globals.h"
 #include "partition.h"
@@ -15,13 +16,13 @@ Partition::Partition(UINT totalFunctions, UINT nclusters)
 	for(UINT i=0;i<_nClusters;i++)
 		_Clusters.push_back( Cluster(totalFunctions) );
 
-	_Cost=0; //TODO change to NA 
+	_Cost = std::numeric_limits<double>::quiet_NaN();
 }
 
 void Partition::setCluster(UINT totalFunctions, UINT nclusters)
 {
+	ModificationFlag=true;
 	_nClusters = nclusters; 
-	
 	_Clusters.resize(_nClusters);
 	for(UINT i=0;i<_nClusters;i++)
 		_Clusters[i].setFunctionCapacity(totalFunctions);
@@ -51,18 +52,8 @@ void Partition::removeFunction(UINT ftnNo)
 float Partition::BalancingPenalty()
 {
 	float EC=0.0, BP=0.0;
-	float * ECi;
 	UINT i;
-	
-	try
-	{
-		ECi = new float [_nClusters];
-	}
-	catch (const std::bad_alloc& e) 
-	{
-		cout<<e.what()<<endl;
-		throw Exception("Allocation Failed",__FILE__,__LINE__);
-	}
+	vector<float>ECi(_nClusters);
 	
 	for( i=0; i< _nClusters ; i++)
 	{
@@ -75,7 +66,6 @@ float Partition::BalancingPenalty()
 		BP += fabs(EC/_nClusters - ECi[i]);
 	}
 	
-	delete[] ECi;
 	return BP;
 }
 

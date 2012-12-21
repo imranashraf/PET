@@ -12,15 +12,43 @@ TabuList::TabuList(UINT nclusters, UINT nfunctions)
 	size_y = nclusters;
 	size_z = nfunctions;
 	
-	tList = new UINT **[size_x];
+	tList.resize(size_x);
+	for (UINT i = 0; i < size_x; i++)
+	{
+		tList[i].resize(size_y);
+		for (UINT j = 0; j < size_y; j++)
+		{
+			tList[i][j].resize(size_z);
+		}
+	}	
+	
 	for (UINT i = 0; i < size_x; ++i) 
 	{
-		tList[i] = new UINT* [size_y];
 		for (UINT j = 0; j < size_y; ++j) 
 		{
-			tList[i][j] = new UINT[size_z];
+			for (UINT k = 0; k < size_z; ++k) 
+			{
+				tList[i][j][k] = 0;
+			}
 		}
 	}
+}
+
+void TabuList::setTabuList(UINT nclusters, UINT nfunctions)
+{
+	size_x = nclusters;
+	size_y = nclusters;
+	size_z = nfunctions;
+	
+	tList.resize(size_x);
+	for (UINT i = 0; i < size_x; i++)
+	{
+		tList[i].resize(size_y);
+		for (UINT j = 0; j < size_y; j++)
+		{
+			tList[i][j].resize(size_z);
+		}
+	}	
 	
 	for (UINT i = 0; i < size_x; ++i) 
 	{
@@ -79,37 +107,9 @@ void TabuList::printTabu(std::ostream & fout = std::cout)
 
 TabuSearcher::TabuSearcher()
 {
-	try
-	{
-		currPartition = new Partition(g_n,g_k);
-	}
-	catch (const std::bad_alloc& e) 
-	{
-		cout<<e.what()<<endl;
-		throw Exception("Allocation Failed",__FILE__,__LINE__);
-	}
-	
-	try
-	{
-		bestTSPartition = new Partition(g_n,g_k);
-	}
-	catch (const std::bad_alloc& e) 
-	{
-		cout<<e.what()<<endl;
-		throw Exception("Allocation Failed",__FILE__,__LINE__);
-	}
-	
-	//create tabu list
-	try
-	{
-		tabuList = new TabuList(g_k, g_n);
-	}
-	catch (const std::bad_alloc& e) 
-	{
-		cout<<e.what()<<endl;
-		throw Exception("Allocation Failed",__FILE__,__LINE__);
-	}
-	
+	currPartition.setCluster(g_n,g_k);
+	bestTSPartition.setCluster(g_n,g_k);
+	tabuList.setTabuList(g_k, g_n);
 	iterations = 100;
 }
 
@@ -123,14 +123,14 @@ void TabuSearcher::InitialSelection()
 	for( cno=0; cno<g_k; cno++)
 	{
 		fno = cno; 	//The functions are sorted in descending order
-		currPartition->addFunction(fno,cno);
+		currPartition.addFunction(fno,cno);
 	}
 	
 	for( fno=g_k; fno<g_n; fno++)
 	#endif
 	{
 		cno = 0 + ( abs( rng.rand_int31() ) % ( (g_k-1) - 0 + 1 ) );
-		currPartition->addFunction(fno,cno);
+		currPartition.addFunction(fno,cno);
 	}
 }
 
@@ -140,32 +140,27 @@ void TabuSearcher::Apply()
 	
 	InitialSelection();
 	
-	*bestTSPartition = *currPartition;
-	minCost= currPartition->Cost();
+	bestTSPartition = currPartition;
+	minCost= currPartition.Cost();
 	
 	dout<<"Initial minCost TS "<<minCost<<endl;
 
 	for (int i = 0; i < iterations; i++) 
 	{
-		*currPartition = getBestNeighbour();
-		currCost = currPartition->Cost();
+		currPartition = getBestNeighbour();
+		currCost = currPartition.Cost();
 
 		dout<<endl<<"currCost TS "<<currCost<<endl;
 		dout<<"Current tabu list "<<endl;
-		tabuList->printTabu(dout);
+		tabuList.printTabu(dout);
 		
 		if(currCost < minCost)
 		{
-			*bestTSPartition = *currPartition;
+			bestTSPartition = currPartition;
 			minCost = currCost;
 			dout<<endl<<"minCost TS "<<minCost<<endl;
 		}
 	}
-	//TODO check these as they are also destructed in destructor
-	delete currPartition;
-	currPartition=NULL;
-	delete tabuList;
-	tabuList=NULL;
 	dout<<"End TS Apply() "<<endl;
 }
 
@@ -185,7 +180,7 @@ Partition TabuSearcher::getBestNeighbour()
 	UINT tsrcCNo=0, tdstCNo=0, tfno=0;
 	bool firstNeighbor = true;
 	
-	bestSol = *currPartition;
+	bestSol = currPartition;
 	bestCost = bestSol.Cost();
 	
 	for(srcCNo = 0; srcCNo < TotalClusters; srcCNo++)
@@ -197,7 +192,7 @@ Partition TabuSearcher::getBestNeighbour()
 				continue;
 			}
 			
-			TotalFunctions = currPartition->getClusterFunctionCount(srcCNo);
+			TotalFunctions = currPartition.getClusterFunctionCount(srcCNo);
 			
 			#ifdef RND_INIT_TS
 			for(fno=0; fno<TotalFunctions; fno++)
@@ -211,7 +206,7 @@ Partition TabuSearcher::getBestNeighbour()
 				
 				newBestCost = newBestSol.Cost();
 				
-				if( (newBestCost < bestCost || firstNeighbor) && (tabuList->getTabuValue(srcCNo,dstCNo,fno) == 0) )
+				if( (newBestCost < bestCost || firstNeighbor) && (tabuList.getTabuValue(srcCNo,dstCNo,fno) == 0) )
 				{
 					firstNeighbor = false;
 					bestSol = newBestSol;
@@ -225,13 +220,13 @@ Partition TabuSearcher::getBestNeighbour()
 		}
 	}
 
-	tabuList->tabuMove(tsrcCNo, tdstCNo, tfno);
-	tabuList->decrementTabu();		
+	tabuList.tabuMove(tsrcCNo, tdstCNo, tfno);
+	tabuList.decrementTabu();		
 
 // 	if(tfno != 0)
 // 	{
-// 		tabuList->tabuMove(tsrcCNo, tdstCNo, tfno);
-// 		tabuList->decrementTabu();		
+// 		tabuList.tabuMove(tsrcCNo, tdstCNo, tfno);
+// 		tabuList.decrementTabu();		
 // 	}
 
 	dout<<"End TS getBestNeighbour() "<<endl;

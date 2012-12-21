@@ -15,42 +15,35 @@ typedef unsigned int UINT;
 //comment the following if random initial solution is not required
 #define RND_INIT_TS
 
+typedef std::vector< std::vector< std::vector< UINT > > > array3d;
+
 class TabuList 
 {
 	private:
-		UINT ***tList;
+		array3d tList;
 		UINT size_x, size_y, size_z;
 		
 	public: 
+		TabuList()
+		{
+			size_x = 0;
+			size_y = 0;
+			size_z = 0;
+		}
+		
 		TabuList(UINT nclusters, UINT nfunctions);
+		void setTabuList(UINT nclusters, UINT nfunctions);
 		void tabuMove(UINT srcCNo, UINT dstCNo, UINT fno);
 		UINT getTabuValue(UINT srcCNo, UINT dstCNo, UINT fno);
 		void decrementTabu();
 		void printTabu(std::ostream & );
-		
-		~TabuList()
-		{
-			for (UINT i = 0; i < size_x; ++i) 
-			{
-				for (UINT j = 0; j < size_y; ++j) 
-				{
-					delete [] tList[i][j];
-					tList[i][j]=NULL;
-				}
-				delete [] tList[i];
-				tList[i] = NULL;
-			}
-			
-			delete [] tList;
-			tList = NULL;	
-		}
 };
 
 class TabuSearcher : public Algorithm
 {
     private:
-		Partition* currPartition;
-		TabuList * tabuList;
+		Partition currPartition;
+		TabuList tabuList;
 		double	currCost;
 		double	minCost;
 		long iterations;
@@ -61,12 +54,6 @@ class TabuSearcher : public Algorithm
 		void InitialSelection();
 		void Apply();
 		Partition getBestNeighbour();
-		
-		~TabuSearcher()
-		{
-			delete currPartition;
-			delete tabuList;
-		}
 };
 
 #endif

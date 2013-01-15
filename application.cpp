@@ -387,14 +387,22 @@ void Application::Filter()
 	
 	set<unsigned int>filteredFtnNos;
 	list<MyData> edgeList;
-	
-	if(nContribThresh > g_n)
+
+	//TODO Changed for smaller applications
+/*	if(nContribThresh > g_n)
 		throw Exception("nContribThresh should be less than n",__FILE__,__LINE__);
 	if(nCommThresh > g_n )
 		throw Exception("nCommThresh should be less than n",__FILE__,__LINE__);
 	if(nTotalThresh > g_n )
 		throw Exception("nTotalThresh should be less than n",__FILE__,__LINE__);
-	
+*/
+	if(nContribThresh > g_n)
+		nContribThresh = g_n;
+	if(nCommThresh > g_n )
+		nCommThresh = g_n;
+	if(nTotalThresh > g_n )
+		nTotalThresh = g_n;
+
 	MyData data;
 	unsigned int e=0, i,j;
 	for(i=0 ; i < _TotalFunctions ; i++)

@@ -25,6 +25,7 @@ void Timer::Print(std::ostream & fout = std::cout)
 {
 	double t1=_StartTime.tv_sec+(_StartTime.tv_usec/1000000.0);
 	double t2=_StopTime.tv_sec+(_StopTime.tv_usec/1000000.0);
+	fout<<"Time Elapsed = "<<long( (t2-t1)*1e6 )<<" uSec"<<endl;
 	fout<<"Time Elapsed = "<<PrintTime(t2-t1)<<endl;
 }
 

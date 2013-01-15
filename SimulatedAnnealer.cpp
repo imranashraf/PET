@@ -13,7 +13,7 @@ SimulatedAnnealer::SimulatedAnnealer()
 	
 	initTemp = 100;
 	decayRate = 0.99;
-	iterations = 100;
+	iterations = nIterations;
 }
 
 void SimulatedAnnealer::InitialSelection()
@@ -82,7 +82,7 @@ void SimulatedAnnealer::Step()
 {
 	UINT fno, cno;
 
-	#ifndef RND_INIT_SA
+	#ifdef RND_INIT_SA
 	fno = 0 + ( abs( rng.rand_int31() ) % ( (g_n-1) - (0) + 1 ) ); 
 	#else
 	fno = g_k + ( abs( rng.rand_int31() ) % ( (g_n-1) - (g_k) + 1 ) );  //not changing the ftns from initial selection	

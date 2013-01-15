@@ -5,9 +5,6 @@
 #include "partition.h"
 #include "rng.h"
 
-//comment the following if random initial solution is not required
-#define RND_INIT_SA
-
 typedef unsigned int UINT;
 
 class SimulatedAnnealer : public Algorithm

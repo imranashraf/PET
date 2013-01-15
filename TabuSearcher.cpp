@@ -110,7 +110,7 @@ TabuSearcher::TabuSearcher()
 	currPartition.setCluster(g_n,g_k);
 	bestTSPartition.setCluster(g_n,g_k);
 	tabuList.setTabuList(g_k, g_n);
-	iterations = 100;
+	iterations = nIterations*1;
 }
 
 void TabuSearcher::InitialSelection()
@@ -129,7 +129,7 @@ void TabuSearcher::InitialSelection()
 	for( fno=g_k; fno<g_n; fno++)
 	#endif
 	{
-		cno = 0 + ( abs( rng.rand_int31() ) % ( (g_k-1) - 0 + 1 ) );
+		cno = 0 + ( abs( rng.rand_int31() ) %  (g_k-1) );
 		currPartition.addFunction(fno,cno);
 	}
 }

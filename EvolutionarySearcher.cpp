@@ -7,24 +7,10 @@ using namespace std;
 
 EvolutionarySearcher::EvolutionarySearcher()
 {
-	TotalGenerations = 100;
+	TotalGenerations = nIterations;
 	Fittest = 0;
 	for(int i=0;i<PoplSize;i++)
 		Population.push_back( Partition(g_n,g_k) );
-
-// 	Population.resize(PoplSize);
-	
-// 	try
-// 	{
-// 		Population = new Partition[PoplSize];
-// 		for(int i=0;i<PoplSize;i++)
-// 			Population[i].setCluster(g_n,g_k);
-// 	}
-// 	catch (const std::bad_alloc& e) 
-// 	{
-// 		cout<<e.what()<<endl;
-// 		throw Exception("Allocation Failed",__FILE__,__LINE__);
-// 	}
 
 	bestESPartition.setCluster(g_n, g_k);
 }
@@ -110,8 +96,11 @@ void EvolutionarySearcher::Reproduce()
 			
 			for (vector<UINT>::iterator it = fNos.begin(); it!=fNos.end(); ++it) 
 			{
-				if( (rand()%100) > 100*Pc)	continue;	//we do not reproduce
-
+				//if( (rand()%100) > 100*Pc)	continue;	//we do not reproduce
+				//if( (abs(rng.rand_int31()) % 100) > 100*Pc)	continue;	//we do not reproduce
+				double rnd=rng.rand_closed01();
+				if( rnd < Pc)	continue;	//we do not reproduce
+				
 				fno = *it;
 				
 				//now add that trit to current population
@@ -124,7 +113,7 @@ void EvolutionarySearcher::Reproduce()
 
 void EvolutionarySearcher::Mutate()
 {
-	UINT i, TotalFunctions, fno, cno;
+	UINT i, TotalFunctions, fno=0, cno;
 	UINT TotalClusters = g_k;
 
 	for(i=0; i<PoplSize; i++)
@@ -135,27 +124,31 @@ void EvolutionarySearcher::Mutate()
 		}
 	}
 	
-	return;
-	
 	for(i=0; i<PoplSize; i++)
 	{
 		if(i==Fittest) continue;
 		
 		for(cno=0; cno < TotalClusters; cno++)
 		{
-			if( (rand()%1000) > 1000*Pm) continue; //tune mutation
+			//if( (rand()%1000) > 1000*Pm) continue; //tune mutation
+			//if( (abs( rng.rand_int31() ) % 1000) > 1000*Pm) continue; //tune mutation
+			
+			double rnd=rng.rand_closed01();
+			if( rnd > Pm) continue; //tune mutation
 
 			TotalFunctions = Population[i].getClusterFunctionCount(cno);
 			
 			if(TotalFunctions <= 1) continue;	//we do not remove the last alone function from a cluster
 			
 			//select a function in the cno cluster for mutation
-			#ifndef RND_INIT_ES
-			fno = 0 + ( abs( rng.rand_int31() ) % ( (TotalFunctions-1) - (0) + 1 ) ); 
+			#ifdef RND_INIT_ES
+			fno = 0 + ( abs( rng.rand_int31() ) % (TotalFunctions-1) ); 
 			#else
-			fno = g_k + ( abs( rng.rand_int31() ) % ( (TotalFunctions-1) - (g_k) + 1 ) );  //not changing the ftns from initial selection	
+			//not changing the ftns from initial selection	
+			fno = g_k + ( abs(rng.rand_int31()) % (TotalFunctions-1) );
 			#endif
 			
+			//cout<<TotalFunctions<<" "<<fno<<" "<<endl;
 			//mutate it
 			Population[i].removeFunction(fno);
 			Population[i].addFunction(fno,cno);

@@ -4,6 +4,7 @@
 #include <cmath>
 #include <fstream>
 #include <exception>
+#include <omp.h>
 
 #include "bruteforce.h"
 #include "heuristic.h"
@@ -26,6 +27,8 @@ void usage();
 int main(int argc, char *argv[])
 {
 	cout<<"Starting Simulation"<<endl;
+	
+	omp_set_num_threads(2);
 	
 	try
 	{

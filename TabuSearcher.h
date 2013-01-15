@@ -10,10 +10,7 @@
 typedef unsigned int UINT;
 
 #define TABU_SIZE 5
-#define TABU_TENURE 9
-
-//comment the following if random initial solution is not required
-#define RND_INIT_TS
+#define TABU_TENURE 3
 
 typedef std::vector< std::vector< std::vector< UINT > > > array3d;
 

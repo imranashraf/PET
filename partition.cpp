@@ -98,12 +98,10 @@ float Partition::Cost()
 	if(ModificationFlag == true)
 	{
 		ModificationFlag=false;
-		float BP, CC, CD;
-		BP = BalancingPenalty();
-		CC = CommunicationCost();
-		CD = CouplingDegree();
+		float BP = BalancingPenalty();
+		float CC = CommunicationCost();
 		
-		_Cost = ALPHA * BP + BETA * CC + GAMMA*1.0/CD;
+		_Cost = ALPHA * BP + BETA * CC;
 	}
 
 	return _Cost;
@@ -123,6 +121,5 @@ void Partition::Print(std::ostream & fout = std::cout , const std::string & part
 	
 	fout<<partName<<" Cost = "<<Cost()<<endl
 		<<partName<<" BP   = "<<BalancingPenalty()<<endl
-		<<partName<<" CC   = "<<CommunicationCost()<<endl
-		<<partName<<" CD   = "<<CouplingDegree()<<endl;
+		<<partName<<" CC   = "<<CommunicationCost()<<endl;
 }

@@ -74,4 +74,4 @@ clean:
 	@-rm -f .depend $(OBJECTS) $(EXEC) *~ gmon.out graph_*.dot graph_*.pdf profile.txt profile.pdf costs_*.txt output_*.txt
 
 #TODO remove all globals for application and number of functions
-#TODO Heuristic adds all remaining functions to same cluster, Check !!!
+

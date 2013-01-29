@@ -23,23 +23,23 @@ extern std::ostream cnull;
 
 //comment the following to not store all the partitions produced in bruteforce algorithm
 //do it for small simulations only as it will require more memory
-#define STORE_PARTITIONS
+//#define STORE_PARTITIONS
 // #define PRINT_STORED_PARTITIONS
 
 //comment the following to stop storing the scores of all partions produced in bruteforce algorithm
 //do it for small simulations only as it will require more memory and hard disk space
-#define STORE_COSTS
+//#define STORE_COSTS
 
 //comment the following if you do not want to run Bruteforce search
-// #define RUN_BF
+#define RUN_BF
 //comment the following if you do not want to run Heuristic Search
 #define RUN_HS
 //comment the following if you do not want to run Simmulated Annealing
-// #define RUN_SA
+#define RUN_SA
 //comment the following if you do not want to run Tabu Search
-// #define RUN_TS
+#define RUN_TS
 //comment the following if you do not want to run Evolutionary Search
-// #define RUN_ES
+#define RUN_ES
 
 
 //comment the following if you want to show output results on screen

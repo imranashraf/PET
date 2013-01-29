@@ -137,8 +137,13 @@ class RNG
   ulong MWC()  
     { return (((znew() << 16) + wnew()) & 0xfffffffful); }
   ulong SHR3()
-    { jsr ^= (jsr << 17); jsr ^= (jsr >> 13);
-      return (jsr = ((jsr ^= (jsr << 5)) & 0xfffffffful)); }
+    	{ 
+		jsr ^= (jsr << 17); 
+		jsr ^= (jsr >> 13);
+		jsr ^= (jsr << 5);
+      	jsr = (jsr  & 0xfffffffful);
+	  	return jsr; 
+	  	}
   ulong CONG() 
     { return (jcong = ((69069 * jcong + 1234567) & 0xfffffffful)); }
   ulong rand_int32()         // [0,2^32-1]

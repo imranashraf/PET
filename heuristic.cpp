@@ -163,7 +163,7 @@ void Heuristic::Apply()
 		{
 			for	(cno2=cno1+1; cno2<k; cno2++)
 			{
-				if( Marked[cno1] == Marked[cno2] )
+				if( (Marked[cno1] == Marked[cno2]) && (Marked[cno1] != -1) )
 				{
 					//Here we are giving priority based on rank of the tempfno for cno1 or cno2
 					UINT tempfno = Marked[cno1];	//or Marked[cno2]
